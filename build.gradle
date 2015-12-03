@@ -1,0 +1,26 @@
+plugins {
+	id 'java'
+	id 'groovy'
+	id 'eclipse'
+}
+
+def vertxVersion = '3.1.0'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compile "io.vertx:vertx-core:$vertxVersion"
+	compile "io.vertx:vertx-web:$vertxVersion"
+	compile "io.vertx:vertx-lang-groovy:$vertxVersion"
+	compile "io.vertx:vertx-unit:$vertxVersion"
+
+	testCompile 'junit:junit:4.12'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.9'
+}
