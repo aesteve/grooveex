@@ -50,6 +50,7 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | ------------- | --------------- |
 | `ctx['key']` | `ctx.get('key')` |
 | `ctx['key'] = value` | `ctx.put('key', value)` |
+| `ctx++` | `ctx.next()` |
 
 
 ### String

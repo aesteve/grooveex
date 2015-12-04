@@ -15,7 +15,7 @@ class RoutingContextSpec extends TestBase {
 		router = Router.router vertx
 		router[PATH] = {
 			it[KEY] = VALUE
-			it.next()
+			it++
 		}
 		router[PATH] = {
 			it.response().end it[KEY]
@@ -24,7 +24,7 @@ class RoutingContextSpec extends TestBase {
 	}
 	
 	@Test
-	void testGetPut(TestContext context) {
+	void testGetPutAndCall(TestContext context) {
 		client().getNow PATH, { response -> 
 			response.bodyHandler {
 				context.assertEquals it.toString('UTF-8'), VAL
