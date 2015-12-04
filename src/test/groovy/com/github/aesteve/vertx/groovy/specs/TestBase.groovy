@@ -29,17 +29,7 @@ abstract class TestBase {
 	public void setUpServer() {
 		vertx = Vertx.vertx()
 		server = vertx.createHttpServer(serverOptions)
-		router = Router.router vertx
-		SockJSHandler sockHandler = SockJSHandler.create(vertx, [:])
-		sockHandler.socketHandler { SockJSSocket sock ->
-			sock >> {
-				sock << it
-			} 
-		}
-		router['/test'] = {
-			it.response().end "test"
-		}
-		router['/sock/*'] >> sockHandler
+		router()
 		server.requestHandler(router.&accept).listen()
 	}
 	
@@ -47,6 +37,8 @@ abstract class TestBase {
 	public void tearDown() {
 		server.close()
 	}
+	
+	abstract void router()
 	
 	HttpClient client() {
 		vertx.createHttpClient clientOptions

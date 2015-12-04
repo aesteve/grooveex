@@ -44,6 +44,13 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `buff += 'something'` | `buffer.appendString('something')` |
 | `buff += "hello $name"` | `buffer.appendString("hello $name".toString()")` |
 
+### RoutingContext
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `ctx['key']` | `ctx.get('key')` |
+| `ctx['key'] = value` | `ctx.put('key', value)` |
+
 
 ### String
 

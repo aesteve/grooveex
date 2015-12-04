@@ -6,11 +6,27 @@ import io.vertx.groovy.core.file.AsyncFile
 import io.vertx.groovy.core.http.WebSocket
 import io.vertx.groovy.ext.unit.Async
 import io.vertx.groovy.ext.unit.TestContext
+import io.vertx.groovy.ext.web.Router
+import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
+import io.vertx.groovy.ext.web.handler.sockjs.SockJSSocket
 
 import org.junit.Test
 
 class SockJSSocketSpec extends TestBase {
 
+	@Override
+	Router router() {
+		Router router = Router.router vertx
+		SockJSHandler sockHandler = SockJSHandler.create(vertx, [:])
+		sockHandler.socketHandler { SockJSSocket sock ->
+			sock >> {
+				sock << it
+			}
+		}
+		router['/sock/*'] >> sockHandler
+		router
+	}
+	
 	@Test
 	public void testSocketSugar(TestContext context) {
 		Async async = context.async()
