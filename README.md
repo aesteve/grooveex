@@ -38,7 +38,11 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `buff << other` | `buffer.appendBuffer(other)` |
-| `buff << 'something'` | `buffer.appendString(other)` |
+| `buff << 'something'` | `buffer.appendString('something')` |
+| `buff << "hello $name"` | `buffer.appendString("hello $name".toString()")` |
+| `buff += other` | `buffer.appendBuffer(other)` |
+| `buff += 'something'` | `buffer.appendString('something')` |
+| `buff += "hello $name"` | `buffer.appendString("hello $name".toString()")` |
 
 
 ### String

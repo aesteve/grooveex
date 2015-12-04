@@ -19,13 +19,21 @@ class BufferExtension {
 	static Buffer leftShift(Buffer self, String other) {
 		self.appendString other
 	}
-	
+
+	static Buffer leftShift(Buffer self, GString other) {
+		self.appendString other.toString()
+	}
+		
 	static Buffer plus(Buffer self, Buffer other) {
 		self.appendBuffer other
 	}
 	
 	static Buffer plus(Buffer self, String other) {
 		self.appendString other
+	}
+
+	static Buffer plus(Buffer self, GString other) {
+		self.appendString other.toString()
 	}
 
 	static int compareTo(Buffer self, Object other) {
