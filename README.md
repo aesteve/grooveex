@@ -2,6 +2,8 @@
 
 If you want to use Vert.x in Groovy with a less idiomatic but more groovy-ish API !
 
+Have a look at [the tests](/src/test/groovy/com/github/aesteve/vertx/groovy/specs) if you want to have a glimpse at how the sugar looks in action.
+
 ## List of transformations
 
 ### WriteStream
@@ -65,6 +67,7 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | ------------- | --------------- |
 | `req.params` | `req.params()` |
 | `req.headers` | `req.headers()` |
+| `req >>> handler` | `req.bodyHandler(handler)` |
 
 ### HttpServerResponse
 
