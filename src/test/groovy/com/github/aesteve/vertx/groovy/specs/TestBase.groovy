@@ -39,7 +39,7 @@ abstract class TestBase {
 		router['/test'] = {
 			it.response().end "test"
 		}
-		router['/sock/*'] << sockHandler
+		router['/sock/*'] >> sockHandler
 		server.requestHandler(router.&accept).listen()
 	}
 	

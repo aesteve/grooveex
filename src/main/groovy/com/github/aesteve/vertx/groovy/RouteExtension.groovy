@@ -6,7 +6,7 @@ import io.vertx.groovy.ext.web.Route;
 
 class RouteExtension {
 
-	static Route leftShift(Route self, Handler handler) {
+	static Route rightShift(Route self, Handler handler) {
 		self.handler handler
 	}
 

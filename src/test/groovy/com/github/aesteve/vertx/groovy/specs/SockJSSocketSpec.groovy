@@ -14,7 +14,7 @@ class SockJSSocketSpec extends TestBase {
 	@Test
 	public void testSocketSugar(TestContext context) {
 		Async async = context.async()
-		Buffer buff = Buffer.buffer "test"
+		Buffer buff = "test" as Buffer
 		client().websocket "/sock/websocket", { WebSocket sock -> 
 			sock.handler {
 				context.assertEquals buff, it
@@ -32,7 +32,7 @@ class SockJSSocketSpec extends TestBase {
 		Buffer buff = Buffer.buffer()
 		client().websocket "/sock/websocket", { WebSocket sock ->
 			sock.handler {
-				buff.appendBuffer it
+				buff += it // buff << it
 				if (buff.length() >= fileBuff.length()) {
 					async.complete()
 				}
