@@ -1,6 +1,8 @@
 package com.github.aesteve.vertx.groovy
 
 import groovy.transform.TypeChecked
+import io.vertx.groovy.core.http.HttpServerRequest
+import io.vertx.groovy.core.http.HttpServerResponse
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.RoutingContext
 
@@ -15,7 +17,11 @@ class RoutingContextExtension {
 		self.get path
 	}
 	
-	static void next(RoutingContext self) {
-		self.next()
+	static HttpServerRequest getRequest(RoutingContext self) {
+		self.request()
+	}
+	
+	static HttpServerResponse getResponse(RoutingContext self) {
+		self.response()
 	}
 }

@@ -1,5 +1,6 @@
 package com.github.aesteve.vertx.groovy.specs
 
+import io.vertx.groovy.ext.unit.Async
 import io.vertx.groovy.ext.unit.TestContext
 import io.vertx.groovy.ext.web.Router
 import org.junit.Test
@@ -14,20 +15,21 @@ class RoutingContextSpec extends TestBase {
 	void router() {
 		router = Router.router vertx
 		router[PATH] = {
-			it[KEY] = VALUE
+			it[KEY] = VAL
 			it++
 		}
 		router[PATH] = {
 			it.response().end it[KEY]
 		}
-		router
 	}
 	
 	@Test
 	void testGetPutAndCall(TestContext context) {
-		client().getNow PATH, { response -> 
+		Async async = context.async()
+		client.getNow PATH, { response -> 
 			response.bodyHandler {
 				context.assertEquals it.toString('UTF-8'), VAL
+				async.complete()
 			}
 		}
 	}

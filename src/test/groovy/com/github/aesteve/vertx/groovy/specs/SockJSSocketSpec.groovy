@@ -15,28 +15,27 @@ import org.junit.Test
 class SockJSSocketSpec extends TestBase {
 
 	@Override
-	Router router() {
-		Router router = Router.router vertx
+	void router() {
+		router = Router.router vertx
 		SockJSHandler sockHandler = SockJSHandler.create(vertx, [:])
 		sockHandler.socketHandler { SockJSSocket sock ->
 			sock >> {
-				sock << it
+				sock += it
 			}
 		}
 		router['/sock/*'] >> sockHandler
-		router
 	}
 	
 	@Test
 	public void testSocketSugar(TestContext context) {
 		Async async = context.async()
 		Buffer buff = "test" as Buffer
-		client().websocket "/sock/websocket", { WebSocket sock -> 
+		client.websocket "/sock/websocket", { WebSocket sock -> 
 			sock.handler {
 				context.assertEquals buff, it
 				async.complete()
 			}
-			sock << buff
+			sock += buff
 		}
 	}
 
@@ -46,7 +45,7 @@ class SockJSSocketSpec extends TestBase {
 		Async async = context.async()
 		Buffer fileBuff = vertx.fileSystem().readFileBlocking filePath
 		Buffer buff = Buffer.buffer()
-		client().websocket "/sock/websocket", { WebSocket sock ->
+		client.websocket "/sock/websocket", { WebSocket sock ->
 			sock.handler {
 				buff += it // buff << it
 				if (buff.length() >= fileBuff.length()) {

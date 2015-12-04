@@ -40,7 +40,7 @@ abstract class TestBase {
 	
 	abstract void router()
 	
-	HttpClient client() {
+	HttpClient getClient() {
 		vertx.createHttpClient clientOptions
 	}
 }

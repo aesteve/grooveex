@@ -10,7 +10,10 @@ Examples : `ServerWebSocket`, `SockJSSocket`, `HttpServerResponse`
 
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
-| `stream << data` | `stream.write(data)` |
+| `stream += data` | `stream.write(data)` |
+
+In case you're wondering I chose the `<<` operator to mean "end the stream". cf. `HttpServerResponse` for instance.
+Don't hesitate to (gently ;) ) let me know what you think about it.
 
 ### ReadStream
 
@@ -50,7 +53,45 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | ------------- | --------------- |
 | `ctx['key']` | `ctx.get('key')` |
 | `ctx['key'] = value` | `ctx.put('key', value)` |
+| `ctx.response` | `ctx.response()` |
+| `ctx.request` | `ctx.request()` |
 | `ctx++` | `ctx.next()` |
+
+NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
+
+### HttpServerRequest
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `req.params` | `req.params()` |
+| `req.headers` | `req.headers()` |
+
+### HttpServerResponse
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `resp.headers` | `resp.headers()` |
+| `resp++` | `resp.end()` |
+| `resp << 'done'` | `resp.end('done')` |
+
+### HttpClient
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `client['/path']` | `client.get('/path')` |
+
+
+### HttpClientRequest
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `req++` | `req.end()` |
+
+### HttpClientResponse
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `resp >>> handler` | `resp.bodyHandler(handler)` |
 
 
 ### String

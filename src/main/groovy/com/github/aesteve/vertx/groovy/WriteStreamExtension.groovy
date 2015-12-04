@@ -7,7 +7,7 @@ import io.vertx.groovy.ext.web.Route;
 
 class WriteStreamExtension {
 
-	static <T> WriteStream leftShift(WriteStream self, T data) {
+	static <T> WriteStream plus(WriteStream self, T data) {
 		self.write data
 	}
 
