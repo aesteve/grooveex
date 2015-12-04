@@ -7,7 +7,7 @@ import io.vertx.groovy.core.http.HttpClientResponse
 
 @TypeChecked
 class HttpClientResponseExtension {
-	static void unsignedRightShift(HttpClientResponse self, Handler handler) {
+	static void rightShiftUnsigned(HttpClientResponse self, Handler handler) {
 		self.bodyHandler handler
 	}
 }

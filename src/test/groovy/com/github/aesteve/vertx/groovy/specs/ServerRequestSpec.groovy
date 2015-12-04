@@ -1,6 +1,7 @@
 package com.github.aesteve.vertx.groovy.specs
 
 import io.vertx.core.http.HttpHeaders
+import io.vertx.groovy.core.buffer.Buffer
 import io.vertx.groovy.core.http.HttpClientRequest
 import io.vertx.groovy.ext.unit.Async
 import io.vertx.groovy.ext.unit.TestContext
@@ -19,6 +20,9 @@ class ServerRequestSpec extends TestBase {
 		router = Router.router vertx
 		router["$PATH/header"] = { it.response << it.request.headers[HEADER] }
 		router["$PATH/param"] = { it.response << it.request.params[PARAM] }
+		router.post("$PATH/body") >> { ctx ->
+			ctx.request >>> { ctx.response << it } 
+		}
 	}
 	
 	@Test
@@ -38,10 +42,23 @@ class ServerRequestSpec extends TestBase {
 	void testParams(TestContext context) {
 		Async async = context.async()
 		client.getNow "$PATH/param?$PARAM=$VAL", { response ->
-			response.bodyHandler {
+			response >>> {
 				context.assertEquals it.toString('UTF-8'), VAL
 				async.complete()
 			}
 		}
+	}
+	
+	@Test
+	void testPost(TestContext context) {
+		Async async = context.async()
+		Buffer buff = VAL as Buffer
+		HttpClientRequest post = client.post "$PATH/body", { response ->
+			response >>> {
+				context.assertEquals it.toString('UTF-8'), VAL
+				async.complete()
+			}
+		}
+		post << buff
 	}
 }
