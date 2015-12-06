@@ -57,6 +57,13 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `ctx['key'] = value` | `ctx.put('key', value)` |
 | `ctx.response` | `ctx.response()` |
 | `ctx.request` | `ctx.request()` |
+| `ctx.user` | `ctx.user()` |
+| `ctx.session` | `ctx.session()` |
+| `ctx.cookies` | `ctx.cookies()` |
+| `ctx.statusCode` | `ctx.statusCode()` |
+| `ctx.vertx` | `ctx.vertx()` |
+| `ctx.mountPoint` | `ctx.mountPoint()` |
+| `ctx.normalisedPath` | `ctx.normalisedPath()` |
 | `ctx++` | `ctx.next()` |
 
 NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`

@@ -1,10 +1,14 @@
 package com.github.aesteve.vertx.groovy
 
 import groovy.transform.TypeChecked
+import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.core.http.HttpServerRequest
 import io.vertx.groovy.core.http.HttpServerResponse
+import io.vertx.groovy.ext.auth.User
+import io.vertx.groovy.ext.web.Cookie
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.RoutingContext
+import io.vertx.groovy.ext.web.Session
 
 @TypeChecked
 class RoutingContextExtension {
@@ -24,4 +28,33 @@ class RoutingContextExtension {
 	static HttpServerResponse getResponse(RoutingContext self) {
 		self.response()
 	}
+	
+	static User getUser(RoutingContext self) {
+		self.user()
+	}
+	
+	static Session getSession(RoutingContext self) {
+		self.session()
+	}
+	
+	static Set<Cookie> getCookies(RoutingContext self) {
+		self.cookies()
+	}
+	
+	static Vertx getVertx(RoutingContext self) {
+		self.vertx()
+	}
+
+	static int getStatusCode(RoutingContext self) {
+		self.statusCode()
+	}
+	
+	static String getMountPoint(RoutingContext self) {
+		self.mountPoint()
+	}
+	
+	static String getNormalisedPath(RoutingContext self) {
+		self.normalisedPath()
+	}
+
 }

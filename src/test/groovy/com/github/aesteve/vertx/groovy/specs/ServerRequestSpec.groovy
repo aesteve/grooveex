@@ -21,7 +21,11 @@ class ServerRequestSpec extends TestBase {
 		router["$PATH/header"] = { it.response << it.request.headers[HEADER] }
 		router["$PATH/param"] = { it.response << it.request.params[PARAM] }
 		router.post("$PATH/body") >> { ctx ->
-			ctx.request >>> { ctx.response << it } 
+			ctx.request >>> { ctx.response << it }
+		}
+		router.post("$PATH/pump") >> { ctx ->
+			ctx.response.chunked = true
+			(ctx.request | ctx.response).start()
 		}
 	}
 	
@@ -57,6 +61,23 @@ class ServerRequestSpec extends TestBase {
 			response >>> {
 				context.assertEquals it.toString('UTF-8'), VAL
 				async.complete()
+			}
+		}
+		post << buff
+	}
+	
+	@Test
+	void testPump(TestContext context) {
+		Async async = context.async()
+		Buffer buff = VAL as Buffer
+		Buffer received = Buffer.buffer()
+		HttpClientRequest post = client.post "$PATH/pump", { response ->
+			response >> {
+				received << it
+				if (received.length() == buff.length()) {
+					context.assertEquals it.toString('UTF-8'), VAL
+					async.complete()
+				}
 			}
 		}
 		post << buff
