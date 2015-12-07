@@ -9,7 +9,7 @@ Have a look at [the tests](/src/test/groovy/com/github/aesteve/vertx/groovy/spec
 Since the projects relies on an Groovy extension module, you just have to add the jar to your project. Nothing more.
 
 Example, if you're using Gradle: 
-```
+```groovy
 repositories {
 	maven {
 		url  "http://dl.bintray.com/aesteve/maven" // waiting for it to be added to jCenter soon
@@ -27,7 +27,7 @@ And you're done. The new methods will also work with `@TypeChecked` since it's a
 
 ### Basic router, dealing with request / responses
 
-```
+```groovy
 Vertx vertx = Vertx.vertx
 
 // Server-side
@@ -52,7 +52,7 @@ req++ // req.end()
 
 ### Pumping streams
 
-```
+```groovy
 Vertx vertx = Vertx.vertx
 
 // Server-side
@@ -78,7 +78,7 @@ vertx.fileSystem.open 'test-file', [:], { res ->
 
 ### Dealing with the event bus
 
-```
+```groovy
 Vertx vertx = Vertx.vertx
 EventBus eb = vertx.eventBus
 Buffer msg = 'Hello !' as Buffer // Buffer.buffer('Hello !')
