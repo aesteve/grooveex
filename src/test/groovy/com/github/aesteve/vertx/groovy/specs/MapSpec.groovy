@@ -4,10 +4,10 @@ import io.vertx.core.DeploymentOptions
 import io.vertx.core.json.JsonObject
 import org.junit.Test
 
-class DeploymentOptionsSpec {
+class MapSpec {
 
 	@Test
-	public void createDeploymentOptions() {
+	public void deploymentOptions() {
 		DeploymentOptions options = new DeploymentOptions()
 		def config = new JsonObject()
 		def ha = true
