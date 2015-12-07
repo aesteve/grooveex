@@ -69,7 +69,7 @@ vertx.createHttpServer().listen()
 // Client side (sends a file to the server)
 HttpClient client = vertx.createHttpClient()
 HttpRequest req = client["/pump"]
-vertx.fileSystem.openFile 'test-file', [:], { res ->
+vertx.fileSystem.open 'test-file', [:], { res ->
   AsyncFile file = res.result()
   Pump filePump = file | req // createPump between readstream and writestream
   filePump.start()
