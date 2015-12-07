@@ -23,8 +23,8 @@ router {
     staticHandler "/assets/*"
     staticHandler "/instrumented-assets/*", {
         get {
-            request.headers().add("X-Custom-Header", "instrumented")
-            next()
+            request.headers["X-Custom-Header"] = "instrumented"
+            it++
         }
     }
     // templateHandler "/dynamic/*", HandlebarsTemplateEngine.create()
