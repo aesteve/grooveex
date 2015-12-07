@@ -4,7 +4,91 @@ If you want to use Vert.x in Groovy with a less idiomatic but more groovy-ish AP
 
 Have a look at [the tests](/src/test/groovy/com/github/aesteve/vertx/groovy/specs) if you want to have a glimpse at how the sugar looks in action.
 
-## List of transformations
+## Adding extensions
+
+Since the projects relies on an Groovy extension module, you just have to add the jar to your project. Nothing more.
+
+Example, if you're using Gradle: 
+```
+repositories {
+	maven {
+		url  "http://dl.bintray.com/aesteve/maven" // waiting for it to be added to jCenter soon
+	}
+}
+
+dependencies {
+	compile 'com.github.aesteve:vertx-groovy-sugar:0.1'
+}
+```
+
+And you're done. The new methods will also work with `@TypeChecked` since it's an extension module, not a metaclass.
+
+## Examples
+
+### Basic router, dealing with request / responses
+
+```
+Vertx vertx = Vertx.vertx
+
+// Server-side
+Router router = Router.router vertx
+router['/hello'] >> { // router.route('hello').handler {
+  def name = it.request.params['name'] // params is available through getParams => as a attribute
+  it.response << "Hello $name"  // it.response.end("Hello $name")
+}
+server.requestHandler router.&accept
+vertx.createHttpServer().listen()
+
+// Client side
+HttpClient client = vertx.createHttpClient()
+HttpRequest req = client["/hello?name=World"] // client.get "/hello?name=World"
+req >> { response -> // req.handler {
+  response >>> { // response.bodyHandler
+    assert it.toString('UTF-8') == 'Hello World'
+  } 
+} 
+req++ // req.end()
+```
+
+### Pumping streams
+
+```
+Vertx vertx = Vertx.vertx
+
+// Server-side
+Router router = Router.router vertx
+router['/pump'] >> {
+  Buffer received = Buffer.buffer()
+  it.request >> { buff -> // request handler
+    received += buff // appends the received buffer (received << buff also works) 
+  }
+}
+server.requestHandler router.&accept
+vertx.createHttpServer().listen()
+
+// Client side (sends a file to the server)
+HttpClient client = vertx.createHttpClient()
+HttpRequest req = client["/pump"]
+vertx.fileSystem.openFile 'test-file', [:], { res ->
+  AsyncFile file = res.result()
+  Pump filePump = file | req // createPump between readstream and writestream
+  filePump.start()
+}
+```
+
+### Dealing with the event bus
+
+```
+Vertx vertx = Vertx.vertx
+EventBus eb = vertx.eventBus
+Buffer msg = 'Hello !' as Buffer // Buffer.buffer('Hello !')
+eb['some-address'] >> { message -> // eb.consumer('some-address', { ... 
+  println "Received : ${message.body}" // message.body()
+}
+eb['some-address'] << 'Hello !' // eb.send('some-address', 'Hello !')
+```
+
+## Complete sugar list
 
 ### WriteStream
 
