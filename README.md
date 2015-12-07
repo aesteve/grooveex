@@ -219,3 +219,10 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | `'something' as Buffer` | `Buffer.buffer('something')` |
 
 
+### RouterBuilder
+
+On top of the syntaxic sugar, you can use the `RouterBuilder` class to create a vertx-web router from a closure.
+
+Just have a look at the [routing file example](blob/master/src/test/resources/routes.groovy) to see how it looks like.
+It makes use of the overloaded operators like `<<` or `>>` but also "wraps" Vert.x's handler closure to inject `RoutingContext` as delegate, so that you can directly write `response.headers` for instance and not `it.response().headers`.
+Every method available in `RoutingContext` will be directly available within your closure.
