@@ -113,6 +113,14 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | `msg.body` | `msg.body()` |
 | `msg << 'reply'` | `msg.reply('reply')` |
 
+### EventBus
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `eb['address'] >> handler` | `eb.consumer('address', handler)` |
+| `eb['address'] << msg` | `eb.send(address, msg)` |
+| `eb['address'] ** msg` | `eb.publish(address, msg)` |
+
 ### Vertx
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
