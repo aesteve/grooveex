@@ -27,7 +27,7 @@ abstract class TestBase {
 	
 	@Before
 	public void setUpServer() {
-		vertx = Vertx.vertx()
+		vertx = Vertx.vertx
 		server = vertx.createHttpServer(serverOptions)
 		router()
 		server.requestHandler(router.&accept).listen()

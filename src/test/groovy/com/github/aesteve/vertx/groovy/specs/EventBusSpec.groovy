@@ -18,10 +18,11 @@ class EventBusSpec extends TestBase {
 	@Test
 	public void testEventBusPublish(TestContext context) {
 		Async async = context.async()
-		EventBus eb = vertx.eventBus()
-		String msg = "test"
+		EventBus eb = vertx.eventBus
+		String msg = "ping"
 		eb[ADDR] >> {
-			context.assertEquals it.body(), msg
+			context.assertEquals it.address, ADDR
+			context.assertEquals it.body, msg
 			async.complete()
 		}
 		eb[ADDR] << msg
@@ -30,10 +31,12 @@ class EventBusSpec extends TestBase {
 	@Test
 	public void testEventBusSend(TestContext context) {
 		Async async = context.async()
-		EventBus eb = vertx.eventBus()
-		String msg = "test"
+		EventBus eb = vertx.eventBus
+		String msg = "ping"
 		eb[ADDR] >> {
-			context.assertEquals it.body(), msg
+			context.assertEquals it.address, ADDR
+			context.assertEquals it.body, msg
+			it << "pong"
 			async.complete()
 		}
 		eb[ADDR] << msg

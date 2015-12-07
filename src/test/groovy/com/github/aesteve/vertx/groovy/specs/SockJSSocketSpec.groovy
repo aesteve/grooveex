@@ -17,11 +17,9 @@ class SockJSSocketSpec extends TestBase {
 	@Override
 	void router() {
 		router = Router.router vertx
-		SockJSHandler sockHandler = SockJSHandler.create(vertx, [:])
+		SockJSHandler sockHandler = SockJSHandler.create vertx, [:]
 		sockHandler.socketHandler { SockJSSocket sock ->
-			sock >> {
-				sock += it
-			}
+			sock >> { sock += it }
 		}
 		router['/sock/*'] >> sockHandler
 	}
@@ -43,16 +41,16 @@ class SockJSSocketSpec extends TestBase {
 	public void testPipeSugar(TestContext context) {
 		String filePath = "src/test/resources/file.txt"
 		Async async = context.async()
-		Buffer fileBuff = vertx.fileSystem().readFileBlocking filePath
+		Buffer fileBuff = vertx.fileSystem.readFileBlocking filePath
 		Buffer buff = Buffer.buffer()
 		client.websocket "/sock/websocket", { WebSocket sock ->
-			sock.handler {
+			sock >> {
 				buff += it // buff << it
 				if (buff.length() >= fileBuff.length()) {
 					async.complete()
 				}
 			}
-			vertx.fileSystem().open filePath, [:], { (it.result() | sock).start() }
+			vertx.fileSystem.open filePath, [:], { (it.result() | sock).start() }
 		}
 	}
 

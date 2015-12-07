@@ -6,6 +6,10 @@ import io.vertx.groovy.core.buffer.Buffer;
 @TypeChecked
 class BufferExtension {
 
+	static Buffer getBuffer(Buffer self) {
+		self.buffer()
+	}
+	
 	static Buffer leftShift(Buffer self, Buffer other) {
 		self.appendBuffer other
 	}

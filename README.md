@@ -55,15 +55,15 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | ------------- | --------------- |
 | `ctx['key']` | `ctx.get('key')` |
 | `ctx['key'] = value` | `ctx.put('key', value)` |
-| `ctx.response` | `ctx.response()` |
-| `ctx.request` | `ctx.request()` |
-| `ctx.user` | `ctx.user()` |
-| `ctx.session` | `ctx.session()` |
 | `ctx.cookies` | `ctx.cookies()` |
-| `ctx.statusCode` | `ctx.statusCode()` |
-| `ctx.vertx` | `ctx.vertx()` |
 | `ctx.mountPoint` | `ctx.mountPoint()` |
 | `ctx.normalisedPath` | `ctx.normalisedPath()` |
+| `ctx.response` | `ctx.response()` |
+| `ctx.request` | `ctx.request()` |
+| `ctx.session` | `ctx.session()` |
+| `ctx.statusCode` | `ctx.statusCode()` |
+| `ctx.user` | `ctx.user()` |
+| `ctx.vertx` | `ctx.vertx()` |
 | `ctx++` | `ctx.next()` |
 
 NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
@@ -103,6 +103,22 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | ------------- | --------------- |
 | `resp >>> handler` | `resp.bodyHandler(handler)` |
 
+### Message
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `msg.address` | `msg.address()` |
+| `msg.replyAddress` | `msg.replyAddress()` |
+| `msg.headers` | `msg.headers()` |
+| `msg.body` | `msg.body()` |
+| `msg << 'reply'` | `msg.reply('reply')` |
+
+### Vertx
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `Vertx.vertx` | `Vertx.vertx()` |
+| `vertx.eventBus` | `vertx.eventBus()` |
+| `vertx.fileSystem` | `vertx.fileSystem()` |
 
 ### String
 
