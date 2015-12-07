@@ -1,6 +1,7 @@
 package com.github.aesteve.vertx.groovy
 
-import groovy.transform.TypeChecked 
+import groovy.json.JsonBuilder
+import groovy.transform.TypeChecked
 import io.vertx.groovy.core.MultiMap 
 import io.vertx.groovy.core.buffer.Buffer 
 import io.vertx.groovy.core.http.HttpServerResponse
@@ -18,6 +19,10 @@ class HttpServerResponseExtension {
 
 	static void leftShift(HttpServerResponse self, String s) {
 		self.end s
+	}
+
+	static void leftShift(HttpServerResponse self, JsonBuilder json) {
+		self.end json.toString()
 	}
 
 	static void next(HttpServerResponse self) {
