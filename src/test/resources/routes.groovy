@@ -5,7 +5,7 @@ import groovy.json.JsonBuilder
 TestController ctrlerInstance = new TestController()
 
 router {
-    get "/simpleGet", { context ->
+    get "/simpleGet", {
         response << "Simple GET"
     }
     route "/handlers", {
