@@ -54,7 +54,7 @@ publishing {
 
 task sourcesJar(type: Jar) {
 	classifier 'sources'
-	from sourceSets.main.allJava
+	from sourceSets.main.allGroovy
 }
 
 task wrapper(type: Wrapper) {
