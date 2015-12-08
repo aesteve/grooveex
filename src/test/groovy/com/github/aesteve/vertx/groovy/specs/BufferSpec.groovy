@@ -9,7 +9,7 @@ class BufferSpec {
 	void testString() {
 		def test = "something"
 		Buffer b = test as Buffer
-		assert b.toString('UTF-8') == test
+		assert b as String == test
 	}
 	
 	@Test
@@ -17,6 +17,6 @@ class BufferSpec {
 		def name= "Snoopy"
 		def test = "hello $name"
 		Buffer b = test as Buffer
-		assert b.toString('UTF-8') == test
+		assert b as String == test
 	}
 }

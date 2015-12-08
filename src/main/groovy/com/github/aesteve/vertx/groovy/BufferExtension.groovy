@@ -33,6 +33,12 @@ class BufferExtension {
     static Buffer plus(Buffer self, GString other) {
         self.appendString other.toString()
     }
+	
+	static Object asType(Buffer self, Class c) {
+		if (c == String.class) {
+			return self.toString('UTF-8')
+		}
+	}
 
     static int compareTo(Buffer self, Object other) {
         if (!(other instanceof Buffer)) {

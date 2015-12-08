@@ -17,11 +17,12 @@ public class RoutingTest extends BuilderTestBase {
     @Test
     public void testGetHandler(TestContext context) {
         Async async = context.async()
+		String expected = new JsonBuilder([result: "GET"]).toString()
         HttpClientRequest req = client["/handlers"]
         req >> { HttpClientResponse response ->
             context.assertEquals 200, response.statusCode()
             response >>> { Buffer buffer ->
-                context.assertEquals buffer.toString("UTF-8"), new JsonBuilder([result: "GET"]).toString()
+                context.assertEquals buffer as String, expected
                 async.complete()
             }
         }
@@ -51,7 +52,7 @@ public class RoutingTest extends BuilderTestBase {
         req >> { response ->
             context.assertEquals response.statusCode(), 200
             response >> { Buffer buffer ->
-                context.assertEquals(buffer.toString("UTF-8"), payload.toString())
+                context.assertEquals buffer as String, payload as String
                 async.complete()
             }
         }
@@ -63,11 +64,12 @@ public class RoutingTest extends BuilderTestBase {
     @Test
     public void testGetStatic(TestContext context) {
         Async async = context.async()
+		JsonBuilder result = new JsonBuilder([result: "closure"])
         HttpClientRequest req = client["/staticClosure"]
         req >> { response ->
             context.assertEquals 200, response.statusCode()
             response >>> { buffer ->
-                context.assertEquals buffer.toString("UTF-8"), new JsonBuilder([result: "closure"]).toString()
+                context.assertEquals buffer as String, result as String
                 async.complete()
             }
         }

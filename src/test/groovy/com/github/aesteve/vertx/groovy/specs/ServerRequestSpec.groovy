@@ -35,7 +35,7 @@ class ServerRequestSpec extends TestBase {
 		HttpClientRequest req = client["$PATH/header"]
 		req >> { response -> 
 			response >>> {
-				context.assertEquals it.toString('UTF-8'), VAL
+				context.assertEquals it as String, VAL
 				async.complete()
 			}
 		}
@@ -47,7 +47,7 @@ class ServerRequestSpec extends TestBase {
 		Async async = context.async()
 		client.getNow "$PATH/param?$PARAM=$VAL", { response ->
 			response >>> {
-				context.assertEquals it.toString('UTF-8'), VAL
+				context.assertEquals it as String, VAL
 				async.complete()
 			}
 		}
@@ -59,7 +59,7 @@ class ServerRequestSpec extends TestBase {
 		Buffer buff = VAL as Buffer
 		HttpClientRequest post = client.post "$PATH/body", { response ->
 			response >>> {
-				context.assertEquals it.toString('UTF-8'), VAL
+				context.assertEquals it as String, VAL
 				async.complete()
 			}
 		}
@@ -75,7 +75,7 @@ class ServerRequestSpec extends TestBase {
 			response >> {
 				received << it
 				if (received.length() == buff.length()) {
-					context.assertEquals it.toString('UTF-8'), VAL
+					context.assertEquals it as String, VAL
 					async.complete()
 				}
 			}

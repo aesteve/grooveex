@@ -23,7 +23,7 @@ class CreateWithClosureTest extends TestBase {
         req >> { response ->
             context.assertEquals 200, response.statusCode()
             response >>> { buff ->
-                context.assertEquals buff.toString('UTF-8'), 'byClosure'
+                context.assertEquals buff as String, 'byClosure'
                 async.complete()
             }
         }

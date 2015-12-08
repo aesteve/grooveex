@@ -28,7 +28,7 @@ class RoutingContextSpec extends TestBase {
 		Async async = context.async()
 		client.getNow PATH, { response -> 
 			response.bodyHandler {
-				context.assertEquals it.toString('UTF-8'), VAL
+				context.assertEquals it as String, VAL
 				async.complete()
 			}
 		}

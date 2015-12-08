@@ -11,7 +11,7 @@ class SubRouterTest extends BuilderTestBase {
         client.getNow("/sub/firstSubRoute", { response ->
             context.assertEquals 200, response.statusCode()
             response >>> { buffer ->
-                context.assertEquals buffer.toString("UTF-8"), "firstSubRoute"
+                context.assertEquals buffer as String, "firstSubRoute"
                 async.complete()
             }
         })

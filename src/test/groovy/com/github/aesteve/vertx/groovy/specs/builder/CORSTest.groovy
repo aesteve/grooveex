@@ -18,7 +18,7 @@ class CORSTest extends BuilderTestBase {
             context.assertEquals 200, response.statusCode()
             context.assertEquals "*", response.headers[ACCESS_CONTROL_ALLOW_ORIGIN]
             response >>> { Buffer buffer ->
-                context.assertEquals(buffer.toString("UTF-8"), "CORS")
+                context.assertEquals(buffer as String, "CORS")
                 async.complete()
             }
         }
