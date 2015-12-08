@@ -69,6 +69,11 @@ class FutureExtension {
 		self
 	}
 	
+	static Future minus(Future self, String cause) {
+		self.fail(cause)
+		self
+	}
+	
 	static io.vertx.groovy.core.Future minus(io.vertx.groovy.core.Future self, String cause) {
 		self.fail(cause)
 		self
