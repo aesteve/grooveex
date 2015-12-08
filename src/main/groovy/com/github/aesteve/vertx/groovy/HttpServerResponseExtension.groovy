@@ -17,12 +17,8 @@ class HttpServerResponseExtension {
 		self.end buff
 	}
 
-	static void leftShift(HttpServerResponse self, String s) {
-		self.end s
-	}
-
-	static void leftShift(HttpServerResponse self, JsonBuilder json) {
-		self.end json.toString()
+	static void leftShift(HttpServerResponse self, Object obj) {
+		self.end obj?.toString()
 	}
 
 	static void next(HttpServerResponse self) {

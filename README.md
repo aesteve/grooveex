@@ -190,7 +190,8 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | ------------- | --------------- |
 | `resp.headers` | `resp.headers()` |
 | `resp++` | `resp.end()` |
-| `resp << 'done'` | `resp.end('done')` |
+| `resp << buffer` | `resp.end(buffer)` |
+| `resp << object` | `resp.end(object.toString())` |
 
 ### HttpClient
 
@@ -204,12 +205,15 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `req++` | `req.end()` |
+| `req << buffer` | `req.end(buffer)` |
+| `req << object` | `req.end(object.toString())` |
 
 ### HttpClientResponse
 
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `resp >>> handler` | `resp.bodyHandler(handler)` |
+| `resp.headers` | `resp.headers()` |
 
 ### Message
 

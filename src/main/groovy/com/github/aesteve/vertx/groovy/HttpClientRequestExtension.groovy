@@ -17,12 +17,8 @@ class HttpClientRequestExtension {
         self.end buff
     }
 
-    static void leftShift(HttpClientRequest self, String s) {
-        self.end s
-    }
-
-    static void leftShift(HttpClientRequest self, JsonBuilder json) {
-        self.end json.toString()
+    static void leftShift(HttpClientRequest self, Object o) {
+        self.end o?.toString()
     }
 
     static MultiMap getHeaders(HttpClientRequest self) {
