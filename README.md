@@ -52,6 +52,27 @@ req >> { response -> // req.handler {
 req++ // req.end()
 ```
 
+### Dealing with async results / futures
+
+```groovy
+vertx.executeBlocking({ future ->
+  try {
+    Thread.sleep(1000)
+    future += 'completed !' // plus operator means complete('...'), plusplus operator means complete() 
+  } catch(all) {
+    future -= 'interrupted :(' // minus operator means fail
+  }
+}, { asyncResult ->
+  if (asyncResult) { // asBoolean method overloading => you can use it in an if statement to check if succeeded() 
+    println 'It has succeeded !'
+  }
+  boolean successful = +asyncResult && asyncResult.result == 'completed' // +asyncResult is asyncResult.succeeded() and getResult() is defined 
+  boolean unsuccessful = -asyncResult || !asyncResult.result == 'completed' // -asyncResult is asyncResult.failed() and getResult() is defined
+})
+
+```
+
+
 ### Pumping streams
 
 ```groovy
