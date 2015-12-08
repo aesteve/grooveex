@@ -4,6 +4,8 @@ If you want to use Vert.x in Groovy with a less idiomatic but more groovy-ish AP
 
 Have a look at [the tests](/src/test/groovy/com/github/aesteve/vertx/groovy/specs) if you want to have a glimpse at how the sugar looks in action.
 
+Enjoy as part of a healthy diet :)
+
 ## Adding extensions
 
 Since the projects relies on an Groovy extension module, you just have to add the jar to your project. Nothing more.
@@ -132,6 +134,7 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `buff += other` | `buffer.appendBuffer(other)` |
 | `buff += 'something'` | `buffer.appendString('something')` |
 | `buff += "hello $name"` | `buffer.appendString("hello $name".toString()")` |
+| `buff as String` | `buffer.toString('UTF-8')` |
 
 ### RoutingContext
 
