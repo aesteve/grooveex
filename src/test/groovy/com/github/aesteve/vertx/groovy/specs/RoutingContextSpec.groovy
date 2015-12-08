@@ -23,7 +23,7 @@ class RoutingContextSpec extends TestBase {
 			it++
 		}
 		router[PATH] = {
-			it.response << it[KEY]
+			response << it[KEY]
 		}
 		router[FAILED_STATUS] = {
 			it -= STATUS
