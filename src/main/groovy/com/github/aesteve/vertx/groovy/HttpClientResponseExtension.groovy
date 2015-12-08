@@ -14,4 +14,13 @@ class HttpClientResponseExtension {
     static MultiMap getHeaders(HttpClientResponse self) {
         self.headers()
     }
+	
+	static int getStatusCode(HttpClientResponse self) {
+		self.statusCode()
+	}
+	
+	static String getStatusMessage(HttpClientResponse self) {
+		self.statusMessage()
+	}
+
 }

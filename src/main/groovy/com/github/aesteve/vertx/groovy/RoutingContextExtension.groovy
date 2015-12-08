@@ -56,5 +56,15 @@ class RoutingContextExtension {
 	static String getNormalisedPath(RoutingContext self) {
 		self.normalisedPath()
 	}
+	
+	static RoutingContext minus(RoutingContext self, Throwable cause) {
+		self.fail cause
+		self
+	} 
 
+	static RoutingContext minus(RoutingContext self, int status) {
+		self.fail status
+		self
+	}
+	
 }

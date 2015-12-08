@@ -111,7 +111,24 @@ eb['some-address'] >> { message -> // eb.consumer('some-address', { ...
 eb['some-address'] << 'Hello !' // eb.send('some-address', 'Hello !')
 ```
 
-## Complete sugar list
+
+## Rule of thumb
+
+Basically : 
+
+* `a + b` means either `a.append(b)`, `a.write(b)` or `a.complete(b)`
+* `a - b` means `a.fail(b)`
+* `a++` means `a.complete()` or `a.next()`
+* `a << b` means `a.end(b)`
+* `a >> b` means `a.handler(b)`
+* `a >>> b` means `a.bodyHandler(b)` (a "global" handler)
+* `a | b` means `a.pipe(b)` (pumps)
+* `+a` means `a.succeeeded()` `a.completed()`
+* `-a` means `a.failed()`
+
+Every getter method like `a.response()`, `a.request()` will also be available as an object attribute `a.response`, `a.request` (through `a.getResponse()` - Groovy convention -).  
+
+## Complete list
 
 ### WriteStream
 
@@ -172,7 +189,10 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `ctx.statusCode` | `ctx.statusCode()` |
 | `ctx.user` | `ctx.user()` |
 | `ctx.vertx` | `ctx.vertx()` |
+| `ctx - 400` | `ctx.fail(400)` |
+| `ctx - new RuntimeException()` | `ctx.fail(new RuntimeException())` |
 | `ctx++` | `ctx.next()` |
+
 
 NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
 
