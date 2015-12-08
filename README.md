@@ -200,6 +200,31 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | `msg.body` | `msg.body()` |
 | `msg << 'reply'` | `msg.reply('reply')` |
 
+### AsyncResult
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `ar.failed` | `ar.failed()` |
+| `-ar` | `ar.failed()` |
+| `ar.succeeded` | `ar.succeeded()` |
+| `+ar` | `ar.succeeded()` |
+| `ar.result` | `ar.result()` |
+| `ar.cause` | `ar.cause()` |
+| `if (ar) {` | `if (ar?.succeeded()) {` |
+
+
+### Future
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `f += result` | `f.complete(result)` |
+| `f -= cause` | `f.fail(cause)` |
+| `f + result` | `f.complete(result)` |
+| `f - cause` | `f.fail(cause)` |
+| `f++` | `f.complete()` |
+
+
+
 ### EventBus
 
 | Groovy sugar  | Vert.x standard |
