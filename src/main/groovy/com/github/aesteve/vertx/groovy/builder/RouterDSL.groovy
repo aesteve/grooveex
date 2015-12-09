@@ -128,10 +128,10 @@ public class RouterDSL {
         if (cookies) {
             route.handler(CookieHandler.create())
         }
-        route.handler({ context ->
+        route.handler { context ->
             closure.delegate = context
             closure.call(context)
-        })
+        }
     }
 
     def methodMissing(String name, args) {

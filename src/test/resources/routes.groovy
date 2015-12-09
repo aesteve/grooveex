@@ -51,4 +51,11 @@ router {
             response << "CORS"
         }
     }
+	route "/blocking", {
+		blocking = true
+		get {
+			sleep 3000 // check no exception is thrown in console
+			response << 'done !'
+		}
+	}
 }

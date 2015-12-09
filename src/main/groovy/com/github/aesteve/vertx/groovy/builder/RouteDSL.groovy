@@ -17,6 +17,7 @@ class RouteDSL {
     def sessionStore
     private List<Route> routes = []
     private List<List<Object>> missingMethods = []
+	boolean blocking
 
     def static make(RouterDSL parent, String path, Closure closure, boolean cookies) {
         RouteDSL routeDSL = new RouteDSL(path: path, parent: parent, cookies: cookies)
@@ -89,10 +90,17 @@ class RouteDSL {
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
-        route.handler { context ->
-            handler.delegate = context
-            handler context
-        }
+		if (!blocking) {
+			route.handler { context ->
+				handler.delegate = context
+				handler context
+			}
+		} else {
+			route.blockingHandler { context ->
+				handler.delegate = context
+				handler context
+			}
+		}
         routes << route
     }
 

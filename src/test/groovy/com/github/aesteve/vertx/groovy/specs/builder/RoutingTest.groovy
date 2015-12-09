@@ -20,7 +20,7 @@ public class RoutingTest extends BuilderTestBase {
 		String expected = new JsonBuilder([result: "GET"]).toString()
         HttpClientRequest req = client["/handlers"]
         req >> { HttpClientResponse response ->
-            context.assertEquals 200, response.statusCode()
+            context.assertEquals response.statusCode, 200
             response >>> { Buffer buffer ->
                 context.assertEquals buffer as String, expected
                 async.complete()
@@ -36,7 +36,7 @@ public class RoutingTest extends BuilderTestBase {
         Async async = context.async()
         HttpClientRequest req = client["/handlers"]
         req >> { HttpClientResponse response ->
-            context.assertEquals response.statusCode(), 404
+            context.assertEquals 404, response.statusCode
             async.complete()
         }
         req.headers[ACCEPT] = "application/xml"
@@ -50,7 +50,7 @@ public class RoutingTest extends BuilderTestBase {
         Async async = context.async()
         HttpClientRequest req = client.post "/handlers"
         req >> { response ->
-            context.assertEquals response.statusCode(), 200
+            context.assertEquals 200, response.statusCode
             response >> { Buffer buffer ->
                 context.assertEquals buffer as String, payload as String
                 async.complete()
@@ -67,7 +67,7 @@ public class RoutingTest extends BuilderTestBase {
 		JsonBuilder result = new JsonBuilder([result: "closure"])
         HttpClientRequest req = client["/staticClosure"]
         req >> { response ->
-            context.assertEquals 200, response.statusCode()
+            context.assertEquals 200, response.statusCode
             response >>> { buffer ->
                 context.assertEquals buffer as String, result as String
                 async.complete()
@@ -75,4 +75,18 @@ public class RoutingTest extends BuilderTestBase {
         }
         req++
     }
+	
+	@Test
+	public void testBlocking(TestContext context) {
+		Async async = context.async()
+		HttpClientRequest req = client['/blocking']
+		req >> { response ->
+			context.assertEquals 200, response.statusCode
+			response >>> { buffer ->
+				context.assertEquals buffer as String, 'done !'
+				async.complete()
+			}
+		}
+		req++
+	}
 }
