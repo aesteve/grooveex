@@ -1,5 +1,8 @@
 package com.github.aesteve.vertx.groovy
 
+import io.vertx.core.AsyncResult
+import io.vertx.core.Handler
+
 import java.util.Set
 import groovy.transform.TypeChecked 
 import io.vertx.groovy.core.Vertx 
@@ -65,6 +68,17 @@ class RoutingContextExtension {
 	static RoutingContext minus(RoutingContext self, int status) {
 		self.fail status
 		self
+	}
+
+	static<T> Handler<AsyncResult<T>> rightShift(RoutingContext self, Closure clos) {
+		return { AsyncResult<T> res ->
+			if (res.failed()) {
+				self.fail res.cause()
+			} else {
+				clos.delegate = self
+				clos res.result()
+			}
+		} as Handler
 	}
 	
 }

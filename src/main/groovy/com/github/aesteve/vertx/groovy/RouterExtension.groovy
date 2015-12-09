@@ -8,7 +8,7 @@ class RouterExtension {
 	static Route putAt(Router self, String path, Closure handler) {
 		self.route(path).handler { ctx ->
 			handler.delegate = ctx
-			handler(ctx)
+			handler ctx
 		}
 	}
 

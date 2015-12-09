@@ -241,12 +241,14 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `ctx - 400` | `ctx.fail(400)` |
 | `ctx - new RuntimeException()` | `ctx.fail(new RuntimeException())` |
 | `ctx++` | `ctx.next()` |
+| `ctx >> closure` | `{ res -> if (res.failed) { ctx.fail(res.cause()) } else { closure(res.result()) } }` |
 
 
 NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
+NB : the last method is a very common pattern when you invoke an async method that takes an Handler<AsyncResult> as parameter. If it fails, you just want the context to fail, else, you'll need the result to do something with.
 
 ### HttpServerRequest
-
+outing
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `req.params` | `req.params()` |
