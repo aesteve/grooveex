@@ -37,7 +37,7 @@ router {
         }
     }
     sockJS '/sockjs/*', { socket ->
-        socket.handler socket.&write
+        socket >> socket.&write
     }
     //favicon "my_favicon.ico"
     route '/login', {
