@@ -70,15 +70,9 @@ class RoutingContextExtension {
 		self
 	}
 
-	static<T> Handler<AsyncResult<T>> rightShift(RoutingContext self, Closure clos) {
-		return { AsyncResult<T> res ->
-			if (res.failed()) {
-				self.fail res.cause()
-			} else {
-				clos.delegate = self
-				clos res.result()
-			}
-		} as Handler
+	static getFail(RoutingContext self) {
+		new FailOr(ctx: self)
 	}
-	
+
+
 }

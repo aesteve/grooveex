@@ -44,9 +44,9 @@ class RoutingContextSpec extends TestBase {
 			it -= ex
 		}
 		router[ASYNC_SERVICE] = {
-			fakeServiceMethod( request.params['fail'].toBoolean(), it >> { res ->
+			fakeServiceMethod request.params['fail'].toBoolean(), fail | { res ->
 				response << res
-			})
+			}
 		}
 	}
 	

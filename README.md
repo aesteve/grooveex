@@ -112,7 +112,7 @@ eb['some-address'] << 'Hello !' // eb.send('some-address', 'Hello !')
 ### Invoking an async service
 ```groovy
 router.get '/async' >> { context ->
-  invokeAsyncMethod request.params['something'], context >> { result ->
+  invokeAsyncMethod request.params['something'], fail | { result ->
     response << result
   }
 }
