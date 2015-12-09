@@ -6,53 +6,53 @@ import groovy.json.JsonBuilder
 TestController ctrlerInstance = new TestController()
 
 router {
-    get "/simpleGet", {
-        response << "Simple GET"
+    get '/simpleGet', {
+        response << 'Simple GET'
     }
-    route "/handlers", {
-        produces "application/json"
-        consumes "application/json"
+    route '/handlers', {
+        produces 'application/json'
+        consumes 'application/json'
         get {
-            response << new JsonBuilder([result: "GET"])
+            response << new JsonBuilder([result: 'GET'])
         }
         post {
             response << bodyAsString // simply echoes body
         }
     }
-    get "/staticClosure", TestStaticController.testClosure
-    get "/controllerInstance", ctrlerInstance.&someMethod
-    staticHandler "/assets/*"
-    staticHandler "/instrumented-assets/*", {
+    get '/staticClosure', TestStaticController.testClosure
+    get '/controllerInstance', ctrlerInstance.&someMethod
+    staticHandler '/assets/*'
+    staticHandler '/instrumented-assets/*', {
         get {
-            request.headers["X-Custom-Header"] = "instrumented"
+            request.headers['X-Custom-Header'] = 'instrumented'
             it++
         }
     }
     // templateHandler "/dynamic/*", HandlebarsTemplateEngine.create()
-    subRouter "/sub", {
+    subRouter '/sub', {
         cookies = true
-        staticHandler "/assets/*", "webroot/subDirectory"
-        get "/firstSubRoute", {
-            response << "firstSubRoute"
+        staticHandler '/assets/*', 'webroot/subDirectory'
+        get '/firstSubRoute', {
+            response << 'firstSubRoute'
         }
     }
-    sockJS "/sockjs/*", { socket ->
+    sockJS '/sockjs/*', { socket ->
         socket.handler socket.&write
     }
     //favicon "my_favicon.ico"
-    route "/login", {
+    route '/login', {
         session([clustered: true])
         get {
             response << session["test"]
         }
     }
-    route "/cors/test", {
+    route '/cors/test', {
         cors "*"
         get {
             response << "CORS"
         }
     }
-	route "/blocking", {
+	route '/blocking', {
 		blocking = true
 		get {
 			sleep 3000 // check no exception is thrown in console
@@ -72,13 +72,13 @@ router {
 			}
 		}
 		route '/sex', {
-			route '/magic', {
+			route '/magic', { // /sugar/sex/magic
 				blocking = true
 				cors '*'
 				get {
 					response.headers['X-Song'] = 'Under the bridge'
 					response.headers['X-Artist'] = 'RHCP'
-					response.headers[DATE] = "Tue, 10 Mar 1992 12:45:26 GMT"
+					response.headers[DATE] = 'Tue, 10 Mar 1992 12:45:26 GMT'
 					response.chunked = true
 					response += 'Is the city I live in...'
 					sleep 1000
