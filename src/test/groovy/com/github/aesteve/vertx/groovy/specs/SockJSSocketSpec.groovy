@@ -50,7 +50,7 @@ class SockJSSocketSpec extends TestBase {
 					async.complete()
 				}
 			}
-			vertx.fileSystem.open filePath, [:], { (it.result() | sock).start() }
+			vertx.fileSystem.open filePath, [:], { (it.result() | sock)++ }
 		}
 	}
 

@@ -95,7 +95,7 @@ HttpRequest req = client["/pump"]
 vertx.fileSystem.open 'test-file', [:], { res ->
   AsyncFile file = res.result()
   Pump filePump = file | req // createPump between readstream and writestream
-  filePump.start()
+  filePump++
 }
 ```
 
@@ -280,6 +280,12 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 | `f - cause` | `f.fail(cause)` |
 | `f++` | `f.complete()` |
 
+
+### Pump
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `pump++` | `pump.start()` |
+| `pump--` | `pump.stop()` |
 
 
 ### EventBus

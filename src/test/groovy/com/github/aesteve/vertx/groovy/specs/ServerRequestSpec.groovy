@@ -25,7 +25,7 @@ class ServerRequestSpec extends TestBase {
 		}
 		router.post("$PATH/pump") >> { ctx ->
 			ctx.response.chunked = true
-			(ctx.request | ctx.response).start()
+			(ctx.request | ctx.response)++
 		}
 	}
 	
