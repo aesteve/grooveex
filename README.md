@@ -109,6 +109,27 @@ eb['some-address'] >> { message -> // eb.consumer('some-address', { ...
 eb['some-address'] << 'Hello !' // eb.send('some-address', 'Hello !')
 ```
 
+### Invoking an async service
+```groovy
+router.get '/async' >> { context ->
+  invokeAsyncMethod request.params['something'], context >> { result ->
+    response << result
+  }
+}
+```
+Equivalent to : 
+```groovy
+router.get('/async').handler { context ->
+  invokeAsyncMethod context.request().params['something'], { res ->
+    if (res.failed()) {
+      context.fail(res.cause())
+    } else {
+      response << res.result()
+    }
+  }
+}
+```
+
 
 ## Rule of thumb
 
@@ -245,6 +266,7 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 
 
 NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
+
 NB : the last method is a very common pattern when you invoke an async method that takes an Handler<AsyncResult> as parameter. If it fails, you just want the context to fail, else, you'll need the result to do something with.
 
 ### HttpServerRequest
