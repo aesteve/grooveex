@@ -55,7 +55,7 @@ req++ // req.end()
 ```groovy
 vertx.executeBlocking({ future ->
   try {
-    Thread.sleep(1000)
+    sleep 1000
     future += 'completed !' // plus operator means complete('...'), plusplus operator means complete() 
   } catch(all) {
     future -= 'interrupted :(' // minus operator means fail
@@ -91,7 +91,7 @@ vertx.createHttpServer().listen()
 HttpClient client = vertx.createHttpClient()
 HttpRequest req = client["/pump"]
 vertx.fileSystem.open 'test-file', [:], { res ->
-  AsyncFile file = res.result()
+  AsyncFile file = res.result
   Pump filePump = file | req // createPump between readstream and writestream
   filePump++
 }
