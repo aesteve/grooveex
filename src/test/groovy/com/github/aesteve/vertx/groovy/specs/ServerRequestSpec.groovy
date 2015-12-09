@@ -31,55 +31,59 @@ class ServerRequestSpec extends TestBase {
 	
 	@Test
 	void testGetAt(TestContext context) {
-		Async async = context.async()
-		HttpClientRequest req = client["$PATH/header"]
-		req >> { response -> 
-			response >>> {
-				context.assertEquals it as String, VAL
-				async.complete()
+		context.async { async ->
+			HttpClientRequest req = client["$PATH/header"]
+			req >> { response -> 
+				response >>> {
+					assertEquals it as String, VAL
+					async++
+				}
 			}
+			req.putHeader(HEADER, VAL)++
 		}
-		req.putHeader(HEADER, VAL)++
 	}
 	
 	@Test
 	void testParams(TestContext context) {
-		Async async = context.async()
-		client.getNow "$PATH/param?$PARAM=$VAL", { response ->
-			response >>> {
-				context.assertEquals it as String, VAL
-				async.complete()
+		context.async { async ->
+			client.getNow "$PATH/param?$PARAM=$VAL", { response ->
+				response >>> {
+					assertEquals it as String, VAL
+					async++
+				}
 			}
 		}
 	}
 	
 	@Test
 	void testPost(TestContext context) {
-		Async async = context.async()
-		Buffer buff = VAL as Buffer
-		HttpClientRequest post = client.post "$PATH/body", { response ->
-			response >>> {
-				context.assertEquals it as String, VAL
-				async.complete()
+		context.async { async ->
+			Buffer buff = VAL as Buffer
+			HttpClientRequest post = client.post "$PATH/body", { response ->
+				response >>> {
+					assertEquals it as String, VAL
+					async++
+				}
 			}
+			post << buff
 		}
-		post << buff
 	}
 	
 	@Test
 	void testPump(TestContext context) {
-		Async async = context.async()
-		Buffer buff = VAL as Buffer
-		Buffer received = Buffer.buffer()
-		HttpClientRequest post = client.post "$PATH/pump", { response ->
-			response >> {
-				received << it
-				if (received.length() == buff.length()) {
-					context.assertEquals it as String, VAL
-					async.complete()
+		context.async { async ->
+			Buffer buff = VAL as Buffer
+			Buffer received = Buffer.buffer()
+			HttpClientRequest post = client.post "$PATH/pump", { response ->
+				response >> {
+					received << it
+					if (received.length() == buff.length()) {
+						assertEquals it as String, VAL
+						async++
+					}
 				}
 			}
+			post << buff
 		}
-		post << buff
 	}
 }

@@ -26,31 +26,33 @@ class SockJSSocketSpec extends TestBase {
 	
 	@Test
 	public void testSocketSugar(TestContext context) {
-		Async async = context.async()
-		Buffer buff = "test" as Buffer
-		client.websocket "/sock/websocket", { WebSocket sock -> 
-			sock.handler {
-				context.assertEquals buff, it
-				async.complete()
+		context.async { async ->
+			Buffer buff = "test" as Buffer
+			client.websocket "/sock/websocket", { WebSocket sock -> 
+				sock.handler {
+					assertEquals buff, it
+					async++
+				}
+				sock += buff
 			}
-			sock += buff
 		}
 	}
 
 	@Test
 	public void testPipeSugar(TestContext context) {
-		String filePath = "src/test/resources/file.txt"
-		Async async = context.async()
-		Buffer fileBuff = vertx.fileSystem.readFileBlocking filePath
-		Buffer buff = Buffer.buffer()
-		client.websocket "/sock/websocket", { WebSocket sock ->
-			sock >> {
-				buff += it // buff << it
-				if (buff.length() >= fileBuff.length()) {
-					async.complete()
+		context.async { async ->
+			String filePath = "src/test/resources/file.txt"
+			Buffer fileBuff = vertx.fileSystem.readFileBlocking filePath
+			Buffer buff = Buffer.buffer()
+			client.websocket "/sock/websocket", { WebSocket sock ->
+				sock >> {
+					buff += it // buff << it
+					if (buff.length() >= fileBuff.length()) {
+						async++
+					}
 				}
+				vertx.fileSystem.open filePath, [:], { (it.result() | sock)++ }
 			}
-			vertx.fileSystem.open filePath, [:], { (it.result() | sock)++ }
 		}
 	}
 

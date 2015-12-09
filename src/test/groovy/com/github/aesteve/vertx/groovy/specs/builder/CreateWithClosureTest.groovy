@@ -18,15 +18,16 @@ class CreateWithClosureTest extends TestBase {
 
     @Test
     void testByClosure(TestContext context) {
-        Async async = context.async()
-        def req = client['/byClosure']
-        req >> { response ->
-            context.assertEquals 200, response.statusCode()
-            response >>> { buff ->
-                context.assertEquals buff as String, 'byClosure'
-                async.complete()
-            }
-        }
-        req++
+		context.async { async ->
+	        def req = client['/byClosure']
+	        req >> { response ->
+	            assertEquals 200, response.statusCode()
+	            response >>> { buff ->
+	                assertEquals buff as String, 'byClosure'
+	                async++
+	            }
+	        }
+	        req++
+		}
     }
 }

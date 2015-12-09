@@ -11,6 +11,7 @@ import org.junit.After
 import org.junit.Before
 
 import org.junit.runner.RunWith
+import io.vertx.groovy.ext.unit.TestContext
 import io.vertx.groovy.ext.unit.junit.VertxUnitRunner
 
 @RunWith(VertxUnitRunner.class)
@@ -26,16 +27,16 @@ abstract class TestBase {
 	protected Router router
 	
 	@Before
-	public void setUpServer() {
+	public void setUpServer(TestContext context) {
 		vertx = Vertx.vertx
 		server = vertx.createHttpServer(serverOptions)
 		router()
-		server.requestHandler(router.&accept).listen()
+		server.requestHandler(router.&accept).listen context.asyncAssertSuccess()
 	}
 	
 	@After
-	public void tearDown() {
-		server.close()
+	public void tearDown(TestContext context) {
+		server.close context.asyncAssertSuccess()
 	}
 	
 	abstract void router()

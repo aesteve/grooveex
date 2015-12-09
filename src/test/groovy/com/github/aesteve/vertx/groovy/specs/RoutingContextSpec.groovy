@@ -35,30 +35,33 @@ class RoutingContextSpec extends TestBase {
 	
 	@Test
 	void testGetPutAndCall(TestContext context) {
-		Async async = context.async()
-		client.getNow PATH, { response -> 
-			response >>> {
-				context.assertEquals it as String, VAL
-				async.complete()
+		context.async { async ->
+			client.getNow PATH, { response -> 
+				response >>> {
+					assertEquals it as String, VAL
+					async++
+				}
 			}
 		}
 	}
 	
 	@Test
 	void testFailWithStatus(TestContext context) {
-		Async async = context.async()
-		client.getNow FAILED_STATUS, { response ->
-			context.assertEquals response.statusCode, STATUS
-			async.complete()
+		context.async { async ->
+			client.getNow FAILED_STATUS, { response ->
+				assertEquals response.statusCode, STATUS
+				async++
+			}
 		}
 	}
 
 	@Test
 	void testFailWithThrowable(TestContext context) {
-		Async async = context.async()
-		client.getNow FAILED_THROW, { response ->
-			context.assertEquals response.statusCode, 500
-			async.complete()
+		context.async { async ->
+			client.getNow FAILED_THROW, { response ->
+				assertEquals response.statusCode, 500
+				async++
+			}
 		}
 	}
 }
