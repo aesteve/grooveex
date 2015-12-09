@@ -12,4 +12,8 @@ class RouteExtension {
 		}
 	}
 
+	static Route rightShift(Route self, Handler handler) {
+		self.handler handler
+	}
+
 }

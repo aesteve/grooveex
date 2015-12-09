@@ -89,10 +89,10 @@ class RouteDSL {
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
-        route.handler({ context ->
+        route.handler { context ->
             handler.delegate = context
-            handler(context)
-        })
+            handler context
+        }
         routes << route
     }
 
