@@ -15,7 +15,7 @@ router {
             response << new JsonBuilder([result: "GET"])
         }
         post {
-            response << bodyAsString
+            response << bodyAsString // simply echoes body
         }
     }
     get "/staticClosure", TestStaticController.testClosure
@@ -29,7 +29,7 @@ router {
     }
     // templateHandler "/dynamic/*", HandlebarsTemplateEngine.create()
     subRouter "/sub", {
-        cookies: true
+        cookies = true
         staticHandler "/assets/*", "webroot/subDirectory"
         get "/firstSubRoute", {
             response << "firstSubRoute"
