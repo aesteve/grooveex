@@ -33,8 +33,8 @@ Vertx vertx = Vertx.vertx
 // Server-side
 Router router = Router.router vertx
 router['/hello'] >> { // router.route('hello').handler {
-  def name = it.request.params['name'] // params is available through getParams => as a attribute
-  it.response << "Hello $name"  // it.response.end("Hello $name")
+  def name = request.params['name'] // params is available through getParams => as a attribute
+  response << "Hello $name"  // it.response.end("Hello $name")
 }
 server.requestHandler router.&accept
 vertx.createHttpServer().listen()
@@ -44,7 +44,7 @@ HttpClient client = vertx.createHttpClient()
 HttpRequest req = client["/hello?name=World"] // client.get "/hello?name=World"
 req >> { response -> // req.handler {
   response >>> { // response.bodyHandler
-    assert it.toString('UTF-8') == 'Hello World'
+    assert it as String == 'Hello World' // as String => buffer.toString 'UTF-8'
   } 
 } 
 req++ // req.end()
@@ -80,7 +80,7 @@ Vertx vertx = Vertx.vertx
 Router router = Router.router vertx
 router['/pump'] >> {
   Buffer received = Buffer.buffer()
-  it.request >> { buff -> // request handler
+  request >> { buff -> // request handler
     received += buff // appends the received buffer (received << buff also works) 
   }
 }
