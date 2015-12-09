@@ -1,5 +1,6 @@
 import controllers.TestController
 import controllers.TestStaticController
+import static io.vertx.core.http.HttpHeaders.DATE
 import groovy.json.JsonBuilder
 
 TestController ctrlerInstance = new TestController()
@@ -56,6 +57,36 @@ router {
 		get {
 			sleep 3000 // check no exception is thrown in console
 			response << 'done !'
+		}
+	}
+	route '/sugar', {
+		get {
+			response << 'Yes please !'
+		}
+		post {
+			String sent = body as String
+			if (sent == 'I want that sugar sweet') {
+				response << "Don't let nobody touch it"
+			} else {
+				fail 400
+			}
+		}
+		route '/sex', {
+			route '/magic', {
+				blocking = true
+				cors '*'
+				get {
+					response.headers['X-Song'] = 'Under the bridge'
+					response.headers['X-Artist'] = 'RHCP'
+					response.headers[DATE] = "Tue, 10 Mar 1992 12:45:26 GMT"
+					response.chunked = true
+					response += 'Is the city I live in...'
+					sleep 1000
+					response += '...The city of Angels'
+					sleep 1000
+					response << ' - RHCP (1991)'
+				}
+			}
 		}
 	}
 }

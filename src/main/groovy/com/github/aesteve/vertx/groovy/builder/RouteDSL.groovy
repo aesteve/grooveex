@@ -19,8 +19,13 @@ class RouteDSL {
     private List<List<Object>> missingMethods = []
 	boolean blocking
 
-    def static make(RouterDSL parent, String path, Closure closure, boolean cookies) {
-        RouteDSL routeDSL = new RouteDSL(path: path, parent: parent, cookies: cookies)
+    def static make(RouterDSL parent, String path, Closure closure, boolean cookies, String parentPath = null) {
+		String completePath = ''
+		if (parentPath) {
+			completePath += parentPath
+		}
+		completePath += path
+		RouteDSL routeDSL = new RouteDSL(path: completePath, parent: parent, cookies: cookies)
         closure.resolveStrategy = Closure.DELEGATE_FIRST
         closure.delegate = routeDSL
         closure.call()
@@ -75,6 +80,10 @@ class RouteDSL {
             sessionStore = ClusteredSessionStore.create(parent.vertx)
         }
     }
+	
+	def route(String path, Closure clos) {
+		RouteDSL.make parent, path, clos, cookies, this.path
+	}
 
     private void createRoute(HttpMethod method, Closure handler, boolean useBodyHandler = false) {
         if (useBodyHandler) {

@@ -124,11 +124,10 @@ public class RouterDSL {
     }
 
     def makeRoute(String path, HttpMethod method, Closure closure) {
-        def route = router.route(method, path)
         if (cookies) {
-            route.handler(CookieHandler.create())
+            router.route(method, path).handler(CookieHandler.create())
         }
-        route.handler { context ->
+        router.route(method, path).handler { context ->
             closure.delegate = context
             closure.call(context)
         }

@@ -137,6 +137,45 @@ Just have a look at the [routing file example](blob/master/src/test/resources/ro
 It makes use of the overloaded operators like `<<` or `>>` but also "wraps" Vert.x's handler closure to inject `RoutingContext` as delegate, so that you can directly write `response.headers` for instance and not `it.response().headers`.
 Every method available in `RoutingContext` will be directly available within your closure.
 
+```groovy
+RouterBuilder builder = new RouterBuilder() 
+Router router = builder.make {
+  route '/blood' {
+    // ...
+    route '/sugar' {
+      get {
+        response << 'Yes please !'
+      }
+      post {
+        String sent = body as String
+        if (sent == 'I want that sugar sweet') {
+          response << "Don't let nobody touch it"
+        } else {
+          fail 400
+        }
+      }
+      route '/sex' {
+        route '/magic' {
+          blocking = true
+          cors '*'
+          get {
+            response.headers['X-Song'] = 'Under the bridge'
+            response.headers['X-Artist'] = 'RHCP'
+            response.headers[HttpHeaders.DATE] = "Tue, 10 Mar 1992 12:45:26 GMT"
+            response.chunked = true
+            response += 'Is the city I live in...'
+            sleep 1000
+            response += '...The city of Angels'
+            sleep 1000
+            response << '- RHCP (1991)'
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 
 ## Complete list of syntaxic sugar
 

@@ -14,6 +14,20 @@ import static org.junit.Assert.assertEquals
 
 public class RoutingTest extends BuilderTestBase {
 
+	@Test
+	public void testSimpleGet(TestContext context) {
+		context.async().with {
+			HttpClientRequest req = client['/simpleGet']
+			req >> { response ->
+				response >>> {
+					context.assertEquals it as String, 'Simple GET'
+					complete()
+				}
+			}
+			req++
+		}
+	}
+	
     @Test
     public void testGetHandler(TestContext context) {
         Async async = context.async()
