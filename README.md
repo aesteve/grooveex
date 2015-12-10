@@ -270,7 +270,7 @@ NB : you already can call `ctx++` (without this lib) since the method on `Routin
 NB : the last method is a very common pattern when you invoke an async method that takes an Handler<AsyncResult> as parameter. If it fails, you just want the context to fail, else, you'll need the result to do something with.
 
 ### HttpServerRequest
-outing
+
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `req.params` | `req.params()` |
