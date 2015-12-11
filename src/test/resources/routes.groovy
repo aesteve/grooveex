@@ -1,6 +1,6 @@
 import controllers.TestController
 import controllers.TestStaticController
-import static io.vertx.core.http.HttpHeaders.DATE
+import static io.vertx.core.http.HttpHeaders.*
 import groovy.json.JsonBuilder
 
 TestController ctrlerInstance = new TestController()
@@ -87,6 +87,14 @@ router {
 					response << ' - RHCP (1991)'
 				}
 			}
+		}
+	}
+	route '/expect', {
+		expect { params['exists'] }
+		expect { Long.valueOf params['long'] }
+		expect { headers[AUTHORIZATION]?.indexOf('token ') == 0 }
+		get {
+			response << "everything's fine"
 		}
 	}
 }

@@ -5,6 +5,7 @@ import io.vertx.core.Handler
 
 import java.util.Set
 import groovy.transform.TypeChecked 
+import io.vertx.groovy.core.MultiMap
 import io.vertx.groovy.core.Vertx 
 import io.vertx.groovy.core.eventbus.EventBus
 import io.vertx.groovy.core.http.HttpServerRequest 
@@ -63,6 +64,14 @@ class RoutingContextExtension {
 	
 	static EventBus getEventBus(RoutingContext self) {
 		self.vertx().eventBus()
+	}
+	
+	static MultiMap getParams(RoutingContext self) {
+		self.request().params()
+	}
+	
+	static MultiMap getHeaders(RoutingContext self) {
+		self.request().headers()
 	}
 	
 	static RoutingContext minus(RoutingContext self, Throwable cause) {

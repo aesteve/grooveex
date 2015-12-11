@@ -1,5 +1,6 @@
 package com.github.aesteve.vertx.groovy.builder
 
+import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.handler.BodyHandler
@@ -18,6 +19,7 @@ class RouteDSL {
     private List<Route> routes = []
     private List<List<Object>> missingMethods = []
 	boolean blocking
+	Set<Eval> expectations = []
 
     def static make(RouterDSL parent, String path, Closure closure, boolean cookies, String parentPath = null) {
 		String completePath = ''
@@ -71,6 +73,10 @@ class RouteDSL {
         parent.router.route(path).handler(CorsHandler.create(origin))
     }
 
+	def expect(Closure expectation) {
+		expectations << expectation
+	}
+	
     def session(Map options) {
         if (options.store) {
             sessionStore = options.store
@@ -95,6 +101,21 @@ class RouteDSL {
         if (sessionStore) {
             parent.router.route(path).handler(SessionHandler.create(sessionStore))
         }
+		expectations.each { expectation ->
+			parent.router.route(method, path).handler { ctx ->
+				try {
+					expectation.delegate = ctx
+					boolean expected = expectation(ctx)?.asBoolean()
+					if (!expected) {
+						ctx.fail 400
+					} else {
+						ctx++
+					}
+				} catch(all) {
+					ctx.fail 400
+				}
+			}
+		}
         Route route = parent.router.route(method, path)
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
