@@ -150,13 +150,15 @@ Every getter method like `a.response()`, `a.request()` will also be available as
 
 
 
-### RouterBuilder
+## RouterBuilder
 
 On top of the syntaxic sugar, you can use the `RouterBuilder` class to create a vertx-web router from a closure.
 
 Just have a look at the [routing file example](blob/master/src/test/resources/routes.groovy) to see how it looks like.
 It makes use of the overloaded operators like `<<` or `>>` but also "wraps" Vert.x's handler closure to inject `RoutingContext` as delegate, so that you can directly write `response.headers` for instance and not `it.response().headers`.
 Every method available in `RoutingContext` will be directly available within your closure.
+
+### Nesting routes
 
 ```groovy
 RouterBuilder builder = new RouterBuilder() 
@@ -197,6 +199,25 @@ Router router = builder.make {
 }
 ```
 
+### Check/Expect
+
+```groovy
+route '/expect', { // fails with 400, even if an exception is thrown (be careful !)
+	expect { params['exists'] }
+	expect { Long.valueOf params['long'] } // can throw NumberFormatException -> but 400 anyway
+	expect { headers[AUTHORIZATION]?.indexOf('token ') == 0 }
+	get {
+		response << "everything's fine"
+	}
+}
+route '/check', { // fails with the specified statusCode, and doesn't swallow exceptions
+	check { params['token'] } | 401
+	check { params['token'] == 'magic' } | 403
+	get {
+		response << "everything's fine"
+	}
+}
+```
 
 ## Complete list of syntaxic sugar
 
