@@ -46,6 +46,10 @@ class RoutingContextSpec extends TestBase {
 		router[ASYNC_SERVICE] = {
 			fakeServiceMethod request.params['fail'].toBoolean(), fail | response.&end
 		}
+		router['/eventbus'] = {
+			eventBus['test-address'] << 'something'
+			response << 'sent'
+		}
 	}
 	
 	@Test
@@ -100,6 +104,19 @@ class RoutingContextSpec extends TestBase {
 					async++
 				}
 			}
+		}
+	}
+	
+	@Test
+	void testEventBus(TestContext context) {
+		context.async { async ->
+			vertx.eventBus['test-address'] >> { msg ->
+				assertEquals msg.body as String, 'something' 
+				async.complete()
+			}
+			client.getNow '/eventbus', { response ->
+				assertEquals response.statusCode, 200
+			} 
 		}
 	}
 }

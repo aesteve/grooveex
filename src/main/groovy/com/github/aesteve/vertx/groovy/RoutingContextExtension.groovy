@@ -6,6 +6,7 @@ import io.vertx.core.Handler
 import java.util.Set
 import groovy.transform.TypeChecked 
 import io.vertx.groovy.core.Vertx 
+import io.vertx.groovy.core.eventbus.EventBus
 import io.vertx.groovy.core.http.HttpServerRequest 
 import io.vertx.groovy.core.http.HttpServerResponse 
 import io.vertx.groovy.ext.auth.User 
@@ -58,6 +59,10 @@ class RoutingContextExtension {
 
 	static String getNormalisedPath(RoutingContext self) {
 		self.normalisedPath()
+	}
+	
+	static EventBus getEventBus(RoutingContext self) {
+		self.vertx().eventBus()
 	}
 	
 	static RoutingContext minus(RoutingContext self, Throwable cause) {
