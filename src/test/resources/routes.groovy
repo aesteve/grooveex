@@ -97,4 +97,10 @@ router {
 			response << "everything's fine"
 		}
 	}
+	route '/check', {
+		check { params['token'] } | 401
+		get {
+			response << "everything's fine"
+		}
+	}
 }

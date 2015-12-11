@@ -20,6 +20,7 @@ class RouteDSL {
     private List<List<Object>> missingMethods = []
 	boolean blocking
 	Set<Eval> expectations = []
+	Set<Checker> checkers = []
 
     def static make(RouterDSL parent, String path, Closure closure, boolean cookies, String parentPath = null) {
 		String completePath = ''
@@ -77,6 +78,12 @@ class RouteDSL {
 		expectations << expectation
 	}
 	
+	Checker check(Closure check) {
+		Checker checker = new Checker(check:check) 
+		checkers << checker
+		checker
+	}
+	
     def session(Map options) {
         if (options.store) {
             sessionStore = options.store
@@ -115,6 +122,9 @@ class RouteDSL {
 					ctx.fail 400
 				}
 			}
+		}
+		checkers.each {
+			parent.router.route(method, path).handler it as Handler
 		}
         Route route = parent.router.route(method, path)
         missingMethods.each { methodMissing ->
