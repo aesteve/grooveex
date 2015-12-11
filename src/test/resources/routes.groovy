@@ -99,6 +99,7 @@ router {
 	}
 	route '/check', {
 		check { params['token'] } | 401
+		check { params['token'] == 'magic' } | 403
 		get {
 			response << "everything's fine"
 		}

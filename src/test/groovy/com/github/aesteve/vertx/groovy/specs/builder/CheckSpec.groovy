@@ -26,6 +26,18 @@ class CheckSpec extends BuilderTestBase {
     }
 	
 	@Test
+	public void testCheckFail2(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client['/check?token=something']
+			req >> { response ->
+				assertEquals 403, response.statusCode
+				async++
+			}
+			req++
+		}
+	}
+	
+	@Test
 	public void testCheckFail(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/check']
