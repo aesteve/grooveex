@@ -21,6 +21,8 @@ class RouteDSL {
 	boolean blocking
 	List<Eval> expectations = []
 	List<Checker> checkers = []
+    List<String> consumes = []
+    List<String> produces = []
 
     def static make(RouterDSL parent, String path, Closure closure, boolean cookies, String parentPath = null) {
 		String completePath = ''
@@ -95,11 +97,11 @@ class RouteDSL {
     }
 
     def consumes(String contentType) {
-        parent.consumes contentType
+        consumes << contentType
     }
 
     def produces(String contentType) {
-        parent.produces contentType
+        produces << contentType
     }
 
     def route(String path, Closure clos) {
@@ -135,8 +137,10 @@ class RouteDSL {
 			parent.router.route(method, path).handler it as Handler
 		}
         Route route = parent.router.route(method, path)
-        parent.consumes.each { route.consumes it }
-        parent.produces.each { route.consumes it }
+        consumes.addAll parent.consumes
+        produces.addAll parent.produces
+        consumes.each { route.consumes it }
+        produces.each { route.consumes it }
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
@@ -146,7 +150,9 @@ class RouteDSL {
 				handler context
 			}
 		} else {
+            println "create blocking route $route.path"
 			route.blockingHandler { context ->
+                println "blocking handler $path"
 				handler.delegate = context
 				handler context
 			}
