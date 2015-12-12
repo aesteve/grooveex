@@ -163,9 +163,9 @@ Every method available in `RoutingContext` will be directly available within you
 ```groovy
 RouterBuilder builder = new RouterBuilder() 
 Router router = builder.make {
-  route '/blood' {
+  route '/blood', {
     // ...
-    route '/sugar' {
+    route '/sugar', {
       get {
         response << 'Yes please !'
       }
@@ -177,8 +177,8 @@ Router router = builder.make {
           fail 400
         }
       }
-      route '/sex' {
-        route '/magic' {
+      route '/sex', {
+        route '/magic', {
           blocking = true
           cors '*'
           get {
