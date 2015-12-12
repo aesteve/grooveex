@@ -134,7 +134,9 @@ class RouteDSL {
 		checkers.each {
 			parent.router.route(method, path).handler it as Handler
 		}
-inherit co
+        Route route = parent.router.route(method, path)
+        parent.consumes.each { route.consumes it }
+        parent.produces.each { route.consumes it }
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
