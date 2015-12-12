@@ -44,9 +44,13 @@ public class RouterDSL {
         dsl
     }
 
-    def staticHandler(String path, Closure closure = null) {
+    def staticHandler(String path, String webroot, Closure closure = null) {
         if (!staticHandler) {
-            staticHandler = StaticHandler.create()
+            if (webroot) {
+                staticHandler = StaticHandler.create webroot
+            } else {
+                staticHandler = StaticHandler.create()
+            }
         }
         if (closure) {
             RouteDSL dsl = RouteDSL.make(this, path, cookies)
@@ -55,11 +59,8 @@ public class RouterDSL {
         router.route(path).handler(staticHandler)
     }
 
-    def staticHandler(String path, String webroot, Closure closure = null) {
-        if (closure) {
-            RouteDSL.make(this, path, closure, cookies)
-        }
-        router.route(path).handler(StaticHandler.create(webroot))
+    def staticHandler(String path, Closure closure = null) {
+        staticHandler(path, null, closure)
     }
 
     def templateHandler(String path, def engine, Closure closure = null) {

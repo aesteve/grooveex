@@ -22,16 +22,16 @@ router {
     get('/staticClosure') >> TestStaticController.testClosure
     get('/controllerInstance') >> ctrlerInstance.&someMethod
     staticHandler '/assets/*'
-    staticHandler '/instrumented-assets/*', {
+    staticHandler('/instrumented-assets/*') {
         get {
-            request.headers['X-Custom-Header'] = 'instrumented'
+            response.headers['X-Custom-Header'] = 'instrumented'
             it++
         }
     }
     // templateHandler "/dynamic/*", HandlebarsTemplateEngine.create()
     subRouter('/sub') {
         cookies = true
-        staticHandler '/assets/*', 'webroot/subDirectory'
+        staticHandler '/assets/*', 'webroot/subdirectory'
         get('/firstSubRoute') >> {
             response << 'firstSubRoute'
         }
