@@ -35,6 +35,11 @@ router {
         get '/firstSubRoute', {
             response << 'firstSubRoute'
         }
+		route '/secondSubRoute', {
+			get {
+				response << 'secondSubRoute'
+			}
+		}
     }
     sockJS '/sockjs/*', { socket ->
         socket >> socket.&write
@@ -102,6 +107,20 @@ router {
 		check { params['token'] == 'magic' } | 403
 		get {
 			response << "everything's fine"
+		}
+	}
+	subRouter '/json', {
+		consumes 'application/json'
+		produces 'application/json'
+		get '/pure', {
+			response << 'json'
+		}
+		route '/plain', {
+			consumes 'text/plain'
+			produces 'text/plain'
+			get {
+				response << 'json|plain'
+			}
 		}
 	}
 }

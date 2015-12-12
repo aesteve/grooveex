@@ -93,8 +93,16 @@ class RouteDSL {
             sessionStore = ClusteredSessionStore.create(parent.vertx)
         }
     }
-	
-	def route(String path, Closure clos) {
+
+    def consumes(String contentType) {
+        parent.consumes contentType
+    }
+
+    def produces(String contentType) {
+        parent.produces contentType
+    }
+
+    def route(String path, Closure clos) {
 		RouteDSL.make parent, path, clos, cookies, this.path
 	}
 
@@ -108,7 +116,7 @@ class RouteDSL {
         if (sessionStore) {
             parent.router.route(path).handler(SessionHandler.create(sessionStore))
         }
-		expectations.each { expectation ->
+        expectations.each { expectation ->
 			parent.router.route(method, path).handler { ctx ->
 				try {
 					expectation.delegate = ctx
@@ -126,7 +134,7 @@ class RouteDSL {
 		checkers.each {
 			parent.router.route(method, path).handler it as Handler
 		}
-        Route route = parent.router.route(method, path)
+inherit co
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
