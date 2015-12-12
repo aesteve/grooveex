@@ -19,8 +19,8 @@ class RouteDSL {
     private List<Route> routes = []
     private List<List<Object>> missingMethods = []
 	boolean blocking
-	Set<Eval> expectations = []
-	Set<Checker> checkers = []
+	List<Eval> expectations = []
+	List<Checker> checkers = []
 
     def static make(RouterDSL parent, String path, Closure closure, boolean cookies, String parentPath = null) {
 		String completePath = ''

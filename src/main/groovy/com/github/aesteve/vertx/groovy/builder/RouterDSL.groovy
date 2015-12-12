@@ -10,6 +10,7 @@ import io.vertx.groovy.ext.web.handler.FaviconHandler
 import io.vertx.groovy.ext.web.handler.StaticHandler
 import io.vertx.groovy.ext.web.handler.TemplateHandler
 import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
+import io.vertx.groovy.ext.web.templ.TemplateEngine
 
 public class RouterDSL {
 
