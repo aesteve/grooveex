@@ -39,7 +39,8 @@ public class RouterDSL {
             staticHandler = StaticHandler.create()
         }
         if (closure) {
-            RouteDSL.make(this, path, closure, cookies)
+            RouteDSL dsl = RouteDSL.make(this, path, cookies)
+            dsl(closure)
         }
         router.route(path).handler(staticHandler)
     }
@@ -96,8 +97,8 @@ public class RouterDSL {
         this
     }
 
-    def route(String path, Closure closure) {
-        RouteDSL.make(this, path, closure, cookies)
+    def route(String path, Closure clos) {
+        RouteDSL.make(this, path, cookies)(clos)
     }
 
     def get(String path = null, Closure closure) {

@@ -9,7 +9,7 @@ router {
     get '/simpleGet', {
         response << 'Simple GET'
     }
-    route '/handlers', {
+    route('/handlers') {
         produces 'application/json'
         consumes 'application/json'
         get {
@@ -45,26 +45,26 @@ router {
         socket >> socket.&write
     }
     //favicon "my_favicon.ico"
-    route '/login', {
+    route('/login') {
         session([clustered: true])
         get {
             response << session["test"]
         }
     }
-    route '/cors/test', {
+    route('/cors/test') {
         cors "*"
         get {
             response << "CORS"
         }
     }
-	route '/blocking', {
+	route('/blocking') {
 		blocking = true
 		get {
 			sleep 3000 // check no exception is thrown in console
 			response << 'done !'
 		}
 	}
-	route '/sugar', {
+	route('/sugar') {
 		get {
 			response << 'Yes please !'
 		}
@@ -76,7 +76,7 @@ router {
 				fail 400
 			}
 		}
-		route '/sex', {
+		route('/sex') {
 			route '/magic', { // /sugar/sex/magic
 				blocking = true
 				cors '*'
@@ -94,7 +94,7 @@ router {
 			}
 		}
 	}
-	route '/expect', {
+	route('/expect') {
 		expect { params['exists'] }
 		expect { Long.valueOf params['long'] }
 		expect { headers[AUTHORIZATION]?.indexOf('token ') == 0 }
@@ -102,7 +102,7 @@ router {
 			response << "everything's fine"
 		}
 	}
-	route '/check', {
+	route('/check') {
 		check { params['token'] } | 401
 		check { params['token'] == 'magic' } | 403
 		get {
@@ -115,7 +115,7 @@ router {
 		get '/pure', {
 			response << 'json'
 		}
-		route '/plain', {
+		route('/plain') {
 			consumes 'text/plain'
 			produces 'text/plain'
 			get {

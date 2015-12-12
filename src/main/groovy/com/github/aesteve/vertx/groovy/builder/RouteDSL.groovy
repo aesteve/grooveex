@@ -24,15 +24,18 @@ class RouteDSL {
     List<String> consumes = []
     List<String> produces = []
 
-    def static make(RouterDSL parent, String path, Closure closure, boolean cookies, String parentPath = null) {
+    def static make(RouterDSL parent, String path, boolean cookies, String parentPath = null) {
 		String completePath = ''
 		if (parentPath) {
 			completePath += parentPath
 		}
 		completePath += path
-		RouteDSL routeDSL = new RouteDSL(path: completePath, parent: parent, cookies: cookies)
+		new RouteDSL(path: completePath, parent: parent, cookies: cookies)
+    }
+
+    void call(Closure closure) {
         closure.resolveStrategy = Closure.DELEGATE_FIRST
-        closure.delegate = routeDSL
+        closure.delegate = this
         closure.call()
     }
 
@@ -105,7 +108,7 @@ class RouteDSL {
     }
 
     def route(String path, Closure clos) {
-		RouteDSL.make parent, path, clos, cookies, this.path
+		RouteDSL.make(parent, path, cookies, this.path)(clos)
 	}
 
     private void createRoute(HttpMethod method, Closure handler, boolean useBodyHandler = false) {
@@ -150,9 +153,7 @@ class RouteDSL {
 				handler context
 			}
 		} else {
-            println "create blocking route $route.path"
 			route.blockingHandler { context ->
-                println "blocking handler $path"
 				handler.delegate = context
 				handler context
 			}
