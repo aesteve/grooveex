@@ -16,22 +16,32 @@ public class RouterDSL {
 
     Vertx vertx
     Router router
+    Router parent
+    String path
     Set<String> consumes = []
     Set<String> produces = []
     boolean cookies
     private StaticHandler staticHandler
+
 
     def make(Closure closure) {
         router = Router.router(vertx)
         closure.resolveStrategy = Closure.DELEGATE_FIRST
         closure.delegate = this
         closure()
+        if (parent && path) {
+            parent.mountSubRouter path, router
+        }
+    }
+
+    def call(Closure closure) {
+        make closure
     }
 
     def subRouter(String path, Closure closure) {
-        RouterDSL dsl = new RouterDSL(vertx: vertx)
-        dsl.make(closure)
-        router.mountSubRouter(path, dsl.router)
+        RouterDSL dsl = new RouterDSL(vertx: vertx, parent: router, path: path)
+        dsl.call(closure)
+        dsl
     }
 
     def staticHandler(String path, Closure closure = null) {
@@ -101,43 +111,7 @@ public class RouterDSL {
         RouteDSL.make(this, path, cookies)(clos)
     }
 
-    def get(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.GET, closure)
-    }
-
-    def post(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.POST, closure)
-    }
-
-    def put(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.PUT, closure)
-    }
-
-    def delete(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.DELETE, closure)
-    }
-
-    def options(String path, Closure closure) {
-        makeRoute(path, HttpMethod.OPTIONS, closure)
-    }
-
-    def head(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.HEAD, closure)
-    }
-
-    def connect(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.CONNECT, closure)
-    }
-
-    def patch(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.PATCH, closure)
-    }
-
-    def trace(String path = null, Closure closure) {
-        makeRoute(path, HttpMethod.TRACE, closure)
-    }
-
-    def makeRoute(String path, HttpMethod method, Closure closure) {
+    def makeRoute(String path, HttpMethod method, Closure closure = null) {
         Route route
         if (!path) {
             def methodStr = method.toString().toLowerCase()
@@ -153,17 +127,32 @@ public class RouterDSL {
         }
         consumes.each { route.consumes it }
         produces.each { route.produces it }
-        route.handler { context ->
-            closure.delegate = context
-            closure.call(context)
+        if (closure) {
+            route.handler { context ->
+                closure.delegate = context
+                closure.call(context)
+            }
         }
+        route
     }
 
     def methodMissing(String name, args) {
-        if (args && args.size() == 1) {
-            router."$name"(args[0])
+        HttpMethod method
+        try {
+            method = HttpMethod.valueOf name?.toUpperCase()
+        } catch(all) {}
+        if (method) {
+            if (args.size() == 1) {
+                return makeRoute(args[0], method)
+            } else {
+                makeRoute(args[0], method, args[1])
+            }
         } else {
-            router."$name"(args)
+            if (args && args.size() == 1) {
+                router."$name"(args[0])
+            } else {
+                router."$name"(args)
+            }
         }
     }
 }

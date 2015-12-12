@@ -6,7 +6,7 @@ import groovy.json.JsonBuilder
 TestController ctrlerInstance = new TestController()
 
 router {
-    get '/simpleGet', {
+    get('/simpleGet') {
         response << 'Simple GET'
     }
     route('/handlers') {
@@ -19,8 +19,8 @@ router {
             response << bodyAsString // simply echoes body
         }
     }
-    get '/staticClosure', TestStaticController.testClosure
-    get '/controllerInstance', ctrlerInstance.&someMethod
+    get('/staticClosure') >> TestStaticController.testClosure
+    get('/controllerInstance') >> ctrlerInstance.&someMethod
     staticHandler '/assets/*'
     staticHandler '/instrumented-assets/*', {
         get {
@@ -29,10 +29,10 @@ router {
         }
     }
     // templateHandler "/dynamic/*", HandlebarsTemplateEngine.create()
-    subRouter '/sub', {
+    subRouter('/sub') {
         cookies = true
         staticHandler '/assets/*', 'webroot/subDirectory'
-        get '/firstSubRoute', {
+        get('/firstSubRoute') >> {
             response << 'firstSubRoute'
         }
 		route '/secondSubRoute', {
@@ -77,7 +77,7 @@ router {
 			}
 		}
 		route('/sex') {
-			route '/magic', { // /sugar/sex/magic
+			route('/magic') { // /sugar/sex/magic
 				blocking = true
 				cors '*'
 				get {
@@ -109,10 +109,10 @@ router {
 			response << "everything's fine"
 		}
 	}
-	subRouter '/json', {
+	subRouter('/json') {
 		consumes 'application/json'
 		produces 'application/json'
-		get '/pure', {
+		get('/pure') >> {
 			response << 'json'
 		}
 		route('/plain') {

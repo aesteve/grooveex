@@ -39,42 +39,6 @@ class RouteDSL {
         closure.call()
     }
 
-    def get(Closure handler) {
-        createRoute(HttpMethod.GET, handler)
-    }
-
-    def post(Closure handler) {
-        createRoute(HttpMethod.POST, handler, true)
-    }
-
-    def put(Closure handler) {
-        createRoute(HttpMethod.PUT, handler, true)
-    }
-
-    def delete(Closure handler) {
-        createRoute(HttpMethod.DELETE, handler)
-    }
-
-    def options(Closure handler) {
-        createRoute(HttpMethod.OPTIONS, handler)
-    }
-
-    def head(Closure handler) {
-        createRoute(HttpMethod.HEAD, handler)
-    }
-
-    def connect(Closure handler) {
-        createRoute(HttpMethod.CONNECT, handler)
-    }
-
-    def trace(Closure handler) {
-        createRoute(HttpMethod.TRACE, handler)
-    }
-
-    def patch(Closure handler) {
-        createRoute(HttpMethod.PATCH, handler)
-    }
-
     def cors(String origin) {
         parent.router.route(path).handler(CorsHandler.create(origin))
     }
@@ -162,12 +126,20 @@ class RouteDSL {
     }
 
     def methodMissing(String name, args) {
-        if (routes.empty) {
-            // delay
-            missingMethods << [name, args]
-        }
-        routes.each { Route route ->
-            callMethodOnRoute(route, name, args)
+        HttpMethod method
+        try {
+            method = HttpMethod.valueOf name?.toUpperCase()
+        } catch(all) {}
+        if (method) {
+            createRoute(method, args[0], true)
+        } else {
+            if (routes.empty) {
+                // delay
+                missingMethods << [name, args]
+            }
+            routes.each { Route route ->
+                callMethodOnRoute(route, name, args)
+            }
         }
     }
 
