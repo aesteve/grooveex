@@ -2,6 +2,7 @@ import controllers.TestController
 import controllers.TestStaticController
 import static io.vertx.core.http.HttpHeaders.*
 import groovy.json.JsonBuilder
+import io.vertx.groovy.ext.web.templ.HandlebarsTemplateEngine
 
 TestController ctrlerInstance = new TestController()
 
@@ -28,7 +29,13 @@ router {
             it++
         }
     }
-    // templateHandler "/dynamic/*", HandlebarsTemplateEngine.create()
+    templateHandler("/handlebars/*", HandlebarsTemplateEngine.create()) {
+		expect { params['name'] }
+		get { ctx ->
+			ctx['name'] = params['name']
+			ctx++
+		}
+	}
     subRouter('/sub') {
         cookies = true
         staticHandler '/assets/*', 'webroot/subdirectory'

@@ -63,10 +63,10 @@ public class RouterDSL {
         staticHandler(path, null, closure)
     }
 
-    def templateHandler(String path, def engine, Closure closure = null) {
+    def templateHandler(String path, TemplateEngine engine, Closure closure = null) {
         TemplateHandler tplHandler = TemplateHandler.create(engine)
         if (closure) {
-            RouteDSL.make(this, path, closure, cookies)
+            RouteDSL.make(this, path, cookies)(closure)
         }
         router.route(path).handler(tplHandler)
     }
