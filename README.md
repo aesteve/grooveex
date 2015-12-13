@@ -219,6 +219,43 @@ route('/check') { // fails with the specified statusCode, and doesn't swallow ex
 }
 ```
 
+### REST shortcut
+
+```groovy
+router {
+    rest '/rest', new RESTController()
+}
+```
+
+```groovy
+class RESTController {
+    
+    void post(RoutingContext ctx) {
+        ctx.response << 'post'
+    }
+    
+    void get(RoutingContext ctx) {
+        ctx.response << 'get'
+    }
+}
+```
+
+Will do what you're expecting it to do :
+
+```groovy
+client.get('/rest', { response ->
+    response >>> {
+        assert it as String == 'get'
+    }
+})++
+client.post('/rest', { response ->
+    response >>> {
+        assert it as String == 'post'
+    }
+})++
+```
+
+
 ## Complete list of syntaxic sugar
 
 ### WriteStream
