@@ -1,4 +1,3 @@
-import controllers.RESTController
 import controllers.TestController
 import controllers.TestStaticController
 import static io.vertx.core.http.HttpHeaders.*
@@ -131,5 +130,10 @@ router {
 			}
 		}
 	}
-	rest '/rest', new RESTController()
+	route('/regex/*') {
+		it ~/\/([^\/]+)\/([^\/]+)/ // route.pathRegex(/\/([^\/]+)\/([^\/]+)/)
+		get {
+			response << params['param1']
+		}
+	}
 }

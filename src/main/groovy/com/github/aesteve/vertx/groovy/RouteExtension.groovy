@@ -1,8 +1,12 @@
 package com.github.aesteve.vertx.groovy
 
+import groovy.transform.TypeChecked
 import io.vertx.core.Handler
-import io.vertx.groovy.ext.web.Route;
+import io.vertx.groovy.ext.web.Route
 
+import java.util.regex.Pattern;
+
+@TypeChecked
 class RouteExtension {
 
 	static Route rightShift(Route self, Closure clos) {
@@ -14,6 +18,10 @@ class RouteExtension {
 
 	static Route rightShift(Route self, Handler handler) {
 		self.handler handler
+	}
+
+	static Route call(Route self, Pattern regex) {
+		self.pathRegex regex.toString()
 	}
 
 }

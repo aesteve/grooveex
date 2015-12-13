@@ -12,7 +12,7 @@ import io.vertx.groovy.ext.web.sstore.LocalSessionStore
 class RouteDSL {
 
     RouterDSL parent
-    String path
+    def path
     def bodyHandler
     boolean cookies
     def sessionStore
@@ -24,7 +24,7 @@ class RouteDSL {
     List<String> consumes = []
     List<String> produces = []
 
-    def static make(RouterDSL parent, String path, boolean cookies, String parentPath = null) {
+    def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
 		String completePath = ''
 		if (parentPath) {
 			completePath += parentPath
@@ -36,7 +36,7 @@ class RouteDSL {
     void call(Closure closure) {
         closure.resolveStrategy = Closure.DELEGATE_FIRST
         closure.delegate = this
-        closure.call()
+        closure.call(this)
     }
 
     def cors(String origin) {

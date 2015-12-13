@@ -12,6 +12,8 @@ import io.vertx.groovy.ext.web.handler.TemplateHandler
 import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
 
+import java.util.regex.Pattern
+
 public class RouterDSL {
 
     Vertx vertx
@@ -108,26 +110,15 @@ public class RouterDSL {
         this
     }
 
-    def rest(String path, def obj) {
-        def methods = obj.metaClass.methods
-        methods.each { method ->
-            HttpMethod http
-            try {
-                http = HttpMethod.valueOf method.name.toUpperCase()
-            } catch(all) {}
-            if (method) {
-                router.route(http, path).handler { ctx ->
-                    method.invoke obj, ctx
-                }
-            }
-        }
-    }
-
     def route(String path, Closure clos) {
         RouteDSL.make(this, path, cookies)(clos)
     }
 
-    def makeRoute(String path, HttpMethod method, Closure closure = null) {
+    def route(Pattern path, Closure clos) {
+        RouteDSL.make(this, path, cookies)(clos)
+    }
+
+    def makeRoute(def path, HttpMethod method, Closure closure = null) {
         Route route
         if (!path) {
             def methodStr = method.toString().toLowerCase()
