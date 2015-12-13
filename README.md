@@ -240,21 +240,6 @@ class RESTController {
 }
 ```
 
-Will do what you're expecting it to do :
-
-```groovy
-client.get('/rest', { response ->
-    response >>> {
-        assert it as String == 'get'
-    }
-})++
-client.post('/rest', { response ->
-    response >>> {
-        assert it as String == 'post'
-    }
-})++
-```
-
 
 ## Complete list of syntaxic sugar
 
@@ -283,6 +268,7 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `route >> handler` | `route.handler(handler)` |
+| `route ~/somePattern/` | `route.pathRegex("somePattern")` |
 
 ### Router
 
