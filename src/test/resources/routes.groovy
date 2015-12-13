@@ -1,7 +1,9 @@
+import com.github.aesteve.vertx.groovy.io.impl.JacksonMarshaller
 import controllers.TestController
 import controllers.TestStaticController
 import groovy.json.JsonBuilder
 import io.vertx.groovy.ext.web.templ.HandlebarsTemplateEngine
+import model.Dog
 
 import static io.vertx.core.http.HttpHeaders.AUTHORIZATION
 import static io.vertx.core.http.HttpHeaders.DATE
@@ -136,6 +138,12 @@ router {
         it ~/\/regex\/([^\/]+)/ // route.pathRegex(/\/regex\/([^\/]+)/)
         get {
             response << params['param0']
+        }
+    }
+    subRouter('/marshall') {
+        marshaller 'application/json', new JacksonMarshaller()
+        post('/dog') { // echo back
+            yield body as Dog
         }
     }
 }

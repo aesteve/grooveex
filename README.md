@@ -219,6 +219,46 @@ route('/check') { // fails with the specified statusCode, and doesn't swallow ex
 }
 ```
 
+### Payload & Marshalling
+
+You can set a marshaller to read request body or write response body automatically simply by implementing the `com.github.aesteve.vertx.groovy.io.Marshaller` interface.
+By default, since Vert.x already uses Jackson, you can use the `JacksonMarshaller` we provided.
+
+Then, just declare that you're router (or route), uses this marshaller:
+
+```groovy
+router {
+    marshaller 'application/json', new JacksonMarshaller()
+    // ...
+}
+```
+
+#### Read request body using marshaller
+
+```groovy
+router {
+    marshaller 'application/json', new JacksonMarshaller()
+    post('/create') {
+        def marshalledBody = body as SomeObject // using 'as' on body will automatically invoke the marshaller
+        // ...
+    }
+}
+```
+
+#### Write response body
+
+```groovy
+def users = [:] // your userService
+router {
+    marshaller 'application/json', new JacksonMarshaller()
+    post('/create') {
+        def marshalledBody = body as SomeObject
+        def something = marshalledBody.transform() // do some stuff
+        yield something // when you yield an object, it's set as response payload and calls context.next(), it will be marshalled automatically
+    }
+}
+```
+
 ## Complete list of syntaxic sugar
 
 ### WriteStream

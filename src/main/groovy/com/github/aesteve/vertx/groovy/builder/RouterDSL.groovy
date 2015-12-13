@@ -1,10 +1,12 @@
 package com.github.aesteve.vertx.groovy.builder
 
+import com.github.aesteve.vertx.groovy.io.Marshaller
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.Router
 import io.vertx.groovy.ext.web.RoutingContext
+import io.vertx.groovy.ext.web.handler.BodyHandler
 import io.vertx.groovy.ext.web.handler.CookieHandler
 import io.vertx.groovy.ext.web.handler.FaviconHandler
 import io.vertx.groovy.ext.web.handler.StaticHandler
@@ -22,6 +24,7 @@ public class RouterDSL {
     String path
     Set<String> consumes = []
     Set<String> produces = []
+    Map<String, Marshaller> marshallers = [:]
     boolean cookies
     private StaticHandler staticHandler
 
@@ -110,6 +113,10 @@ public class RouterDSL {
         this
     }
 
+    def marshaller(String contentType, Marshaller marshaller) {
+        marshallers[contentType] = marshaller
+    }
+
     def route(String path, Closure clos) {
         RouteDSL.make(this, path, cookies)(clos)
     }
@@ -119,25 +126,42 @@ public class RouterDSL {
     }
 
     def makeRoute(def path, HttpMethod method, Closure closure = null) {
-        Route route
-        if (!path) {
-            def methodStr = method.toString().toLowerCase()
-            if (cookies) {
-                router."$methodStr"().handler(CookieHandler.create())
+        def createRoute = {
+            if (!path) {
+                def methodStr = method.toString().toLowerCase()
+                return router."$methodStr"()
             }
-            route = router."$methodStr"()
-        } else {
-            if (cookies) {
-                router.route(method, path).handler(CookieHandler.create())
-            }
-            route = router.route(method, path)
+            else return router.route(method, path)
         }
+        createRoute().handler BodyHandler.create()
+        if (cookies) {
+            createRoute().handler CookieHandler.create()
+        }
+        createRoute().handler { ctx ->
+            ctx.marshallers = marshallers
+            ctx++
+        }
+        Route route = createRoute()
         consumes.each { route.consumes it }
         produces.each { route.produces it }
         if (closure) {
             route.handler { context ->
                 closure.delegate = context
                 closure.call(context)
+            }
+        }
+        if (marshallers.size() > 0) {
+            createRoute().handler { ctx ->
+                Marshaller m = ctx.marshaller
+                if (!m) {
+                    m = marshallers.find().value
+                }
+                def payload = ctx.getPayload()
+                if (!payload) {
+                    ctx.response.end()
+                    return
+                }
+                ctx.response().end(m.marshall(payload))
             }
         }
         route
@@ -147,8 +171,7 @@ public class RouterDSL {
         HttpMethod method
         try {
             method = HttpMethod.valueOf name?.toUpperCase()
-        } catch (all) {
-        }
+        } catch (all) {}
         if (method) {
             if (args.size() == 1) {
                 return makeRoute(args[0], method)

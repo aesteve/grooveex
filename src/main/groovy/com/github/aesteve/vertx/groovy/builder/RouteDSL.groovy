@@ -1,5 +1,6 @@
 package com.github.aesteve.vertx.groovy.builder
 
+import com.github.aesteve.vertx.groovy.io.Marshaller
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.ext.web.Route
@@ -23,6 +24,7 @@ class RouteDSL {
     List<Checker> checkers = []
     List<String> consumes = []
     List<String> produces = []
+    Map<String, Marshaller> marshallers = [:]
 
     def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
         String completePath = ''
@@ -102,6 +104,11 @@ class RouteDSL {
         }
         checkers.each {
             parent.router.route(method, path).handler it as Handler
+        }
+        marshallers << parent.marshallers
+        parent.router.route(method, path).handler { ctx ->
+            ctx.marshallers = marshallers
+            ctx++
         }
         Route route = parent.router.route(method, path)
         consumes.addAll parent.consumes

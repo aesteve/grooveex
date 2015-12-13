@@ -23,7 +23,6 @@ class Ensure {
             } else {
                 expected.delegate = ctx
                 def result = expected(res.result)
-                println "result = $result"
                 boolean b = result?.asBoolean()
                 if (b) {
                     if (then) {
