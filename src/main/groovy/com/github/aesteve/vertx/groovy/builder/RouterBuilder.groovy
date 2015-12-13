@@ -6,12 +6,13 @@ import io.vertx.groovy.ext.web.Router
 
 @TypeChecked
 class RouterBuilder {
-    static Router buildRouter(Vertx vertx, File routingFile) {
+
+    static Router buildRouter(Vertx vertx, File... routingFiles) {
         def binding = new Binding()
         def shell = new GroovyShell(binding)
         RouterDSL routerDSL = new RouterDSL(vertx: vertx)
         shell.setVariable("router", routerDSL.&make)
-        shell.evaluate(routingFile)
+        routingFiles.each { shell.evaluate it as File }
         routerDSL.router
     }
 
