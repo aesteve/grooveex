@@ -31,8 +31,10 @@ class ContentTypeSpec extends BuilderTestBase {
 		context.async { async ->
 			HttpClientRequest req = client['/json/pure']
 			req >> { response ->
-				assertEquals 404, response.statusCode
-				async++
+				response >>> {
+					println it as String
+					async++
+				}
 			}
 			req[ACCEPT] = 'text/plain'
 			req[CONTENT_TYPE] = 'text/plain'

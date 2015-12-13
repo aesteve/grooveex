@@ -19,7 +19,7 @@ class RouteDSL {
     private List<Route> routes = []
     private List<List<Object>> missingMethods = []
 	boolean blocking
-	List<Eval> expectations = []
+	List<Closure> expectations = []
 	List<Checker> checkers = []
     List<String> consumes = []
     List<String> produces = []
@@ -107,7 +107,7 @@ class RouteDSL {
         consumes.addAll parent.consumes
         produces.addAll parent.produces
         consumes.each { route.consumes it }
-        produces.each { route.consumes it }
+        produces.each { route.produces it }
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }

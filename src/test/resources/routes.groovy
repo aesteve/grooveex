@@ -119,7 +119,7 @@ router {
 	subRouter('/json') {
 		consumes 'application/json'
 		produces 'application/json'
-		get('/pure') >> {
+		get('/pure') {
 			response << 'json'
 		}
 		route('/plain') {
@@ -131,9 +131,9 @@ router {
 		}
 	}
 	route('/regex/*') {
-		it ~/\/([^\/]+)\/([^\/]+)/ // route.pathRegex(/\/([^\/]+)\/([^\/]+)/)
+		it ~/\/regex\/([^\/]+)/ // route.pathRegex(/\/([^\/]+)\/([^\/]+)/)
 		get {
-			response << params['param1']
+			response << params['param0']
 		}
 	}
 }
