@@ -13,6 +13,7 @@ class RouterBuilder {
         RouterDSL routerDSL = new RouterDSL(vertx: vertx)
         shell.setVariable("router", routerDSL.&make)
         routingFiles.each { shell.evaluate it as File }
+        routerDSL.finish()
         routerDSL.router
     }
 
@@ -25,12 +26,14 @@ class RouterBuilder {
         RouterDSL routerDSL = new RouterDSL(vertx: vertx)
         shell.setVariable("router", routerDSL.&make)
         is.withReader { shell.evaluate(it) }
+        routerDSL.finish()
         routerDSL.router
     }
 
     static Router buildRouter(Vertx vertx, Closure closure) {
         RouterDSL routerDSL = new RouterDSL(vertx: vertx)
         routerDSL.make(closure)
+        routerDSL.finish()
         routerDSL.router
     }
 }

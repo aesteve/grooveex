@@ -23,7 +23,8 @@ public class RouterDSL {
     Map<String, Marshaller> marshallers = [:]
     boolean cookies
     private StaticHandler staticHandler
-
+    private LinkedHashSet<MethodAndPath> toFinalize = [] as LinkedHashSet
+    private Set<RouteDSL> children = [] as Set
 
     def make(Closure closure) {
         router = Router.router(vertx)
@@ -42,6 +43,7 @@ public class RouterDSL {
     def subRouter(String path, Closure closure) {
         RouterDSL dsl = new RouterDSL(vertx: vertx, parent: router, path: path)
         dsl.call(closure)
+        children << dsl
         dsl
     }
 
@@ -56,6 +58,7 @@ public class RouterDSL {
         if (closure) {
             RouteDSL dsl = RouteDSL.make(this, path, cookies)
             dsl(closure)
+            children << dsl
         }
         router.route(path).handler(staticHandler)
     }
@@ -67,7 +70,9 @@ public class RouterDSL {
     def templateHandler(String path, TemplateEngine engine, Closure closure = null) {
         TemplateHandler tplHandler = TemplateHandler.create(engine)
         if (closure) {
-            RouteDSL.make(this, path, cookies)(closure)
+            RouteDSL dsl = RouteDSL.make(this, path, cookies)
+            dsl(closure)
+            children << dsl
         }
         router.route(path).handler(tplHandler)
     }
@@ -114,30 +119,34 @@ public class RouterDSL {
     }
 
     def route(String path, Closure clos) {
-        RouteDSL.make(this, path, cookies)(clos)
+        RouteDSL dsl = RouteDSL.make(this, path, cookies)
+        dsl(clos)
+        children << dsl
     }
 
     def route(Pattern path, Closure clos) {
-        RouteDSL.make(this, path, cookies)(clos)
+        RouteDSL dsl = RouteDSL.make(this, path, cookies)
+        dsl(clos)
+        children << dsl
+    }
+
+    private createRoute(method, path) {
+        if (!path) {
+            def methodStr = method.toString().toLowerCase()
+            return router."$methodStr"()
+        } else return router.route(method, path)
     }
 
     def makeRoute(def path, HttpMethod method, Closure closure = null) {
-        def createRoute = {
-            if (!path) {
-                def methodStr = method.toString().toLowerCase()
-                return router."$methodStr"()
-            }
-            else return router.route(method, path)
-        }
-        createRoute().handler BodyHandler.create()
+        createRoute(method, path).handler BodyHandler.create()
         if (cookies) {
-            createRoute().handler CookieHandler.create()
+            createRoute(method, path).handler CookieHandler.create()
         }
-        createRoute().handler { ctx ->
+        createRoute(method, path).handler { ctx ->
             ctx.marshallers = marshallers
             ctx++
         }
-        Route route = createRoute()
+        Route route = createRoute(method, path)
         consumes.each { route.consumes it }
         produces.each { route.produces it }
         if (closure) {
@@ -147,7 +156,14 @@ public class RouterDSL {
             }
         }
         if (marshallers.size() > 0) {
-            createRoute().handler { ctx ->
+            toFinalize << new MethodAndPath(method: method, path: path)
+        }
+        route
+    }
+
+    Router finish() {
+        toFinalize.each {
+            createRoute(it.method, it.path).handler { ctx ->
                 Marshaller m = ctx.marshaller
                 if (!m) {
                     m = marshallers.find().value
@@ -159,8 +175,10 @@ public class RouterDSL {
                 }
                 ctx.response().end(m.marshall(payload))
             }
+
         }
-        route
+        children.each { it.finish() }
+        router
     }
 
     def methodMissing(String name, args) {
