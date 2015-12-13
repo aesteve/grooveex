@@ -12,6 +12,7 @@ class RoutingContextSpec extends TestBase {
 	
 	final static String KEY = 'dog'
 	final static String VAL = 'Snoopy'
+	final static String VAL2 = 'Charlie'
 	final static String PATH = '/routingcontexttest'
 	final static String FAILED_STATUS = '/failWithStatus'
 	final static String FAILED_THROW = '/failWithThrowable'
@@ -22,6 +23,14 @@ class RoutingContextSpec extends TestBase {
 	void fakeServiceMethod(Boolean fail, Handler<AsyncResult<String>> handler) {
 		if (fail) {
 			handler.handle Future.failedFuture(ex)
+		} else {
+			handler.handle Future.succeededFuture(VAL)
+		}
+	}
+
+	void checkTokenAsync(String token, Handler<AsyncResult<String>> handler) {
+		if (token != 'secret') {
+			handler.handle Future.succeededFuture(null)
 		} else {
 			handler.handle Future.succeededFuture(VAL)
 		}
@@ -46,9 +55,21 @@ class RoutingContextSpec extends TestBase {
 		router[ASYNC_SERVICE] = {
 			fakeServiceMethod request.params['fail'].toBoolean(), fail | response.&end
 		}
+		router[ASYNC_SERVICE + '/2'] = {
+			fakeServiceMethod request.params['fail'].toBoolean(), fail | next
+		}
+		router[ASYNC_SERVICE + '/2'] = {
+			response << VAL2
+		}
 		router['/eventbus'] = {
 			eventBus['test-address'] << 'something'
 			response << 'sent'
+		}
+		router['/checkToken'] = {
+			checkTokenAsync params['token'], ensure({ it }) & { put 'user', it } | 401
+		}
+		router['/checkToken'] = {
+			response << it['user']
 		}
 	}
 	
@@ -84,6 +105,30 @@ class RoutingContextSpec extends TestBase {
 		}
 	}
 
+
+	@Test
+	void testFailCheckToken(TestContext context) {
+		context.async { async ->
+			client.getNow '/checkToken?token=invalid', { response ->
+				assertEquals response.statusCode, 401
+				async++
+			}
+		}
+	}
+
+	@Test
+	void testSuccessCheckToken(TestContext context) {
+		context.async { async ->
+			client.getNow "/checkToken?token=secret", { response ->
+				assertEquals response.statusCode, 200
+				response >>> {
+					assertEquals it as String, VAL
+					async++
+				}
+			}
+		}
+	}
+
 	@Test
 	void testFailAsyncService(TestContext context) {
 		context.async { async ->
@@ -101,6 +146,29 @@ class RoutingContextSpec extends TestBase {
 				assertEquals response.statusCode, 200
 				response >>> {
 					assertEquals it as String, VAL
+					async++
+				}
+			}
+		}
+	}
+
+	@Test
+	void testFailAsyncService2(TestContext context) {
+		context.async { async ->
+			client.getNow "${ASYNC_SERVICE}/2?fail=true", { response ->
+				assertEquals response.statusCode, 500
+				async++
+			}
+		}
+	}
+
+	@Test
+	void testSuccessAsyncService2(TestContext context) {
+		context.async { async ->
+			client.getNow "${ASYNC_SERVICE}/2?fail=false", { response ->
+				assertEquals response.statusCode, 200
+				response >>> {
+					assertEquals it as String, VAL2
 					async++
 				}
 			}

@@ -84,8 +84,16 @@ class RoutingContextExtension {
 		self
 	}
 
-	static getFail(RoutingContext self) {
+	static FailOr getFail(RoutingContext self) {
 		new FailOr(ctx: self)
+	}
+
+	static Closure getNext(RoutingContext self) {
+		return { self.next() }
+	}
+
+	static Ensure ensure(RoutingContext self, Closure expectation) {
+		new Ensure(expected: expectation, ctx: self)
 	}
 
 

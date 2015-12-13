@@ -286,6 +286,69 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `ctx++` | `ctx.next()` |
 | `ctx >> closure` | `{ res -> if (res.failed) { ctx.fail(res.cause()) } else { closure(res.result()) } }` |
 
+#### Additional methods
+
+You'll find an `ensure` method within `RoutingContext` which is very useful for dealing with a common pattern in Vert.x.
+
+Often, one of the first handlers in your routes will invoke an async service and :
+
+* fail if the service invocation failed ( 500 )
+* check the result asynchronously, then :
+** fail with some statusCode if the result doesn't suit you (say, the token is invalid)
+** store the result somewhere, or do something with the result if the results suits you, then call `context.next()`
+
+In action :
+
+```groovy
+router.get('/api/1/*').handler { ctx ->
+    accessTokenChecker.check(ctx.request().params().get('accessToken'), {
+        if (res.failed()) {
+            ctx.fail res.cause()
+        } else {
+            User user = res.result()
+            if (user && user.validated) {
+                ctx.setUser(user)
+                ctx.next()
+            } else {
+                ctx.fail 401
+            }
+        }
+    })
+}
+```
+
+Here's the `ensure` equivalent (buckle up !)
+
+```groovy
+router.get('/api/1/').handler { ctx ->
+    accessTokenChecker.check(ctx.request().params().get('accessToken'), ctx.ensure({ it && it.validated }) & { user = it } | 401)
+}
+```
+
+Now let's benefit of full sugar and rewrite it :
+```groovy
+router.get('/api/1/') >> {
+    def accessToken = params['accessToken']
+    def putTokenIfExistsOrFailWith401 = ensure({ it && it.validated }) & { user = it } | 401
+    accessTokenChecker.check accessToken, putTokenIfExistsOrFailWith401 
+}
+```
+
+This is especially useful for storing and composing small pieces of reusable logic into closures, like so :
+
+```groovy
+def userHasValidAccount = { user ->
+    user && user.validated
+}
+router.get('/api/1/') >> {
+    def accessToken = params['accessToken']
+    def putTokenIfExistsOrFailWith401 = ensure(userHasValidAccount) & { user = it } | 401
+    accessTokenChecker.check accessToken, putTokenIfExistsOrFailWith401 
+}
+```
+
+
+#### Notes
 
 NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
 

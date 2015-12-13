@@ -131,7 +131,7 @@ router {
 		}
 	}
 	route('/regex/*') {
-		it ~/\/regex\/([^\/]+)/ // route.pathRegex(/\/([^\/]+)\/([^\/]+)/)
+		it ~/\/regex\/([^\/]+)/ // route.pathRegex(/\/regex\/([^\/]+)/)
 		get {
 			response << params['param0']
 		}
