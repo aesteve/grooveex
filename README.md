@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-	compile 'com.github.aesteve:vertx-groovy-sugar:0.1'
+	compile 'com.github.aesteve:vertx-groovy-sugar:0.2'
 }
 ```
 
