@@ -108,6 +108,21 @@ public class RouterDSL {
         this
     }
 
+    def rest(String path, def obj) {
+        def methods = obj.metaClass.methods
+        methods.each { method ->
+            HttpMethod http
+            try {
+                http = HttpMethod.valueOf method.name.toUpperCase()
+            } catch(all) {}
+            if (method) {
+                router.route(http, path).handler { ctx ->
+                    method.invoke obj, ctx
+                }
+            }
+        }
+    }
+
     def route(String path, Closure clos) {
         RouteDSL.make(this, path, cookies)(clos)
     }
