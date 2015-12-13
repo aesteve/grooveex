@@ -6,8 +6,8 @@ import io.vertx.core.Future
 @TypeChecked
 class FutureStaticExtension {
 
-	static Future getFuture(Future self) {
-		Future.future()
-	}
+    static Future getFuture(Future self) {
+        Future.future()
+    }
 
 }

@@ -18,19 +18,19 @@ class RouteDSL {
     def sessionStore
     private List<Route> routes = []
     private List<List<Object>> missingMethods = []
-	boolean blocking
-	List<Closure> expectations = []
-	List<Checker> checkers = []
+    boolean blocking
+    List<Closure> expectations = []
+    List<Checker> checkers = []
     List<String> consumes = []
     List<String> produces = []
 
     def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
-		String completePath = ''
-		if (parentPath) {
-			completePath += parentPath
-		}
-		completePath += path
-		new RouteDSL(path: completePath, parent: parent, cookies: cookies)
+        String completePath = ''
+        if (parentPath) {
+            completePath += parentPath
+        }
+        completePath += path
+        new RouteDSL(path: completePath, parent: parent, cookies: cookies)
     }
 
     void call(Closure closure) {
@@ -43,16 +43,16 @@ class RouteDSL {
         parent.router.route(path).handler(CorsHandler.create(origin))
     }
 
-	def expect(Closure expectation) {
-		expectations << expectation
-	}
-	
-	Checker check(Closure check) {
-		Checker checker = new Checker(check:check) 
-		checkers << checker
-		checker
-	}
-	
+    def expect(Closure expectation) {
+        expectations << expectation
+    }
+
+    Checker check(Closure check) {
+        Checker checker = new Checker(check: check)
+        checkers << checker
+        checker
+    }
+
     def session(Map options) {
         if (options.store) {
             sessionStore = options.store
@@ -72,8 +72,8 @@ class RouteDSL {
     }
 
     def route(String path, Closure clos) {
-		RouteDSL.make(parent, path, cookies, this.path)(clos)
-	}
+        RouteDSL.make(parent, path, cookies, this.path)(clos)
+    }
 
     private void createRoute(HttpMethod method, Closure handler, boolean useBodyHandler = false) {
         if (useBodyHandler) {
@@ -86,23 +86,23 @@ class RouteDSL {
             parent.router.route(path).handler(SessionHandler.create(sessionStore))
         }
         expectations.each { expectation ->
-			parent.router.route(method, path).handler { ctx ->
-				try {
-					expectation.delegate = ctx
-					boolean expected = expectation(ctx)?.asBoolean()
-					if (!expected) {
-						ctx.fail 400
-					} else {
-						ctx++
-					}
-				} catch(all) {
-					ctx.fail 400
-				}
-			}
-		}
-		checkers.each {
-			parent.router.route(method, path).handler it as Handler
-		}
+            parent.router.route(method, path).handler { ctx ->
+                try {
+                    expectation.delegate = ctx
+                    boolean expected = expectation(ctx)?.asBoolean()
+                    if (!expected) {
+                        ctx.fail 400
+                    } else {
+                        ctx++
+                    }
+                } catch (all) {
+                    ctx.fail 400
+                }
+            }
+        }
+        checkers.each {
+            parent.router.route(method, path).handler it as Handler
+        }
         Route route = parent.router.route(method, path)
         consumes.addAll parent.consumes
         produces.addAll parent.produces
@@ -111,17 +111,17 @@ class RouteDSL {
         missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
-		if (!blocking) {
-			route.handler { context ->
-				handler.delegate = context
-				handler context
-			}
-		} else {
-			route.blockingHandler { context ->
-				handler.delegate = context
-				handler context
-			}
-		}
+        if (!blocking) {
+            route.handler { context ->
+                handler.delegate = context
+                handler context
+            }
+        } else {
+            route.blockingHandler { context ->
+                handler.delegate = context
+                handler context
+            }
+        }
         routes << route
     }
 
@@ -129,7 +129,8 @@ class RouteDSL {
         HttpMethod method
         try {
             method = HttpMethod.valueOf name?.toUpperCase()
-        } catch(all) {}
+        } catch (all) {
+        }
         if (method) {
             createRoute(method, args[0], true)
         } else {

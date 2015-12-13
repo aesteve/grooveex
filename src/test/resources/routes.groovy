@@ -1,8 +1,10 @@
 import controllers.TestController
 import controllers.TestStaticController
-import static io.vertx.core.http.HttpHeaders.*
 import groovy.json.JsonBuilder
 import io.vertx.groovy.ext.web.templ.HandlebarsTemplateEngine
+
+import static io.vertx.core.http.HttpHeaders.AUTHORIZATION
+import static io.vertx.core.http.HttpHeaders.DATE
 
 TestController ctrlerInstance = new TestController()
 
@@ -30,23 +32,23 @@ router {
         }
     }
     templateHandler("/handlebars/*", HandlebarsTemplateEngine.create()) {
-		expect { params['name'] }
-		get { ctx ->
-			ctx['name'] = params['name']
-			ctx++
-		}
-	}
+        expect { params['name'] }
+        get { ctx ->
+            ctx['name'] = params['name']
+            ctx++
+        }
+    }
     subRouter('/sub') {
         cookies = true
         staticHandler '/assets/*', 'webroot/subdirectory'
         get('/firstSubRoute') >> {
             response << 'firstSubRoute'
         }
-		route '/secondSubRoute', {
-			get {
-				response << 'secondSubRoute'
-			}
-		}
+        route '/secondSubRoute', {
+            get {
+                response << 'secondSubRoute'
+            }
+        }
     }
     sockJS '/sockjs/*', { socket ->
         socket >> socket.&write
@@ -64,76 +66,76 @@ router {
             response << "CORS"
         }
     }
-	route('/blocking') {
-		blocking = true
-		get {
-			sleep 3000 // check no exception is thrown in console
-			response << 'done !'
-		}
-	}
-	route('/sugar') {
-		get {
-			response << 'Yes please !'
-		}
-		post {
-			String sent = body as String
-			if (sent == 'I want that sugar sweet') {
-				response << "Don't let nobody touch it"
-			} else {
-				fail 400
-			}
-		}
-		route('/sex') {
-			route('/magic') { // /sugar/sex/magic
-				blocking = true
-				cors '*'
-				get {
-					response.headers['X-Song'] = 'Under the bridge'
-					response.headers['X-Artist'] = 'RHCP'
-					response.headers[DATE] = 'Tue, 10 Mar 1992 12:45:26 GMT'
-					response.chunked = true
-					response += 'Is the city I live in...'
-					sleep 1000
-					response += '...The city of Angels'
-					sleep 1000
-					response << ' - RHCP (1991)'
-				}
-			}
-		}
-	}
-	route('/expect') {
-		expect { params['exists'] }
-		expect { Long.valueOf params['long'] }
-		expect { headers[AUTHORIZATION]?.indexOf('token ') == 0 }
-		get {
-			response << "everything's fine"
-		}
-	}
-	route('/check') {
-		check { params['token'] } | 401
-		check { params['token'] == 'magic' } | 403
-		get {
-			response << "everything's fine"
-		}
-	}
-	subRouter('/json') {
-		consumes 'application/json'
-		produces 'application/json'
-		get('/pure') {
-			response << 'json'
-		}
-		route('/plain') {
-			consumes 'text/plain'
-			produces 'text/plain'
-			get {
-				response << 'json|plain'
-			}
-		}
-	}
-	route('/regex/*') {
-		it ~/\/regex\/([^\/]+)/ // route.pathRegex(/\/regex\/([^\/]+)/)
-		get {
-			response << params['param0']
-		}
-	}
+    route('/blocking') {
+        blocking = true
+        get {
+            sleep 3000 // check no exception is thrown in console
+            response << 'done !'
+        }
+    }
+    route('/sugar') {
+        get {
+            response << 'Yes please !'
+        }
+        post {
+            String sent = body as String
+            if (sent == 'I want that sugar sweet') {
+                response << "Don't let nobody touch it"
+            } else {
+                fail 400
+            }
+        }
+        route('/sex') {
+            route('/magic') { // /sugar/sex/magic
+                blocking = true
+                cors '*'
+                get {
+                    response.headers['X-Song'] = 'Under the bridge'
+                    response.headers['X-Artist'] = 'RHCP'
+                    response.headers[DATE] = 'Tue, 10 Mar 1992 12:45:26 GMT'
+                    response.chunked = true
+                    response += 'Is the city I live in...'
+                    sleep 1000
+                    response += '...The city of Angels'
+                    sleep 1000
+                    response << ' - RHCP (1991)'
+                }
+            }
+        }
+    }
+    route('/expect') {
+        expect { params['exists'] }
+        expect { Long.valueOf params['long'] }
+        expect { headers[AUTHORIZATION]?.indexOf('token ') == 0 }
+        get {
+            response << "everything's fine"
+        }
+    }
+    route('/check') {
+        check { params['token'] } | 401
+        check { params['token'] == 'magic' } | 403
+        get {
+            response << "everything's fine"
+        }
+    }
+    subRouter('/json') {
+        consumes 'application/json'
+        produces 'application/json'
+        get('/pure') {
+            response << 'json'
+        }
+        route('/plain') {
+            consumes 'text/plain'
+            produces 'text/plain'
+            get {
+                response << 'json|plain'
+            }
+        }
+    }
+    route('/regex/*') {
+        it ~/\/regex\/([^\/]+)/ // route.pathRegex(/\/regex\/([^\/]+)/)
+        get {
+            response << params['param0']
+        }
+    }
 }

@@ -147,7 +147,8 @@ public class RouterDSL {
         HttpMethod method
         try {
             method = HttpMethod.valueOf name?.toUpperCase()
-        } catch(all) {}
+        } catch (all) {
+        }
         if (method) {
             if (args.size() == 1) {
                 return makeRoute(args[0], method)
