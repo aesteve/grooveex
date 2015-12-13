@@ -224,7 +224,7 @@ route('/check') { // fails with the specified statusCode, and doesn't swallow ex
 You can set a marshaller to read request body or write response body automatically simply by implementing the `com.github.aesteve.vertx.groovy.io.Marshaller` interface.
 By default, since Vert.x already uses Jackson, you can use the `JacksonMarshaller` we provided.
 
-Then, just declare that you're router (or route), uses this marshaller:
+Then, just declare that your router (or route), uses this marshaller:
 
 ```groovy
 router {
@@ -248,7 +248,6 @@ router {
 #### Write response body
 
 ```groovy
-def users = [:] // your userService
 router {
     marshaller 'application/json', new JacksonMarshaller()
     post('/create') {
