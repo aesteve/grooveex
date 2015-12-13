@@ -6,11 +6,7 @@ import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.Router
 import io.vertx.groovy.ext.web.RoutingContext
-import io.vertx.groovy.ext.web.handler.BodyHandler
-import io.vertx.groovy.ext.web.handler.CookieHandler
-import io.vertx.groovy.ext.web.handler.FaviconHandler
-import io.vertx.groovy.ext.web.handler.StaticHandler
-import io.vertx.groovy.ext.web.handler.TemplateHandler
+import io.vertx.groovy.ext.web.handler.*
 import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
 

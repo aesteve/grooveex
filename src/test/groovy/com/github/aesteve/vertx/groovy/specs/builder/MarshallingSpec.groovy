@@ -4,7 +4,8 @@ import io.vertx.core.json.JsonObject
 import io.vertx.groovy.ext.unit.TestContext
 import org.junit.Test
 
-import static io.vertx.core.http.HttpHeaders.*
+import static io.vertx.core.http.HttpHeaders.ACCEPT
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
 
 class MarshallingSpec extends BuilderTestBase {
 

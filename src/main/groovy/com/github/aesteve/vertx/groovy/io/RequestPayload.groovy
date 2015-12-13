@@ -1,10 +1,7 @@
 package com.github.aesteve.vertx.groovy.io
 
-import groovy.transform.TypeChecked
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.json.JsonObject
-import io.vertx.core.logging.Logger
-import io.vertx.core.logging.LoggerFactory
 import io.vertx.groovy.ext.web.RoutingContext
 
 class RequestPayload {

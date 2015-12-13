@@ -13,7 +13,6 @@ import io.vertx.groovy.core.http.HttpServerRequest
 import io.vertx.groovy.core.http.HttpServerResponse
 import io.vertx.groovy.ext.auth.User
 import io.vertx.groovy.ext.web.Cookie
-import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.RoutingContext
 import io.vertx.groovy.ext.web.Session
 
