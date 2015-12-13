@@ -286,6 +286,12 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `ctx++` | `ctx.next()` |
 | `ctx >> closure` | `{ res -> if (res.failed) { ctx.fail(res.cause()) } else { closure(res.result()) } }` |
 
+#### Notes
+
+NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
+
+NB : the last method is a very common pattern when you invoke an async method that takes an Handler<AsyncResult> as parameter. If it fails, you just want the context to fail, else, you'll need the result to do something with.
+
 #### Additional methods
 
 You'll find an `ensure` method within `RoutingContext` which is very useful for dealing with a common pattern in Vert.x.
@@ -346,13 +352,6 @@ router.get('/api/1/') >> {
     accessTokenChecker.check accessToken, putTokenIfExistsOrFailWith401 
 }
 ```
-
-
-#### Notes
-
-NB : you already can call `ctx++` (without this lib) since the method on `RoutingContext` is already called `next()`
-
-NB : the last method is a very common pattern when you invoke an async method that takes an Handler<AsyncResult> as parameter. If it fails, you just want the context to fail, else, you'll need the result to do something with.
 
 ### HttpServerRequest
 
