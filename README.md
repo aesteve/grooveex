@@ -294,8 +294,8 @@ Often, one of the first handlers in your routes will invoke an async service and
 
 * fail if the service invocation failed ( 500 )
 * check the result asynchronously, then :
-** fail with some statusCode if the result doesn't suit you (say, the token is invalid)
-** store the result somewhere, or do something with the result if the results suits you, then call `context.next()`
+    * fail with some statusCode if the result doesn't suit you (say, the token is invalid)
+    * store the result somewhere, or do something with the result if the results suits you, then call `context.next()`
 
 In action :
 
