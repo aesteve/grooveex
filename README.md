@@ -258,6 +258,47 @@ router {
 }
 ```
 
+#### Register your own DSL item
+
+Obviously we can't provide you a full list of useful middlewares, handlers. Moreover, you'll probably need a lot of stuff specific to your application. 
+
+Since it's pretty cool to read a routing file in a declarative way (like `expect {something}` for instance), you can register your own handlers/middlewares against RouterBuilder:
+```groovy
+RouterBuilder builder = new RouterBuilder()
+builder.extensions['injectHeader'] = { String headerName, String headerValue ->
+	return { RoutingContext ctx ->
+		response.headers[headerName] = headerValue
+		ctx++
+	}
+}
+builder {
+	route('/dateHeader') {
+		injectHeader 'Date', "${-> new Date() }" // lazy eval
+		get {
+			response << 'You should have the date header yay !"
+		}
+	}
+}
+```
+
+Or if you prefer putting it into the routing file directly:
+```groovy
+router {
+	extension('injectHeader') { String headerName, String headerValue ->
+		return { RoutingContext ctx ->
+			response.headers[headerName] = headerValue
+			ctx++
+		}
+	}
+	route('/dateHeader') {
+		injectHeader 'Date', "${-> new Date() }" // lazy eval
+		get {
+			response << 'You should have the date header yay !"
+		}
+	}
+}
+```
+
 ## Complete list of syntaxic sugar
 
 ### WriteStream

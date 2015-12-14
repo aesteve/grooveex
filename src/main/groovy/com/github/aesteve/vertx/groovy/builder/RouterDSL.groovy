@@ -1,6 +1,7 @@
 package com.github.aesteve.vertx.groovy.builder
 
 import com.github.aesteve.vertx.groovy.io.Marshaller
+import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
@@ -25,6 +26,7 @@ public class RouterDSL {
     private StaticHandler staticHandler
     private LinkedHashSet<MethodAndPath> toFinalize = [] as LinkedHashSet
     private Set<RouteDSL> children = [] as Set
+	Map<String, Closure> extensions = [:]
 
     def make(Closure closure) {
         router = Router.router(vertx)
@@ -129,6 +131,10 @@ public class RouterDSL {
         dsl(clos)
         children << dsl
     }
+	
+	def extension(String name, Closure clos) {
+		extensions[name] = clos
+	}
 
     private createRoute(method, path) {
         if (!path) {

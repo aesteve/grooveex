@@ -137,6 +137,22 @@ class RouteDSL {
     }
 
     def methodMissing(String name, args) {
+		Closure extension = parent.extensions[name]
+		if (extension) {
+			Closure handler
+			if (args.size() == 1) {
+				handler = extension.call(args[0])
+			} else {
+				handler = extension.call(args)
+			}
+			if (handler) {
+				parent.router.route(path).handler { ctx ->
+					handler.delegate = ctx
+					handler(ctx)
+				}
+			}
+			return
+		}
         HttpMethod method
         try {
             method = HttpMethod.valueOf name?.toUpperCase()

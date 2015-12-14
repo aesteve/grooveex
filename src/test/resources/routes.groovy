@@ -8,9 +8,16 @@ import model.Dog
 import static io.vertx.core.http.HttpHeaders.AUTHORIZATION
 import static io.vertx.core.http.HttpHeaders.DATE
 
+
 TestController ctrlerInstance = new TestController()
 
 router {
+	extension('setDateHeader') { format -> 
+		return { ctx ->
+			response.headers['X-MyCustomDate'] = new Date().format(format)
+			ctx++
+		}
+	}
     get('/simpleGet') {
         response << 'Simple GET'
     }
@@ -146,4 +153,12 @@ router {
             yield body as Dog
         }
     }
+	route('/extensions') {
+		route('/date') {
+			setDateHeader 'DD/MM/yyyy HH:mm:ss'
+			get {
+				response << 'check the "X-MyCustomDate" header :)'
+			}
+		}
+	}
 }
