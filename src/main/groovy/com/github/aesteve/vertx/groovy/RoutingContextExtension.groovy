@@ -140,6 +140,7 @@ class RoutingContextExtension {
         Map<String, Marshaller> marshallers = self.get(MARSHALLERS) as Map
         List<String> contentTypes = getContentTypes self
         Collection<String> usableMarshallers = contentTypes.intersect marshallers.keySet()
+		self.getAcceptableContentType()
         if (usableMarshallers.size() == 0) return null
         marshallers[usableMarshallers[0]]
     }
@@ -159,7 +160,17 @@ class RoutingContextExtension {
 			self.put CACHED_BODY, cached
 			return null
 		}
-		return cached[c]
+		cached[c]
+	}
+	
+	static RoutingContext setCachedBody(RoutingContext self, Class c, def bodyAsC) {
+		Map<Class, Object> cached = self.get(CACHED_BODY) as Map
+		if (!cached) {
+			cached = [:]
+			self.put CACHED_BODY, cached
+		}
+		cached[c] = bodyAsC
+		self
 	}
 
 }

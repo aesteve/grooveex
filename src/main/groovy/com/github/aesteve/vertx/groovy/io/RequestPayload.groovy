@@ -23,7 +23,9 @@ class RequestPayload {
 		}
         Marshaller m = context.getMarshaller()
         try {
-            return m.unmarshall(context.bodyAsString, c)
+            def asObject = m.unmarshall(context.bodyAsString, c)
+			context.setCachedBody(c, asObject)
+			return asObject
         } catch(all) {
             context.fail 400
         }
