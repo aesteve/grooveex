@@ -7,13 +7,14 @@ import io.vertx.groovy.ext.web.Router
 @TypeChecked
 class RouterBuilder {
 
+	Vertx vertx
 	Map<String, Closure> extensions = [:]
 	
 	def extension(String name, Closure clos) {
 		extensions[name] = clos
 	}
 	
-	Router call(Vertx vertx, File... routingFiles) {
+	Router call(File... routingFiles) {
 		def binding = new Binding()
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
@@ -23,7 +24,17 @@ class RouterBuilder {
 		routerDSL.router
 	}
 	
-	Router call(Vertx vertx, InputStream is) {
+	Router call(Collection<File> routingFiles) {
+		def binding = new Binding()
+		def shell = new GroovyShell(binding)
+		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
+		shell.setVariable("router", routerDSL.&make)
+		routingFiles.each { shell.evaluate it as File }
+		routerDSL.finish()
+		routerDSL.router
+	}
+	
+	Router call(InputStream is) {
 		if (!is) {
 			throw new IllegalArgumentException("Routing file is null")
 		}
@@ -36,7 +47,7 @@ class RouterBuilder {
 		routerDSL.router
 	}
 	
-	Router call(Vertx vertx, Closure closure) {
+	Router call(Closure closure) {
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		routerDSL.make(closure)
 		routerDSL.finish()

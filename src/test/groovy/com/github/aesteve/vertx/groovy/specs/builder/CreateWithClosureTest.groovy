@@ -8,7 +8,8 @@ import org.junit.Test
 class CreateWithClosureTest extends TestBase {
     @Override
     void router() {
-        router = RouterBuilder.buildRouter vertx, {
+        RouterBuilder builder = new RouterBuilder(vertx: vertx)
+		router = builder {
             get '/byClosure', {
                 response << 'byClosure'
             }

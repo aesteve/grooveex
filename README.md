@@ -158,11 +158,41 @@ Just have a look at the [routing file example](blob/master/src/test/resources/ro
 It makes use of the overloaded operators like `<<` or `>>` but also "wraps" Vert.x's handler closure to inject `RoutingContext` as delegate, so that you can directly write `response.headers` for instance and not `it.response().headers`.
 Every method available in `RoutingContext` will be directly available within your closure.
 
+Keep in mind that the DSL doesn't force you to write all your handlers within the routingFile.
+
+Vert.x defines a Groovy Handler (middleware) as either a class implementing the `Handler` interface, a closure or a method reference.
+
+That means you can do the following :
+
+```groovy
+RouterBuidler.make {
+	get('/accessAnObject').handler(new MyHandler())
+	get('/accessAMethod').handler(new HandlerWithMultipleMethods().&someMethod)
+	get('/accessAClosure', SomeClass.aStaticClosure)
+	get('/inline') {
+		response.end << "or just inline stuff if it's simple enough" 
+	}
+}
+```
+
+And since you receive the `Router` instance once its built, you can use it programmatically as you're used to with Vert.x ! 
+
+### Split routing rules across multiple files
+
+As soon as your application grows, you'll feel the need to separate concerns and the routing concerns separate.
+For instance the part dealing with static resources, server-side templates, could be kept together, whereas middlewares for REST-APIs should be kept in a separate file. 
+
+```groovy
+RouterBuilder builder = new RouterBuilder(vertx: vertx)
+File routingFolder = new File('/some/path/routing_foler')
+Router router = builder(routingFolder.listFiles().collect { it.name.endsWith('.groovy') })
+```
+
 ### Nesting routes
 
 ```groovy
 RouterBuilder builder = new RouterBuilder() 
-Router router = builder.make {
+Router router = builder {
   route('/blood') {
     // ...
     route('/sugar') {
