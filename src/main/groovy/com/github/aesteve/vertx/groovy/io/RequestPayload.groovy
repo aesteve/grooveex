@@ -18,6 +18,9 @@ class RequestPayload {
         if (c == Buffer.class) {
             return context.bodyAsString as Buffer // pretty bad... but still the delegate issue
         }
+		if (context.getCachedBody(c)) {
+			return context.getCachedBody(c)
+		}
         Marshaller m = context.getMarshaller()
         try {
             return m.unmarshall(context.bodyAsString, c)

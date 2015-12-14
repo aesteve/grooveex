@@ -21,6 +21,7 @@ class RoutingContextExtension {
 
     private final static String PAYLOAD = 'ROUTING_CTX_PAYLOAD'
     private final static String MARSHALLERS = 'ROUTING_CTX_MARSHALLERS'
+	private final static String CACHED_BODY = 'ROUTING_CTX_CACHED_BODY'
 
     static RoutingContext putAt(RoutingContext self, String key, Object obj) {
         self.put key, obj
@@ -150,5 +151,15 @@ class RoutingContextExtension {
         }
         new RequestPayload(context: self)
     }
+	
+	static def getCachedBody(RoutingContext self, Class c) {
+		Map<Class, Object> cached = self.get(CACHED_BODY) as Map
+		if (!cached) {
+			cached = [:]
+			self.put CACHED_BODY, cached
+			return null
+		}
+		return cached[c]
+	}
 
 }
