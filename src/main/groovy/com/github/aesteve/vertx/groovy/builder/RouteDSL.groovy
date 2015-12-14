@@ -25,7 +25,6 @@ class RouteDSL {
     List<String> consumes = []
     List<String> produces = []
     Map<String, Marshaller> marshallers = [:]
-    private LinkedHashSet<MethodAndPath> toFinalize = [] as LinkedHashSet
 
     def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
         String completePath = ''
@@ -130,9 +129,6 @@ class RouteDSL {
                 handler context
             }
         }
-        if (marshallers.size() > 0) {
-            toFinalize << new MethodAndPath(method, path)
-        }
         routes << route
     }
 
@@ -179,20 +175,4 @@ class RouteDSL {
         }
     }
 
-    def finish() {
-        toFinalize.each {
-            parent.router.route(method, path).handler {
-                Marshaller m = ctx.marshaller
-                if (!m) {
-                    m = marshallers.find().value
-                }
-                def payload = ctx.getPayload()
-                if (!payload) {
-                    ctx.response.end()
-                    return
-                }
-                ctx.response().end(m.marshall(payload))
-            }
-        }
-    }
 }

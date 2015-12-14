@@ -49,7 +49,7 @@ public class RoutingTest extends BuilderTestBase {
         context.async { async ->
             HttpClientRequest req = client["/handlers"]
             req >> { HttpClientResponse response ->
-                assertEquals 404, response.statusCode
+                assertEquals response.statusCode, 404
                 async++
             }
             req.headers[ACCEPT] = "application/xml"
@@ -106,4 +106,16 @@ public class RoutingTest extends BuilderTestBase {
             req++
         }
     }
+	
+	@Test
+	void doesNotExist(TestContext context) {
+		context.async { async -> 
+			HttpClientRequest req = client['/doesNotExist']
+			req >> { response ->
+				assertEquals response.statusCode, 404
+				async++
+			}
+			req++ 
+		}
+	}
 }

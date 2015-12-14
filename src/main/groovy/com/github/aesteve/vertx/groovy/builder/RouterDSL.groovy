@@ -1,7 +1,5 @@
 package com.github.aesteve.vertx.groovy.builder
 
-import com.github.aesteve.vertx.groovy.io.Marshaller
-import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
@@ -12,6 +10,8 @@ import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
 
 import java.util.regex.Pattern
+
+import com.github.aesteve.vertx.groovy.io.Marshaller
 
 public class RouterDSL {
 
@@ -24,7 +24,6 @@ public class RouterDSL {
     Map<String, Marshaller> marshallers = [:]
     boolean cookies
     private StaticHandler staticHandler
-    private LinkedHashSet<MethodAndPath> toFinalize = [] as LinkedHashSet
     private Set<RouteDSL> children = [] as Set
 	Map<String, Closure> extensions = [:]
 
@@ -161,29 +160,27 @@ public class RouterDSL {
                 closure.call(context)
             }
         }
-        if (marshallers.size() > 0) {
-            toFinalize << new MethodAndPath(method: method, path: path)
-        }
         route
     }
 
     Router finish() {
-        toFinalize.each {
-            createRoute(it.method, it.path).handler { ctx ->
-                Marshaller m = ctx.marshaller
-                if (!m) {
-                    m = marshallers.find().value
-                }
-                def payload = ctx.getPayload()
-                if (!payload) {
-                    ctx.response.end()
-                    return
-                }
-                ctx.response().end(m.marshall(payload))
-            }
-
-        }
-        children.each { it.finish() }
+		boolean hasMarshallers = !marshallers.empty
+		hasMarshallers = hasMarshallers || children.find { !it.marshallers.empty }
+		if (hasMarshallers) {
+			router.route().last().handler { RoutingContext ctx ->
+				Marshaller m = ctx.marshaller
+				if (!m) {
+					ctx++ // 404 probably
+					return
+				}
+				def payload = ctx.getPayload()
+				if (!payload) {
+					ctx++ // 404 probably
+					return
+				}
+				ctx.response().end(m.marshall(payload))
+			}
+		}
         router
     }
 

@@ -80,7 +80,7 @@ class ContentTypeSpec extends BuilderTestBase {
         context.async { async ->
             HttpClientRequest req = client['/json/plain']
             req >> { response ->
-                assertEquals 404, response.statusCode
+                assertEquals response.statusCode, 404
                 async++
             }
             req[ACCEPT] = 'application/xml'

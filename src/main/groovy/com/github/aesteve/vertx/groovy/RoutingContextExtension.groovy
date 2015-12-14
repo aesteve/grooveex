@@ -139,6 +139,7 @@ class RoutingContextExtension {
     static Marshaller getMarshaller(RoutingContext self) {
         Map<String, Marshaller> marshallers = self.get(MARSHALLERS) as Map
         List<String> contentTypes = getContentTypes self
+		if (!contentTypes || contentTypes.empty) return
         Collection<String> usableMarshallers = contentTypes.intersect marshallers.keySet()
 		self.getAcceptableContentType()
         if (usableMarshallers.size() == 0) return null
