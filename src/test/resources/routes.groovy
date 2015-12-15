@@ -2,6 +2,7 @@ import com.github.aesteve.vertx.groovy.io.impl.JacksonMarshaller
 import controllers.TestController
 import controllers.TestStaticController
 import groovy.json.JsonBuilder
+import io.vertx.groovy.core.buffer.Buffer
 import io.vertx.groovy.ext.web.templ.HandlebarsTemplateEngine
 import model.Dog
 
@@ -25,7 +26,7 @@ router {
         produces 'application/json'
         consumes 'application/json'
         get {
-            response << new JsonBuilder([result: 'GET'])
+            response << new JsonBuilder([result: 'GET']) as Buffer
         }
         post {
             response << bodyAsString // simply echoes body

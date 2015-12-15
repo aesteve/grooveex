@@ -7,5 +7,9 @@ class WriteStreamExtension {
     static <T> WriteStream plus(WriteStream self, T data) {
         self.write data
     }
+	
+	static<T> WriteStream leftShift(WriteStream self, T data) {
+		self.end data
+	}
 
 }

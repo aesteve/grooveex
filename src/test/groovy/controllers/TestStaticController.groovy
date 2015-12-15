@@ -1,6 +1,7 @@
 package controllers
 
 import groovy.json.JsonBuilder
+import io.vertx.groovy.core.buffer.Buffer
 import io.vertx.groovy.ext.web.RoutingContext
 
 class TestStaticController {
