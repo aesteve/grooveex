@@ -14,8 +14,8 @@ class RouterBuilder {
 		extensions[name] = clos
 	}
 	
-	Router call(File... routingFiles) {
-		def binding = new Binding()
+	Router call(Binding binding = null, File... routingFiles) {
+		if (!binding) binding = new Binding()
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -24,8 +24,8 @@ class RouterBuilder {
 		routerDSL.router
 	}
 	
-	Router call(Collection<File> routingFiles) {
-		def binding = new Binding()
+	Router call(Binding binding = null, Collection<File> routingFiles) {
+		if (!binding) binding = new Binding()
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -34,11 +34,11 @@ class RouterBuilder {
 		routerDSL.router
 	}
 	
-	Router call(InputStream is) {
+	Router call(Binding binding = null, InputStream is) {
 		if (!is) {
 			throw new IllegalArgumentException("Routing file is null")
 		}
-		def binding = new Binding()
+		if (!binding) binding = new Binding()
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -54,8 +54,8 @@ class RouterBuilder {
 		routerDSL.router
 	}
 	
-    static Router buildRouter(Vertx vertx, File... routingFiles) {
-        def binding = new Binding()
+    static Router buildRouter(Binding binding = null, Vertx vertx, File... routingFiles) {
+		if (!binding) binding = new Binding()
         def shell = new GroovyShell(binding)
         RouterDSL routerDSL = new RouterDSL(vertx: vertx)
         shell.setVariable("router", routerDSL.&make)
@@ -64,11 +64,11 @@ class RouterBuilder {
         routerDSL.router
     }
 
-    static Router buildRouter(Vertx vertx, InputStream is) {
+    static Router buildRouter(Binding binding = null, Vertx vertx, InputStream is) {
         if (!is) {
             throw new IllegalArgumentException("Routing file is null")
         }
-        def binding = new Binding()
+		if (!binding) binding = new Binding()
         def shell = new GroovyShell(binding)
         RouterDSL routerDSL = new RouterDSL(vertx: vertx)
         shell.setVariable("router", routerDSL.&make)
