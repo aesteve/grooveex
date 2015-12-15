@@ -1,5 +1,6 @@
 package com.github.aesteve.vertx.groovy.builder
 
+import com.github.aesteve.vertx.groovy.io.Marshaller
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
@@ -10,8 +11,6 @@ import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
 
 import java.util.regex.Pattern
-
-import com.github.aesteve.vertx.groovy.io.Marshaller
 
 public class RouterDSL {
 
@@ -196,11 +195,7 @@ public class RouterDSL {
                 makeRoute(args[0], method, args[1])
             }
         } else {
-            if (args && args.size() == 1) {
-                router."$name"(args[0])
-            } else {
-                router."$name"(args)
-            }
+            router."$name"(*args)
         }
     }
 }
