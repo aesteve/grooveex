@@ -19,6 +19,7 @@ repositories {
 dependencies {
 	compile "io.vertx:vertx-core:$vertxVersion"
 	compile "io.vertx:vertx-web:$vertxVersion"
+	compile "io.vertx:vertx-auth-oauth2:$vertxVersion"
 	compile "io.vertx:vertx-lang-groovy:$vertxVersion"
 	compile "io.vertx:vertx-unit:$vertxVersion"
 
