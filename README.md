@@ -333,14 +333,13 @@ router {
 
 ### WriteStream
 
-Examples : `ServerWebSocket`, `SockJSSocket`, `HttpServerResponse`
+Examples : `ServerWebSocket`, `SockJSSocket`, `HttpClientRequest`, `HttpServerResponse`
 
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `stream += data` | `stream.write(data)` |
+| `stream << data` | `stream.end(data)` |
 
-In case you're wondering I chose the `<<` operator to mean "end the stream". cf. `HttpServerResponse` for instance.
-Don't hesitate to (gently ;) ) let me know what you think about it.
 
 ### ReadStream
 
@@ -477,8 +476,7 @@ router.get('/api/1/') >> {
 | ------------- | --------------- |
 | `resp.headers` | `resp.headers()` |
 | `resp++` | `resp.end()` |
-| `resp << buffer` | `resp.end(buffer)` |
-| `resp << object` | `resp.end(object.toString())` |
+| `resp << new JsonBuilder(...)` | `resp.end(new JsonBuilder(...).toString())` |
 
 ### HttpClient
 
@@ -492,8 +490,7 @@ router.get('/api/1/') >> {
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `req++` | `req.end()` |
-| `req << buffer` | `req.end(buffer)` |
-| `req << object` | `req.end(object.toString())` |
+| `req << new JsonBuilder(...)` | `req.end(new JsonBuilder(...).toString())` |
 
 ### HttpClientResponse
 
@@ -563,3 +560,9 @@ router.get('/api/1/') >> {
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `'something' as Buffer` | `Buffer.buffer('something')` |
+
+### JsonBuilder
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `new JsonBuilder(...) as Buffer` | `Buffer.buffer(new JsonBuilder(...).toString())` |
