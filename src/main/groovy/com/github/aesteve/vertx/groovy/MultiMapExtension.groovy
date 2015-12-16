@@ -11,4 +11,10 @@ class MultiMapExtension {
     static void putAt(MultiMap self, CharSequence key, Object value) {
         self.add key.toString(), value
     }
+	
+	static void each(MultiMap self, Closure clos) {
+		self.names().each {
+			clos it, self.get(it)
+		}
+	}
 }

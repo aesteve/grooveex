@@ -15,6 +15,7 @@ class RouteDSL {
     RouterDSL parent
     def path
     def bodyHandler
+	def usesBody = true
     boolean cookies
     def sessionStore
     private List<Route> routes = []
@@ -25,6 +26,7 @@ class RouteDSL {
     List<String> consumes = []
     List<String> produces = []
     Map<String, Marshaller> marshallers = [:]
+	List<Handler> extensions = []
 
     def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
         String completePath = ''
@@ -77,8 +79,8 @@ class RouteDSL {
         RouteDSL.make(parent, path, cookies, this.path)(clos)
     }
 
-    private void createRoute(HttpMethod method, Closure handler, boolean useBodyHandler = false) {
-        if (useBodyHandler) {
+    private void createRoute(HttpMethod method, Closure handler) {
+        if (usesBody) {
             if (!bodyHandler) {
                 bodyHandler = BodyHandler.create()
             }
@@ -110,12 +112,19 @@ class RouteDSL {
             ctx.marshallers = marshallers
             ctx++
         }
-        Route route = parent.router.route(method, path)
+		extensions.each { clos ->
+			println clos.class
+			parent.router.route(method, path).handler { ctx ->
+				clos.delegate = ctx
+				clos.call(ctx)
+			}
+		}
+		Route route = parent.router.route(method, path)
         consumes.addAll parent.consumes
         produces.addAll parent.produces
         consumes.each { route.consumes it }
         produces.each { route.produces it }
-        missingMethods.each { methodMissing ->
+		missingMethods.each { methodMissing ->
             callMethodOnRoute(route, methodMissing[0], methodMissing[1])
         }
         if (!blocking) {
@@ -135,13 +144,8 @@ class RouteDSL {
     def methodMissing(String name, args) {
 		Closure extension = parent.extensions[name]
 		if (extension) {
-            Closure handler = extension.call(*args)
-			if (handler) {
-				parent.router.route(path).handler { ctx ->
-					handler.delegate = ctx
-					handler(ctx)
-				}
-			}
+			def handler = extension.call(*args)
+			if (handler) extensions << handler 
 			return
 		}
         HttpMethod method
@@ -150,7 +154,7 @@ class RouteDSL {
         } catch (all) {
         }
         if (method) {
-            createRoute(method, args[0], true)
+            createRoute(method, args[0])
         } else {
             if (routes.empty) {
                 // delay
@@ -162,6 +166,15 @@ class RouteDSL {
         }
     }
 
+	def authority(String authority) {
+		parent.authHandlers.each { auth -> 
+			parent.router.route(path).handler { 	
+				println "call auth"
+				auth.handle(it)
+			}
+		}
+	}
+	
     def callMethodOnRoute(route, name, args) {
         route."$name"(*args)
     }

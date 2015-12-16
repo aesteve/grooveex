@@ -1,5 +1,7 @@
 package com.github.aesteve.vertx.groovy
 
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import groovy.transform.TypeChecked
 import io.vertx.groovy.core.buffer.Buffer
 
@@ -38,6 +40,12 @@ class BufferExtension {
         if (c == String.class) {
             return self.toString('UTF-8')
         }
+		if (c.isAssignableFrom(Map.class)) {
+			return new JsonSlurper().parseText(self.toString('UTF-8'))
+		}
+		if (c.isAssignableFrom(Collection.class)) {
+			return new JsonSlurper().parseText(self.toString('UTF-8'))
+		}
     }
 
     static int compareTo(Buffer self, Object other) {

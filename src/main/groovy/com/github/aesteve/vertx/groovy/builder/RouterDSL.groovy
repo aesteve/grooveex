@@ -1,6 +1,6 @@
 package com.github.aesteve.vertx.groovy.builder
 
-import com.github.aesteve.vertx.groovy.io.Marshaller
+import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
@@ -11,6 +11,8 @@ import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
 
 import java.util.regex.Pattern
+
+import com.github.aesteve.vertx.groovy.io.Marshaller
 
 public class RouterDSL {
 
@@ -25,6 +27,7 @@ public class RouterDSL {
     private StaticHandler staticHandler
     private Set<RouteDSL> children = [] as Set
 	Map<String, Closure> extensions = [:]
+	List<Handler> authHandlers = []
 
     def make(Closure closure) {
         router = Router.router(vertx)
@@ -132,6 +135,13 @@ public class RouterDSL {
 	
 	def extension(String name, Closure clos) {
 		extensions[name] = clos
+	}
+	
+	def oauth2(Closure clos) {
+		OAuth2DSL dsl = new OAuth2DSL(vertx: vertx, router: router)
+		dsl.make clos
+		authHandlers << dsl.handler
+		this
 	}
 
     private createRoute(method, path) {

@@ -60,6 +60,30 @@ task sourcesJar(type: Jar) {
 	from sourceSets.main.allGroovy
 }
 
+// Demos
+
+sourceSets {
+	demos {
+		groovy {
+			compileClasspath += main.output
+			runtimeClasspath += main.output
+		}
+	}
+}
+
+configurations {
+	demosCompile.extendsFrom compile
+}
+
+task demo(dependsOn: 'classes', type: JavaExec) {
+	String demoName = project['demo']
+	main = "$demoName/launchDemo"
+	classpath = sourceSets.demos.runtimeClasspath
+}
+
+
+
+
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.9'
 }

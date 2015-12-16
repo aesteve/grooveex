@@ -19,10 +19,12 @@ class OAuth2DSL {
 	String site
 	String authorizationPath
 	String tokenPath
-	String callbackPath
 	HttpMethod callbackMethod = HttpMethod.GET
 	Set<String> authorities = []
 	OAuth2FlowType flowType = OAuth2FlowType.AUTH_CODE
+	OAuth2AuthHandler handler
+	Closure callback
+	String callbackPath
 	
 	Map getOptions() {
 		[
@@ -36,18 +38,29 @@ class OAuth2DSL {
 	
 	OAuth2AuthHandler make(Closure clos) {
 		clos.delegate = this
+		clos.resolveStrategy = Closure.DELEGATE_FIRST
 		clos()
 		OAuth2Auth provider = OAuth2Auth.create vertx, flowType, options
-		OAuth2AuthHandler handler = OAuth2AuthHandler.create provider, domain
-		Route callbackRoute = router.route callbackMethod, callbackPath
-		handler.setupCallback callbackRoute
+		handler = OAuth2AuthHandler.create provider, domain
+		if (callback) { router.get(callbackPath).handler callback }
+		handler.setupCallback router.get(callbackPath)
+	}
+	
+	def callback(String path, Closure clos = null) {
+		callbackPath = path
+		if (clos) {
+			callback = { ctx ->
+				clos.delegate = ctx
+				clos(ctx)
+			}
+		}
 	}
 	
 	def authority(String authority) {
 		authorities << authority
 	}
 	
-	def missingMethod(String name, def args) {
+	def methodMissing(String name, def args) {
 		if (args.size() != 1) throw new MissingMethodException(name, this.class, args)
 		try {
 			this.setProperty(name, args[0])
