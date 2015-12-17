@@ -1,9 +1,12 @@
 package com.github.aesteve.vertx.groovy.specs.ast
 
+import com.github.aesteve.vertx.groovy.promise.Promise
+import org.codehaus.groovy.runtime.CurriedClosure
 import org.junit.Test
-import static org.junit.Assert.*
-
 import services.FakeAsyncClient
+
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertTrue
 
 class FakeAsyncClientSpec {
 
@@ -11,6 +14,8 @@ class FakeAsyncClientSpec {
 	
 	@Test
 	void testMethodExists() {
-		println client.someAsyncMethod(true)
+		Promise promise = client.someAsyncMethod('lala')
+		assertNotNull promise
+		assertTrue(promise.closure instanceof CurriedClosure)
 	}
 }

@@ -8,10 +8,10 @@ import io.vertx.core.Handler
  * Some typical Vert.x async client 
  */
 class FakeAsyncClient {
-	
-	public FakeAsyncClient someAsyncMethod(boolean fail, Handler<AsyncResult<String>> handler) {
+
+	public FakeAsyncClient someAsyncMethod(String test, Handler<AsyncResult<String>> handler) {
 		Future fut
-		if (fail) {
+		if (test) {
 			fut = Future.failedFuture(new RuntimeException('failed'))
 		}
 		else {

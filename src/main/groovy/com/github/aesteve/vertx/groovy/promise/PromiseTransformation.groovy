@@ -1,13 +1,7 @@
 package com.github.aesteve.vertx.groovy.promise
 
-import groovy.transform.CompileStatic
 import io.vertx.core.Handler
-
-import org.codehaus.groovy.ast.ASTNode
-import org.codehaus.groovy.ast.ClassNode
-import org.codehaus.groovy.ast.MethodNode
-import org.codehaus.groovy.ast.ModuleNode
-import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.builder.AstBuilder
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
@@ -28,7 +22,6 @@ class PromiseTransformation implements ASTTransformation {
 		if (!classes) return
 		Map<ClassNode, List<MethodNode>> newMethods = [:]
 		classes.each { clazz ->
-			println clazz
 			List<MethodNode> methods = clazz.methods
 			methods.each { MethodNode method ->
 				if (!isHandlerMethod(method)) return
@@ -59,7 +52,7 @@ class PromiseTransformation implements ASTTransformation {
 		Parameter[] params = asyncMethod.parameters
 		params = params.take(params.size() - 1)
 		List<ASTNode> nodes = new AstBuilder().buildFromSpec {
-			method(asyncMethod.name, org.codehaus.groovy.ast.MethodNode.ACC_PUBLIC, String.class) {
+			method(asyncMethod.name, org.codehaus.groovy.ast.MethodNode.ACC_PUBLIC, Promise.class) {
 				parameters {
 					params.each { Parameter param ->
 						parameter "${param.name}": param.type.typeClass
@@ -68,7 +61,20 @@ class PromiseTransformation implements ASTTransformation {
 				exceptions {}
 				block { 
 					returnStatement {
-						constant "Hello!" 
+						constructorCall(Promise.class) {
+							methodCall {
+								methodPointer {
+									variable 'this'
+									constant asyncMethod.name
+								}
+								constant 'curry'
+								argumentList {
+									params.each {
+										constant it.name
+									}
+								}
+							}
+						}
 					}
 				}
 			}
