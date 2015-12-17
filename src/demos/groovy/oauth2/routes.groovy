@@ -1,6 +1,5 @@
 import static io.vertx.core.http.HttpHeaders.*
 import oauth2.GithubUser
-import oauth2.JGithubUser
 
 router {
 	extension('findUsername') { mapName ->
