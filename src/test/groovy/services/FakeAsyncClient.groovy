@@ -9,16 +9,13 @@ import io.vertx.core.Handler
  */
 class FakeAsyncClient {
 
-	public FakeAsyncClient someAsyncMethod(String test, Handler<AsyncResult<String>> handler) {
-		Future fut
-		if (test) {
-			fut = Future.failedFuture(new RuntimeException('failed'))
-		}
-		else {
-			fut Future.succeededFuture('something')
-		}
-		handler.handle fut 
+	public FakeAsyncClient someAsyncMethod(String theParam, Handler<AsyncResult<String>> handler) {
+		handler.handle Future.succeededFuture(theParam)
 		this
+	}
+
+	public FakeAsyncClient someAsyncMethod(Handler<AsyncResult<String>> handler) {
+		handler.handle Future.succeededFuture('void')
 	}
 	
 }

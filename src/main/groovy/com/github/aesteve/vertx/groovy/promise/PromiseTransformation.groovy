@@ -70,7 +70,7 @@ class PromiseTransformation implements ASTTransformation {
 								constant 'curry'
 								argumentList {
 									params.each {
-										constant it.name
+										variable it.name
 									}
 								}
 							}
