@@ -52,7 +52,6 @@ router {
 		authority '*'
 		findUsername 'user_tokens'
 		get {
-			println "${user}"
 			response << "Hello ${user.username}"
 		}
 	}
