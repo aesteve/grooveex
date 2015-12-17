@@ -15,16 +15,26 @@ class ServerDSL {
 		clos.delegate = this
 		clos.resolveStrategy = Closure.DELEGATE_FIRST
 		clos() // fulfill options
-		server = vertx.createHttpServer(options)
-		if (routingFiles && ! routingFiles.empty) {
-			RouterBuilder builder = new RouterBuilder(vertx: vertx)
-			Router router = builder routingFiles
-			server.requestHandler router.&accept
+		if (vertx) {
+			server = vertx.createHttpServer(options)
+			if (routingFiles && ! routingFiles.empty) {
+				RouterBuilder builder = new RouterBuilder(vertx: vertx)
+				Router router = builder routingFiles
+				server.requestHandler router.&accept
+			}
 		}
 	}
 	
 	def routingFile(String file) {
 		routingFiles << file
+	}
+	
+	def routingFiles(Collection<String> files) {
+		routingFiles.addAll files
+	}
+	
+	def routingFiles(String dir, String pattern = '**/*routes*.groovy') {
+		routingFiles.addAll new FileNameFinder().getFileNames(dir, pattern)
 	}
 	
 	def methodMissing(String name, def args) {
