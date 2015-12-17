@@ -113,7 +113,6 @@ class RouteDSL {
             ctx++
         }
 		extensions.each { clos ->
-			println clos.class
 			parent.router.route(method, path).handler { ctx ->
 				clos.delegate = ctx
 				clos.call(ctx)
