@@ -188,5 +188,12 @@ class RoutingContextExtension {
 		cached[c] = bodyAsC
 		self
 	}
+	
+	static RoutingContext redirect(RoutingContext self, String path, int statusCode = 302) {
+		self.response().setStatusCode statusCode
+		self.response().putHeader(HttpHeaders.LOCATION.toString(), path)
+		self.response().end()
+		self
+	}
 
 }

@@ -388,6 +388,7 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | `ctx.request` | `ctx.request()` |
 | `ctx.session` | `ctx.session()` |
 | `ctx.statusCode` | `ctx.statusCode()` |
+| `ctx.redirect 'somewhere', statusCode` | `ctx.response().putHeader(HttpHeaders.LOCATION, 'somewhere').setStatusCode(statusCode).end()` |
 | `ctx.user` | `ctx.user()` |
 | `ctx.vertx` | `ctx.vertx()` |
 | `ctx - 400` | `ctx.fail(400)` |

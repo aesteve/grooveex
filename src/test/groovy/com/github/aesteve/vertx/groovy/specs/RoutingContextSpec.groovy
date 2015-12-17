@@ -1,5 +1,7 @@
 package com.github.aesteve.vertx.groovy.specs
 
+
+import static io.vertx.core.http.HttpHeaders.*
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
 import io.vertx.core.Handler
@@ -70,6 +72,12 @@ class RoutingContextSpec extends TestBase {
         router['/checkToken'] = {
             response << it['user']
         }
+		router['/redirectWith302'] = {
+			redirect 'http://vertx.io'
+		}
+		router['/redirectWith301'] = {
+			redirect 'http://vertx.io', 301
+		}
     }
 
     @Test
@@ -186,5 +194,27 @@ class RoutingContextSpec extends TestBase {
             }
         }
     }
+	
+	@Test
+	void test302(TestContext context) {
+		context.async { async -> 
+			client.getNow '/redirectWith302', { response ->
+				assertEquals response.statusCode, 302
+				assertEquals response.headers[LOCATION], 'http://vertx.io'
+				async++
+			} 
+		}
+	}
+
+	@Test
+	void test301(TestContext context) {
+		context.async { async ->
+			client.getNow '/redirectWith301', { response ->
+				assertEquals response.statusCode, 301
+				assertEquals response.headers[LOCATION], 'http://vertx.io'
+				async++
+			}
+		}
+	}
 
 }

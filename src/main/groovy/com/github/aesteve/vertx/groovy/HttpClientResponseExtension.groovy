@@ -22,5 +22,5 @@ class HttpClientResponseExtension {
     static String getStatusMessage(HttpClientResponse self) {
         self.statusMessage()
     }
-
+	
 }
