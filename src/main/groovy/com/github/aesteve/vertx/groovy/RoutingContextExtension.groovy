@@ -22,6 +22,7 @@ class RoutingContextExtension {
     private final static String PAYLOAD = 'ROUTING_CTX_PAYLOAD'
     private final static String MARSHALLERS = 'ROUTING_CTX_MARSHALLERS'
 	private final static String CACHED_BODY = 'ROUTING_CTX_CACHED_BODY'
+	private final static String USER_IN_CONTEXT = 'USER_WITHIN_ROUTING_CONTEXT'
 
     static RoutingContext putAt(RoutingContext self, String key, Object obj) {
         self.put key, obj
@@ -39,9 +40,22 @@ class RoutingContextExtension {
         self.response()
     }
 
+	static User user(RoutingContext self) {
+		User u = self.get(USER_IN_CONTEXT) as User
+		if (u) return u
+		new User(((io.vertx.ext.web.RoutingContext)self.getDelegate()).user())
+	}
+	
     static User getUser(RoutingContext self) {
         self.user()
     }
+	
+	static RoutingContext setUser(RoutingContext self, User user) {
+		io.vertx.ext.web.RoutingContext javaContext = self.getDelegate() as io.vertx.ext.web.RoutingContext
+		javaContext.setUser(user.getDelegate() as io.vertx.ext.auth.User)
+		self.put USER_IN_CONTEXT, user
+		self
+	}
 
     static Session getSession(RoutingContext self) {
         self.session()

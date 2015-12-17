@@ -1,14 +1,19 @@
 package oauth2
 
-import io.vertx.groovy.ext.auth.common.User
+import io.vertx.groovy.ext.auth.User
 
 class GithubUser extends User {
 
-	public GithubUser(JGithubUser java) {
-		super(java)
-	} 
-
-	String getUsername() {
-		getDelegate().username
+	String username
+	User original
+	
+	public GithubUser(User original, String username) {
+		super(original.getDelegate())
+		this.original = original
+		this.username = username
+	}
+	
+	def getDelegate() {
+		original.getDelegate()
 	}
 }

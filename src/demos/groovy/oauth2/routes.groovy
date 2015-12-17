@@ -11,7 +11,7 @@ router {
 				def tokens = vertx.sharedData[mapName]
 				def username = tokens[token] 
 				if (username) {
-					setUser(new GithubUser(new JGithubUser(user.delegate, username)))
+					user = new GithubUser(user, username)
 					ctx++
 					return
 				}
@@ -23,7 +23,7 @@ router {
 							username = userInfos.login
 							println "username $username"
 							tokens[token] = username
-							setUser(new GithubUser(new JGithubUser(user.delegate, username)))
+							user = new GithubUser(user, username)
 							ctx++
 						}
 					} else {
