@@ -7,7 +7,7 @@ import org.junit.Test
 class MapSpec {
 
 	@Test
-	public void deploymentOptions() {
+	void deploymentOptions() {
 		DeploymentOptions options = new DeploymentOptions()
 		def config = new JsonObject()
 		def ha = true

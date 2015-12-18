@@ -10,12 +10,12 @@ class EventBusSpec extends TestBase {
 	private final static String ADDR = 'some-address'
 
 	@Override
-	public void router() {
+	void router() {
 		router = Router.router(vertx)
 	}
 
 	@Test
-	public void testEventBusPublish(TestContext context) {
+	void testEventBusPublish(TestContext context) {
 		context.async { async ->
 			EventBus eb = vertx.eventBus
 			String msg = "ping"
@@ -29,7 +29,7 @@ class EventBusSpec extends TestBase {
 	}
 
 	@Test
-	public void testEventBusSend(TestContext context) {
+	void testEventBusSend(TestContext context) {
 		context.async { async ->
 			EventBus eb = vertx.eventBus
 			String msg = "ping"

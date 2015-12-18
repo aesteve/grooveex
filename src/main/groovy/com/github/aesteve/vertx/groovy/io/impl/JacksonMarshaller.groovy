@@ -9,7 +9,7 @@ class JacksonMarshaller implements Marshaller {
 
 	ObjectMapper mapper
 
-	public JacksonMarshaller() {
+	JacksonMarshaller() {
 		mapper = new ObjectMapper()
 	}
 

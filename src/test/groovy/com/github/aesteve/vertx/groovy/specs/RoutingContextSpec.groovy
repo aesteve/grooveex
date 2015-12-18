@@ -1,27 +1,12 @@
 package com.github.aesteve.vertx.groovy.specs
 
 import io.vertx.core.AsyncResult
-import io.vertx.core.AsyncResult
-import io.vertx.core.Future
-import io.vertx.core.Future
-import io.vertx.core.Handler
-import io.vertx.core.Handler
-import io.vertx.groovy.ext.unit.TestContext
-import io.vertx.groovy.ext.unit.TestContext
-import io.vertx.groovy.ext.web.Router
-import io.vertx.groovy.ext.web.Router
-import org.junit.Test
-import org.junit.Test
-
-import static io.vertx.core.http.HttpHeaders.*
-import io.vertx.core.AsyncResult
 import io.vertx.core.Future
 import io.vertx.core.Handler
 import io.vertx.groovy.ext.unit.TestContext
 import io.vertx.groovy.ext.web.Router
 import org.junit.Test
 
-import static io.vertx.core.http.HttpHeaders.LOCATION
 import static io.vertx.core.http.HttpHeaders.LOCATION
 
 class RoutingContextSpec extends TestBase {

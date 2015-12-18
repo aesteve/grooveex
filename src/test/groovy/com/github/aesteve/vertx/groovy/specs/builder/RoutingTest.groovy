@@ -10,10 +10,10 @@ import org.junit.Test
 import static io.vertx.core.http.HttpHeaders.ACCEPT
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
 
-public class RoutingTest extends BuilderTestBase {
+class RoutingTest extends BuilderTestBase {
 
 	@Test
-	public void testSimpleGet(TestContext context) {
+	void testSimpleGet(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/simpleGet']
 			req >> { response ->
@@ -27,7 +27,7 @@ public class RoutingTest extends BuilderTestBase {
 	}
 
 	@Test
-	public void testGetHandler(TestContext context) {
+	void testGetHandler(TestContext context) {
 		context.async { async ->
 			String expected = new JsonBuilder([result: "GET"]).toString()
 			HttpClientRequest req = client["/handlers"]
@@ -45,7 +45,7 @@ public class RoutingTest extends BuilderTestBase {
 	}
 
 	@Test
-	public void testWrongContentType(TestContext context) {
+	void testWrongContentType(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client["/handlers"]
 			req >> { HttpClientResponse response ->
@@ -59,7 +59,7 @@ public class RoutingTest extends BuilderTestBase {
 	}
 
 	@Test
-	public void testPostHandler(TestContext context) {
+	void testPostHandler(TestContext context) {
 		context.async { async ->
 			JsonBuilder payload = new JsonBuilder([someKey: 'someValue'])
 			HttpClientRequest req = client.post "/handlers"
@@ -77,7 +77,7 @@ public class RoutingTest extends BuilderTestBase {
 	}
 
 	@Test
-	public void testGetStatic(TestContext context) {
+	void testGetStatic(TestContext context) {
 		context.async { async ->
 			JsonBuilder result = new JsonBuilder([result: "closure"])
 			HttpClientRequest req = client["/staticClosure"]
@@ -93,7 +93,7 @@ public class RoutingTest extends BuilderTestBase {
 	}
 
 	@Test
-	public void testBlocking(TestContext context) {
+	void testBlocking(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/blocking']
 			req >> { response ->

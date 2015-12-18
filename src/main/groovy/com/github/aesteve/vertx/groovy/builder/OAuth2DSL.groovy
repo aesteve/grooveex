@@ -1,24 +1,10 @@
 package com.github.aesteve.vertx.groovy.builder
 
-import groovy.transform.TypeChecked
-import io.vertx.core.http.HttpMethod
-import io.vertx.core.http.HttpMethod
 import io.vertx.core.http.HttpMethod
 import io.vertx.ext.auth.oauth2.OAuth2FlowType
-import io.vertx.ext.auth.oauth2.OAuth2FlowType
-import io.vertx.ext.auth.oauth2.OAuth2FlowType
-import io.vertx.groovy.core.Vertx
-import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.auth.oauth2.OAuth2Auth
-import io.vertx.groovy.ext.auth.oauth2.OAuth2Auth
-import io.vertx.groovy.ext.auth.oauth2.OAuth2Auth
-import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.Router
-import io.vertx.groovy.ext.web.Router
-import io.vertx.groovy.ext.web.Router
-import io.vertx.groovy.ext.web.handler.OAuth2AuthHandler
-import io.vertx.groovy.ext.web.handler.OAuth2AuthHandler
 import io.vertx.groovy.ext.web.handler.OAuth2AuthHandler
 
 class OAuth2DSL {

@@ -13,17 +13,17 @@ import org.junit.runner.RunWith
 @RunWith(VertxUnitRunner.class)
 abstract class TestBase {
 
-	public final int PORT = 9090
-	public final String HOST = 'localhost'
-	public final Map serverOptions = [port: PORT, host: HOST]
-	public final Map clientOptions = [defaultPort: PORT, defaultHost: HOST]
+	final int PORT = 9090
+	final String HOST = 'localhost'
+	final Map serverOptions = [port: PORT, host: HOST]
+	final Map clientOptions = [defaultPort: PORT, defaultHost: HOST]
 
-	protected Vertx vertx
-	protected HttpServer server
-	protected Router router
+	Vertx vertx
+	HttpServer server
+	Router router
 
 	@Before
-	public void setUpServer(TestContext context) {
+	void setUpServer(TestContext context) {
 		vertx = Vertx.vertx
 		server = vertx.createHttpServer(serverOptions)
 		router()
@@ -31,7 +31,7 @@ abstract class TestBase {
 	}
 
 	@After
-	public void tearDown(TestContext context) {
+	void tearDown(TestContext context) {
 		server.close context.asyncAssertSuccess()
 	}
 

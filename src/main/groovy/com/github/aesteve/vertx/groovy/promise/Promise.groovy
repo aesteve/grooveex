@@ -11,21 +11,21 @@ class Promise {
 	Closure successHandler
 	Closure failureHandler
 
-	public Promise(CurriedClosure closure) {
+	Promise(CurriedClosure closure) {
 		this.closure = closure
 	}
 
-	public Promise onSucceed(Closure clos) {
+	Promise onSucceed(Closure clos) {
 		successHandler = clos
 		this
 	}
 
-	public Promise onFail(Closure clos) {
+	Promise onFail(Closure clos) {
 		failureHandler = clos
 		this
 	}
 
-	public void call() {
+	void call() {
 		closure.call { AsyncResult res ->
 			if (res.succeeded()) {
 				if (successHandler) successHandler.call res.result()

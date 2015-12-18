@@ -10,7 +10,7 @@ import static io.vertx.core.http.HttpHeaders.AUTHORIZATION
 class ExpectSpec extends BuilderTestBase {
 
 	@Test
-	public void testCorrectRequest(TestContext context) {
+	void testCorrectRequest(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client["/expect?long=123&exists=something"]
 			req >> { response ->
@@ -26,7 +26,7 @@ class ExpectSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testMissingParam(TestContext context) {
+	void testMissingParam(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client["/expect?long=123"]
 			req >> { response ->
@@ -39,7 +39,7 @@ class ExpectSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testWrongParamValue(TestContext context) {
+	void testWrongParamValue(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client["/expect?long=string&exists=something"]
 			req >> { response ->
@@ -52,7 +52,7 @@ class ExpectSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testWrongHeader(TestContext context) {
+	void testWrongHeader(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client["/expect?long=string&exists=something"]
 			req >> { response ->

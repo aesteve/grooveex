@@ -7,7 +7,7 @@ class GithubUser extends User {
 	String username
 	User original
 
-	public GithubUser(User original, String username) {
+	GithubUser(User original, String username) {
 		super(original.getDelegate())
 		this.original = original
 		this.username = username

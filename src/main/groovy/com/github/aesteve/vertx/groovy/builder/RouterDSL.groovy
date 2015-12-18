@@ -1,42 +1,19 @@
 package com.github.aesteve.vertx.groovy.builder
 
 import com.github.aesteve.vertx.groovy.io.Marshaller
-import com.github.aesteve.vertx.groovy.io.Marshaller
-import io.vertx.core.Handler
-import io.vertx.core.Handler
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
-import io.vertx.core.http.HttpMethod
-import io.vertx.core.http.HttpMethod
-import io.vertx.groovy.core.Vertx
-import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
-import io.vertx.groovy.ext.web.Route
-import io.vertx.groovy.ext.web.Route
-import io.vertx.groovy.ext.web.Router
-import io.vertx.groovy.ext.web.Router
 import io.vertx.groovy.ext.web.Router
 import io.vertx.groovy.ext.web.RoutingContext
-import io.vertx.groovy.ext.web.RoutingContext
-import io.vertx.groovy.ext.web.RoutingContext
-import io.vertx.groovy.ext.web.handler.*
-import io.vertx.groovy.ext.web.handler.*
 import io.vertx.groovy.ext.web.handler.*
 import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
-import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
-import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
-import io.vertx.groovy.ext.web.templ.TemplateEngine
-import io.vertx.groovy.ext.web.templ.TemplateEngine
 import io.vertx.groovy.ext.web.templ.TemplateEngine
 
 import java.util.regex.Pattern
-import java.util.regex.Pattern
-import java.util.regex.Pattern
 
-import com.github.aesteve.vertx.groovy.io.Marshaller
-
-public class RouterDSL {
+class RouterDSL {
 
 	Vertx vertx
 	Router router

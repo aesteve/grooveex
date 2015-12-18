@@ -21,7 +21,7 @@ class SockJSSocketSpec extends TestBase {
 	}
 
 	@Test
-	public void testSocketSugar(TestContext context) {
+	void testSocketSugar(TestContext context) {
 		context.async { async ->
 			Buffer buff = "test" as Buffer
 			client.websocket "/sock/websocket", { WebSocket sock ->
@@ -35,7 +35,7 @@ class SockJSSocketSpec extends TestBase {
 	}
 
 	@Test
-	public void testPipeSugar(TestContext context) {
+	void testPipeSugar(TestContext context) {
 		context.async { async ->
 			String filePath = "src/test/resources/file.txt"
 			Buffer fileBuff = vertx.fileSystem.readFileBlocking filePath

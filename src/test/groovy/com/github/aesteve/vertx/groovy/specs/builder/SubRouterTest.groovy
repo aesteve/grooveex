@@ -5,7 +5,7 @@ import org.junit.Test
 
 class SubRouterTest extends BuilderTestBase {
 	@Test
-	public void testGetHandler(TestContext context) {
+	void testGetHandler(TestContext context) {
 		context.async { async ->
 			client.getNow("/sub/firstSubRoute", { response ->
 				assertEquals 200, response.statusCode
@@ -18,7 +18,7 @@ class SubRouterTest extends BuilderTestBase {
 	}
 
 	@Test
-	public void testSubRoute(TestContext context) {
+	void testSubRoute(TestContext context) {
 		context.async { async ->
 			client.getNow("/sub/secondSubRoute", { response ->
 				assertEquals 200, response.statusCode

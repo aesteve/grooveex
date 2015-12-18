@@ -11,7 +11,7 @@ import static io.vertx.core.http.HttpHeaders.ORIGIN
 class CORSTest extends BuilderTestBase {
 
 	@Test
-	public void testAllowOrigin(TestContext context) {
+	void testAllowOrigin(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client["/cors/test"]
 			req >> { response ->

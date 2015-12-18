@@ -8,7 +8,7 @@ import org.junit.Test
 class NestedRoutesSpec extends BuilderTestBase {
 
 	@Test
-	public void testSubRoutes(TestContext context) {
+	void testSubRoutes(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/sugar']
 			req >> { response ->
@@ -23,7 +23,7 @@ class NestedRoutesSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testSubRoutes2(TestContext context) {
+	void testSubRoutes2(TestContext context) {
 		context.async { async ->
 			Buffer received = Buffer.buffer()
 			HttpClientRequest req = client['/sugar/sex/magic']

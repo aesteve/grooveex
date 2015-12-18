@@ -8,7 +8,7 @@ import org.junit.Test
 class CheckSpec extends BuilderTestBase {
 
 	@Test
-	public void testCheckOK(TestContext context) {
+	void testCheckOK(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/check?token=magic']
 			req >> { response ->
@@ -23,7 +23,7 @@ class CheckSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testCheckFail2(TestContext context) {
+	void testCheckFail2(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/check?token=something']
 			req >> { response ->
@@ -35,7 +35,7 @@ class CheckSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testCheckFail(TestContext context) {
+	void testCheckFail(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/check']
 			req >> { response ->

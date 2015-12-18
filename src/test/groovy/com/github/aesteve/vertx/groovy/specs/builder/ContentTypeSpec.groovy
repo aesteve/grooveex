@@ -11,7 +11,7 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
 class ContentTypeSpec extends BuilderTestBase {
 
 	@Test
-	public void testProducesConsumes(TestContext context) {
+	void testProducesConsumes(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/json/pure']
 			req >> { response ->
@@ -28,7 +28,7 @@ class ContentTypeSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testNotProducesConsumes(TestContext context) {
+	void testNotProducesConsumes(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/json/pure']
 			req >> { response ->
@@ -42,7 +42,7 @@ class ContentTypeSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testSubProducesConsumes(TestContext context) {
+	void testSubProducesConsumes(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/json/plain']
 			req >> { response ->
@@ -59,7 +59,7 @@ class ContentTypeSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testSubProducesConsumesPlain(TestContext context) {
+	void testSubProducesConsumesPlain(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/json/plain']
 			req >> { response ->
@@ -76,7 +76,7 @@ class ContentTypeSpec extends BuilderTestBase {
 	}
 
 	@Test
-	public void testSubNotProducesConsumes(TestContext context) {
+	void testSubNotProducesConsumes(TestContext context) {
 		context.async { async ->
 			HttpClientRequest req = client['/json/plain']
 			req >> { response ->
