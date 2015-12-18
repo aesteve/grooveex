@@ -21,11 +21,11 @@ dependencies {
 	compile "io.vertx:vertx-web:$vertxVersion"
 	compile "io.vertx:vertx-lang-groovy:$vertxVersion"
 	compile "io.vertx:vertx-unit:$vertxVersion"
+	compile "io.vertx:vertx-auth-oauth2:$vertxVersion"
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.apache.ant:ant:1.9.6'
 	testCompile "io.vertx:vertx-web-templ-handlebars:$vertxVersion"
-	testCompile "io.vertx:vertx-auth-oauth2:$vertxVersion"
 	testRuntime 'com.github.jknack:handlebars:1.3.0'
 }
 
