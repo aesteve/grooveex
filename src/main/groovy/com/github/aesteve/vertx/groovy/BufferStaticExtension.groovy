@@ -6,8 +6,8 @@ import io.vertx.groovy.core.buffer.Buffer
 @TypeChecked
 class BufferStaticExtension {
 
-    static Buffer getBuffer(Buffer self) {
-        Buffer.buffer()
-    }
+	static Buffer getBuffer(Buffer self) {
+		Buffer.buffer()
+	}
 
 }

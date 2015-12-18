@@ -7,19 +7,19 @@ import groovy.transform.TypeChecked
 @TypeChecked
 class JacksonMarshaller implements Marshaller {
 
-    ObjectMapper mapper
+	ObjectMapper mapper
 
-    public JacksonMarshaller() {
-        mapper = new ObjectMapper()
-    }
+	public JacksonMarshaller() {
+		mapper = new ObjectMapper()
+	}
 
-    @Override
-    String marshall(Object obj) {
-        mapper.writeValueAsString(obj)
-    }
+	@Override
+	String marshall(Object obj) {
+		mapper.writeValueAsString(obj)
+	}
 
-    @Override
-    def unmarshall(String json, Class type) {
-        mapper.readValue(json, type)
-    }
+	@Override
+	def unmarshall(String json, Class type) {
+		mapper.readValue(json, type)
+	}
 }

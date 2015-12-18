@@ -9,19 +9,19 @@ import java.util.regex.Pattern;
 @TypeChecked
 class RouteExtension {
 
-    static Route rightShift(Route self, Closure clos) {
-        self.handler { ctx ->
-            clos.delegate = ctx
-            clos(ctx)
-        }
-    }
+	static Route rightShift(Route self, Closure clos) {
+		self.handler { ctx ->
+			clos.delegate = ctx
+			clos(ctx)
+		}
+	}
 
-    static Route rightShift(Route self, Handler handler) {
-        self.handler handler
-    }
+	static Route rightShift(Route self, Handler handler) {
+		self.handler handler
+	}
 
-    static Route call(Route self, Pattern regex) {
-        self.pathRegex regex.toString()
-    }
+	static Route call(Route self, Pattern regex) {
+		self.pathRegex regex.toString()
+	}
 
 }

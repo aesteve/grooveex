@@ -10,21 +10,21 @@ import static io.vertx.core.http.HttpHeaders.ORIGIN
 
 class CORSTest extends BuilderTestBase {
 
-    @Test
-    public void testAllowOrigin(TestContext context) {
-        context.async { async ->
-            HttpClientRequest req = client["/cors/test"]
-            req >> { response ->
-                assertEquals 200, response.statusCode()
-                assertEquals "*", response.headers[ACCESS_CONTROL_ALLOW_ORIGIN]
-                response >>> { Buffer buffer ->
-                    assertEquals buffer as String, "CORS"
-                    async++
-                }
-            }
-            req.headers[ORIGIN] = "vertx.io"
-            req++
-        }
-    }
+	@Test
+	public void testAllowOrigin(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client["/cors/test"]
+			req >> { response ->
+				assertEquals 200, response.statusCode()
+				assertEquals "*", response.headers[ACCESS_CONTROL_ALLOW_ORIGIN]
+				response >>> { Buffer buffer ->
+					assertEquals buffer as String, "CORS"
+					async++
+				}
+			}
+			req.headers[ORIGIN] = "vertx.io"
+			req++
+		}
+	}
 
 }

@@ -7,8 +7,8 @@ import io.vertx.groovy.core.eventbus.EventBus
 @TypeChecked
 class EventBusExtension {
 
-    static Wire getAt(EventBus self, String address) {
-        new Wire(eb: self, address: address)
-    }
+	static Wire getAt(EventBus self, String address) {
+		new Wire(eb: self, address: address)
+	}
 
 }

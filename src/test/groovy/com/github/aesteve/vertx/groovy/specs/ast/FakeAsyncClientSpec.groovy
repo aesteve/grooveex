@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue
 class FakeAsyncClientSpec {
 
 	FakeAsyncClient client = new FakeAsyncClient()
-	
+
 	@Test
 	void testMethodExists(TestContext ctx) {
 		String test = 'lala'

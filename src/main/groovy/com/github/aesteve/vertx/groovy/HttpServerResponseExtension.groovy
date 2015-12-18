@@ -9,15 +9,16 @@ import io.vertx.groovy.core.http.HttpServerResponse
 @TypeChecked
 class HttpServerResponseExtension {
 
-    static MultiMap getHeaders(HttpServerResponse self) {
-        self.headers()
-    }
+	static MultiMap getHeaders(HttpServerResponse self) {
+		self.headers()
+	}
 
-    static void next(HttpServerResponse self) {
-        self.end()
-    }
-	
+	static void next(HttpServerResponse self) {
+		self.end()
+	}
+
 	static HttpServerResponse leftShift(HttpServerResponse self, JsonBuilder json) {
 		self.end(json as Buffer)
+		self
 	}
 }

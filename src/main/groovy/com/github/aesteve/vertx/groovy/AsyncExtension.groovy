@@ -6,8 +6,8 @@ import io.vertx.groovy.ext.unit.Async
 @TypeChecked
 class AsyncExtension {
 
-    static void next(Async self) {
-        self.complete()
-    }
+	static void next(Async self) {
+		self.complete()
+	}
 
 }

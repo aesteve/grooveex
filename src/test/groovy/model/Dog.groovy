@@ -1,6 +1,6 @@
 package model
 
 class Dog {
-    String name
-    String breed
+	String name
+	String breed
 }

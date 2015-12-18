@@ -8,16 +8,16 @@ import io.vertx.groovy.core.http.HttpServerRequest
 @TypeChecked
 class HttpServerRequestExtension {
 
-    static MultiMap getParams(HttpServerRequest self) {
-        self.params()
-    }
+	static MultiMap getParams(HttpServerRequest self) {
+		self.params()
+	}
 
-    static MultiMap getHeaders(HttpServerRequest self) {
-        self.headers()
-    }
+	static MultiMap getHeaders(HttpServerRequest self) {
+		self.headers()
+	}
 
-    static HttpServerRequest rightShiftUnsigned(HttpServerRequest self, Handler handler) {
-        self.bodyHandler handler
-    }
+	static HttpServerRequest rightShiftUnsigned(HttpServerRequest self, Handler handler) {
+		self.bodyHandler handler
+	}
 
 }

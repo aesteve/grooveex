@@ -6,9 +6,9 @@ import io.vertx.groovy.core.shareddata.SharedData
 
 @TypeChecked
 class SharedDataExtension {
-	
+
 	static LocalMap getAt(SharedData self, String name) {
 		self.getLocalMap name
 	}
-	
+
 }

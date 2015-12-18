@@ -7,8 +7,8 @@ plugins {
 	id 'com.jfrog.bintray' version '1.4'
 }
 
-group='com.github.aesteve'
-version='0.2'
+group = 'com.github.aesteve'
+version = '0.2'
 
 sourceCompatibility = '1.8'
 
@@ -19,19 +19,19 @@ repositories {
 dependencies {
 	compile "io.vertx:vertx-core:$vertxVersion"
 	compile "io.vertx:vertx-web:$vertxVersion"
-	compile "io.vertx:vertx-auth-oauth2:$vertxVersion"
 	compile "io.vertx:vertx-lang-groovy:$vertxVersion"
 	compile "io.vertx:vertx-unit:$vertxVersion"
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.apache.ant:ant:1.9.6'
 	testCompile "io.vertx:vertx-web-templ-handlebars:$vertxVersion"
+	testCompile "io.vertx:vertx-auth-oauth2:$vertxVersion"
 	testRuntime 'com.github.jknack:handlebars:1.3.0'
 }
 
 bintray {
-    user = 'aesteve'
-    key = System.getenv('BINTRAY_KEY')
+	user = 'aesteve'
+	key = System.getenv('BINTRAY_KEY')
 	pkg {
 		repo = 'maven'
 		name = project.name
@@ -41,19 +41,19 @@ bintray {
 		publicDownloadNumbers = true
 		version {
 			name = project.version
-			description = 'First sugar version'
+			description = 'Extensions + Promises'
 		}
 		publications = ['maven']
 	}
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
+	publications {
+		maven(MavenPublication) {
+			from components.java
 			artifact sourcesJar
-        }
-    }
+		}
+	}
 }
 
 task sourcesJar(type: Jar) {
@@ -66,8 +66,8 @@ task sourcesJar(type: Jar) {
 sourceSets {
 	demos {
 		groovy {
-			compileClasspath += main.output
-			runtimeClasspath += main.output
+			compileClasspath += test.output
+			runtimeClasspath += test.output
 		}
 	}
 }
@@ -81,8 +81,6 @@ task demo(dependsOn: 'classes', type: JavaExec) {
 	main = "$demoName/launchDemo"
 	classpath = sourceSets.demos.runtimeClasspath
 }
-
-
 
 
 task wrapper(type: Wrapper) {

@@ -6,16 +6,16 @@ import io.vertx.groovy.ext.web.RoutingContext
 
 class FailOr {
 
-    RoutingContext ctx
+	RoutingContext ctx
 
-    Handler<AsyncResult> or(Closure clos) {
-        return { AsyncResult res ->
-            if (res.failed()) {
-                ctx.fail res.cause()
-            } else {
-                clos.delegate = ctx
-                clos res.result()
-            }
-        } as Handler
-    }
+	Handler<AsyncResult> or(Closure clos) {
+		return { AsyncResult res ->
+			if (res.failed()) {
+				ctx.fail res.cause()
+			} else {
+				clos.delegate = ctx
+				clos res.result()
+			}
+		} as Handler
+	}
 }

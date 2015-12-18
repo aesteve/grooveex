@@ -9,14 +9,14 @@ import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 // @CompileStatic // doesnt work in Eclipse
-@GroovyASTTransformation(phase=CompilePhase.SEMANTIC_ANALYSIS)
+@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 class PromiseTransformation implements ASTTransformation {
 
 	@Override
 	void visit(ASTNode[] nodes, SourceUnit source) {
 		if (!nodes || nodes.length == 0) return
 		if (!(nodes[0] instanceof ModuleNode)) return
-		
+
 		ModuleNode node = nodes[0] as ModuleNode
 		List<ClassNode> classes = node.classes
 		if (!classes) return
@@ -38,7 +38,7 @@ class PromiseTransformation implements ASTTransformation {
 				clazz.addMethod it
 			}
 		}
-				
+
 	}
 
 	private boolean isHandlerMethod(MethodNode method) {
@@ -47,7 +47,7 @@ class PromiseTransformation implements ASTTransformation {
 			it.type.isDerivedFrom(new ClassNode(Handler.class))
 		}
 	}
-	
+
 	private MethodNode makeSyncMethod(MethodNode asyncMethod) {
 		Parameter[] params = asyncMethod.parameters
 		params = params.take(params.size() - 1)
@@ -59,7 +59,7 @@ class PromiseTransformation implements ASTTransformation {
 					}
 				}
 				exceptions {}
-				block { 
+				block {
 					returnStatement {
 						constructorCall(Promise.class) {
 							methodCall {

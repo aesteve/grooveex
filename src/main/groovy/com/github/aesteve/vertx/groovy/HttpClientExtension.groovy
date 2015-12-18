@@ -6,7 +6,7 @@ import io.vertx.groovy.core.http.HttpClientRequest
 
 @TypeChecked
 class HttpClientExtension {
-    static HttpClientRequest getAt(HttpClient self, String path) {
-        self.get path
-    }
+	static HttpClientRequest getAt(HttpClient self, String path) {
+		self.get path
+	}
 }

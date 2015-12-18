@@ -6,12 +6,12 @@ import io.vertx.groovy.core.streams.Pump
 @TypeChecked
 class PumpExtension {
 
-    static Pump next(Pump self) {
-        self.start()
-    }
+	static Pump next(Pump self) {
+		self.start()
+	}
 
-    static Pump previous(Pump self) {
-        self.stop()
-    }
+	static Pump previous(Pump self) {
+		self.stop()
+	}
 
 }

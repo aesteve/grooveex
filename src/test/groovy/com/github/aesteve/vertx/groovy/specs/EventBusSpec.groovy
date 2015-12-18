@@ -7,40 +7,40 @@ import org.junit.Test
 
 class EventBusSpec extends TestBase {
 
-    private final static String ADDR = 'some-address'
+	private final static String ADDR = 'some-address'
 
-    @Override
-    public void router() {
-        router = Router.router(vertx)
-    }
+	@Override
+	public void router() {
+		router = Router.router(vertx)
+	}
 
-    @Test
-    public void testEventBusPublish(TestContext context) {
-        context.async { async ->
-            EventBus eb = vertx.eventBus
-            String msg = "ping"
-            eb[ADDR] >> {
-                assertEquals it.address, ADDR
-                assertEquals it.body, msg
-                async++
-            }
-            eb[ADDR] << msg
-        }
-    }
+	@Test
+	public void testEventBusPublish(TestContext context) {
+		context.async { async ->
+			EventBus eb = vertx.eventBus
+			String msg = "ping"
+			eb[ADDR] >> {
+				assertEquals it.address, ADDR
+				assertEquals it.body, msg
+				async++
+			}
+			eb[ADDR] << msg
+		}
+	}
 
-    @Test
-    public void testEventBusSend(TestContext context) {
-        context.async { async ->
-            EventBus eb = vertx.eventBus
-            String msg = "ping"
-            eb[ADDR] >> {
-                assertEquals it.address, ADDR
-                assertEquals it.body, msg
-                it << "pong"
-                async++
-            }
-            eb[ADDR] << msg
-        }
-    }
+	@Test
+	public void testEventBusSend(TestContext context) {
+		context.async { async ->
+			EventBus eb = vertx.eventBus
+			String msg = "ping"
+			eb[ADDR] >> {
+				assertEquals it.address, ADDR
+				assertEquals it.body, msg
+				it << "pong"
+				async++
+			}
+			eb[ADDR] << msg
+		}
+	}
 
 }

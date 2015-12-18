@@ -17,5 +17,5 @@ class FakeAsyncClient {
 	public FakeAsyncClient someAsyncMethod(Handler<AsyncResult<String>> handler) {
 		handler.handle Future.succeededFuture('void')
 	}
-	
+
 }

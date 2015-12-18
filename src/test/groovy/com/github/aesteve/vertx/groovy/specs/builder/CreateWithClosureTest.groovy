@@ -6,28 +6,28 @@ import io.vertx.groovy.ext.unit.TestContext
 import org.junit.Test
 
 class CreateWithClosureTest extends TestBase {
-    @Override
-    void router() {
-        RouterBuilder builder = new RouterBuilder(vertx: vertx)
+	@Override
+	void router() {
+		RouterBuilder builder = new RouterBuilder(vertx: vertx)
 		router = builder {
-            get '/byClosure', {
-                response << 'byClosure'
-            }
-        }
-    }
+			get '/byClosure', {
+				response << 'byClosure'
+			}
+		}
+	}
 
-    @Test
-    void testByClosure(TestContext context) {
-        context.async { async ->
-            def req = client['/byClosure']
-            req >> { response ->
-                assertEquals 200, response.statusCode()
-                response >>> { buff ->
-                    assertEquals buff as String, 'byClosure'
-                    async++
-                }
-            }
-            req++
-        }
-    }
+	@Test
+	void testByClosure(TestContext context) {
+		context.async { async ->
+			def req = client['/byClosure']
+			req >> { response ->
+				assertEquals 200, response.statusCode()
+				response >>> { buff ->
+					assertEquals buff as String, 'byClosure'
+					async++
+				}
+			}
+			req++
+		}
+	}
 }

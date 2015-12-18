@@ -5,7 +5,7 @@ import io.vertx.groovy.core.http.HttpServer
 
 class ServerBuilder {
 	Vertx vertx
-	
+
 	HttpServer buildServer(Binding binding = null, File serverFile) {
 		if (!binding) binding = new Binding()
 		def shell = new GroovyShell(binding)

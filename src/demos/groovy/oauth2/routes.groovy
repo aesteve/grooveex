@@ -1,14 +1,15 @@
-import static io.vertx.core.http.HttpHeaders.*
 import oauth2.GithubUser
+
+import static io.vertx.core.http.HttpHeaders.*
 
 router {
 	extension('findUsername') { mapName ->
 		return { ctx ->
 			String token = user?.principal()?.access_token
-			println "token = $token" 
+			println "token = $token"
 			if (token) {
 				def tokens = vertx.sharedData[mapName]
-				def username = tokens[token] 
+				def username = tokens[token]
 				if (username) {
 					user = new GithubUser(user, username)
 					ctx++
@@ -54,5 +55,5 @@ router {
 			response << "Hello ${user.username}"
 		}
 	}
-	
+
 }

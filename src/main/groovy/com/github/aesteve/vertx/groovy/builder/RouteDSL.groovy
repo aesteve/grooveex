@@ -12,106 +12,106 @@ import io.vertx.groovy.ext.web.sstore.LocalSessionStore
 
 class RouteDSL {
 
-    RouterDSL parent
-    def path
-    def bodyHandler
+	RouterDSL parent
+	def path
+	def bodyHandler
 	def usesBody = true
-    boolean cookies
-    def sessionStore
-    private List<Route> routes = []
-    private List<List<Object>> missingMethods = []
-    boolean blocking
-    List<Closure> expectations = []
-    List<Checker> checkers = []
-    List<String> consumes = []
-    List<String> produces = []
-    Map<String, Marshaller> marshallers = [:]
+	boolean cookies
+	def sessionStore
+	private List<Route> routes = []
+	private List<List<Object>> missingMethods = []
+	boolean blocking
+	List<Closure> expectations = []
+	List<Checker> checkers = []
+	List<String> consumes = []
+	List<String> produces = []
+	Map<String, Marshaller> marshallers = [:]
 	List<Handler> extensions = []
 
-    def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
-        String completePath = ''
-        if (parentPath) {
-            completePath += parentPath
-        }
-        completePath += path
-        new RouteDSL(path: completePath, parent: parent, cookies: cookies)
-    }
+	def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
+		String completePath = ''
+		if (parentPath) {
+			completePath += parentPath
+		}
+		completePath += path
+		new RouteDSL(path: completePath, parent: parent, cookies: cookies)
+	}
 
-    void call(Closure closure) {
-        closure.resolveStrategy = Closure.DELEGATE_FIRST
-        closure.delegate = this
-        closure.call(this)
-    }
+	void call(Closure closure) {
+		closure.resolveStrategy = Closure.DELEGATE_FIRST
+		closure.delegate = this
+		closure.call(this)
+	}
 
-    def cors(String origin) {
-        parent.router.route(path).handler(CorsHandler.create(origin))
-    }
+	def cors(String origin) {
+		parent.router.route(path).handler(CorsHandler.create(origin))
+	}
 
-    def expect(Closure expectation) {
-        expectations << expectation
-    }
+	def expect(Closure expectation) {
+		expectations << expectation
+	}
 
-    Checker check(Closure check) {
-        Checker checker = new Checker(check: check)
-        checkers << checker
-        checker
-    }
+	Checker check(Closure check) {
+		Checker checker = new Checker(check: check)
+		checkers << checker
+		checker
+	}
 
-    def session(Map options) {
-        if (options.store) {
-            sessionStore = options.store
-        } else if (options.clustered) {
-            sessionStore = LocalSessionStore.create(parent.vertx)
-        } else {
-            sessionStore = ClusteredSessionStore.create(parent.vertx)
-        }
-    }
+	def session(Map options) {
+		if (options.store) {
+			sessionStore = options.store
+		} else if (options.clustered) {
+			sessionStore = LocalSessionStore.create(parent.vertx)
+		} else {
+			sessionStore = ClusteredSessionStore.create(parent.vertx)
+		}
+	}
 
-    def consumes(String contentType) {
-        consumes << contentType
-    }
+	def consumes(String contentType) {
+		consumes << contentType
+	}
 
-    def produces(String contentType) {
-        produces << contentType
-    }
+	def produces(String contentType) {
+		produces << contentType
+	}
 
-    def route(String path, Closure clos) {
-        RouteDSL.make(parent, path, cookies, this.path)(clos)
-    }
+	def route(String path, Closure clos) {
+		RouteDSL.make(parent, path, cookies, this.path)(clos)
+	}
 
-    private void createRoute(HttpMethod method, Closure handler) {
-        if (usesBody) {
-            if (!bodyHandler) {
-                bodyHandler = BodyHandler.create()
-            }
-            parent.router.route(method, path).handler(bodyHandler)
-        }
-        if (sessionStore) {
-            parent.router.route(path).handler(SessionHandler.create(sessionStore))
-        }
-        expectations.each { expectation ->
-            parent.router.route(method, path).handler { ctx ->
-                try {
-                    expectation.delegate = ctx
-                    boolean expected = expectation(ctx)?.asBoolean()
-                    if (!expected) {
-                        ctx.fail 400
-                    } else {
-                        ctx++
-                    }
-                } catch (all) {
-                    ctx.fail 400
-                }
-            }
-        }
-        checkers.each {
-            parent.router.route(method, path).handler it as Handler
-        }
-        marshallers << parent.marshallers
-        parent.router.route(method, path).handler { ctx ->
-            ctx.marshallers = marshallers
-            ctx++
-        }
+	private void createRoute(HttpMethod method, Closure handler) {
+		if (usesBody) {
+			if (!bodyHandler) {
+				bodyHandler = BodyHandler.create()
+			}
+			parent.router.route(method, path).handler(bodyHandler)
+		}
+		if (sessionStore) {
+			parent.router.route(path).handler(SessionHandler.create(sessionStore))
+		}
+		expectations.each { expectation ->
+			parent.router.route(method, path).handler { ctx ->
+				try {
+					expectation.delegate = ctx
+					boolean expected = expectation(ctx)?.asBoolean()
+					if (!expected) {
+						ctx.fail 400
+					} else {
+						ctx++
+					}
+				} catch (all) {
+					ctx.fail 400
+				}
+			}
+		}
+		checkers.each {
+			parent.router.route(method, path).handler it as Handler
+		}
+		marshallers << parent.marshallers
+		parent.router.route(method, path).handler { ctx ->
+			ctx.marshallers = marshallers
+			ctx++
+		}
 		extensions.each { clos ->
 			parent.router.route(method, path).handler { ctx ->
 				clos.delegate = ctx
@@ -119,63 +119,63 @@ class RouteDSL {
 			}
 		}
 		Route route = parent.router.route(method, path)
-        consumes.addAll parent.consumes
-        produces.addAll parent.produces
-        consumes.each { route.consumes it }
-        produces.each { route.produces it }
+		consumes.addAll parent.consumes
+		produces.addAll parent.produces
+		consumes.each { route.consumes it }
+		produces.each { route.produces it }
 		missingMethods.each { methodMissing ->
-            callMethodOnRoute(route, methodMissing[0], methodMissing[1])
-        }
-        if (!blocking) {
-            route.handler { context ->
-                handler.delegate = context
-                handler context
-            }
-        } else {
-            route.blockingHandler { context ->
-                handler.delegate = context
-                handler context
-            }
-        }
-        routes << route
-    }
+			callMethodOnRoute(route, methodMissing[0], methodMissing[1])
+		}
+		if (!blocking) {
+			route.handler { context ->
+				handler.delegate = context
+				handler context
+			}
+		} else {
+			route.blockingHandler { context ->
+				handler.delegate = context
+				handler context
+			}
+		}
+		routes << route
+	}
 
-    def methodMissing(String name, args) {
+	def methodMissing(String name, args) {
 		Closure extension = parent.extensions[name]
 		if (extension) {
 			def handler = extension.call(*args)
-			if (handler) extensions << handler 
+			if (handler) extensions << handler
 			return
 		}
-        HttpMethod method
-        try {
-            method = HttpMethod.valueOf name?.toUpperCase()
-        } catch (all) {
-        }
-        if (method) {
-            createRoute(method, args[0])
-        } else {
-            if (routes.empty) {
-                // delay
-                missingMethods << [name, args]
-            }
-            routes.each { Route route ->
-                callMethodOnRoute(route, name, args)
-            }
-        }
-    }
+		HttpMethod method
+		try {
+			method = HttpMethod.valueOf name?.toUpperCase()
+		} catch (all) {
+		}
+		if (method) {
+			createRoute(method, args[0])
+		} else {
+			if (routes.empty) {
+				// delay
+				missingMethods << [name, args]
+			}
+			routes.each { Route route ->
+				callMethodOnRoute(route, name, args)
+			}
+		}
+	}
 
 	def authority(String authority) {
-		parent.authHandlers.each { auth -> 
-			parent.router.route(path).handler { 	
+		parent.authHandlers.each { auth ->
+			parent.router.route(path).handler {
 				println "call auth"
 				auth.handle(it)
 			}
 		}
 	}
-	
-    def callMethodOnRoute(route, name, args) {
-        route."$name"(*args)
-    }
+
+	def callMethodOnRoute(route, name, args) {
+		route."$name"(*args)
+	}
 
 }

@@ -6,8 +6,8 @@ import io.vertx.groovy.core.Vertx
 @TypeChecked
 class VertxStaticExtension {
 
-    static Vertx getVertx(Vertx self) {
-        Vertx.vertx()
-    }
+	static Vertx getVertx(Vertx self) {
+		Vertx.vertx()
+	}
 
 }

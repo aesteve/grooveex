@@ -1,11 +1,9 @@
 package com.github.aesteve.vertx.groovy.specs.dsl
 
-import static org.junit.Assert.*
-import io.vertx.groovy.core.Vertx
-
+import com.github.aesteve.vertx.groovy.builder.ServerDSL
 import org.junit.Test
 
-import com.github.aesteve.vertx.groovy.builder.ServerDSL
+import static org.junit.Assert.assertTrue
 
 class RoutingFilesSpec {
 
@@ -27,5 +25,5 @@ class RoutingFilesSpec {
 			assertTrue it.endsWith('.groovy') // '.groovy' extension
 		}
 	}
-	
+
 }

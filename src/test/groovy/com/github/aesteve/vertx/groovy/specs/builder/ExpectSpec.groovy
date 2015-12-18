@@ -9,58 +9,58 @@ import static io.vertx.core.http.HttpHeaders.AUTHORIZATION
 
 class ExpectSpec extends BuilderTestBase {
 
-    @Test
-    public void testCorrectRequest(TestContext context) {
-        context.async { async ->
-            HttpClientRequest req = client["/expect?long=123&exists=something"]
-            req >> { response ->
-                assertEquals 200, response.statusCode
-                response >>> { Buffer buffer ->
-                    assertEquals buffer as String, "everything's fine"
-                    async++
-                }
-            }
-            req.headers[AUTHORIZATION] = 'token MYTOKEN'
-            req++
-        }
-    }
+	@Test
+	public void testCorrectRequest(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client["/expect?long=123&exists=something"]
+			req >> { response ->
+				assertEquals 200, response.statusCode
+				response >>> { Buffer buffer ->
+					assertEquals buffer as String, "everything's fine"
+					async++
+				}
+			}
+			req.headers[AUTHORIZATION] = 'token MYTOKEN'
+			req++
+		}
+	}
 
-    @Test
-    public void testMissingParam(TestContext context) {
-        context.async { async ->
-            HttpClientRequest req = client["/expect?long=123"]
-            req >> { response ->
-                assertEquals 400, response.statusCode
-                async++
-            }
-            req.headers[AUTHORIZATION] = 'token MYTOKEN'
-            req++
-        }
-    }
+	@Test
+	public void testMissingParam(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client["/expect?long=123"]
+			req >> { response ->
+				assertEquals 400, response.statusCode
+				async++
+			}
+			req.headers[AUTHORIZATION] = 'token MYTOKEN'
+			req++
+		}
+	}
 
-    @Test
-    public void testWrongParamValue(TestContext context) {
-        context.async { async ->
-            HttpClientRequest req = client["/expect?long=string&exists=something"]
-            req >> { response ->
-                assertEquals 400, response.statusCode
-                async++
-            }
-            req.headers[AUTHORIZATION] = 'token MYTOKEN'
-            req++
-        }
-    }
+	@Test
+	public void testWrongParamValue(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client["/expect?long=string&exists=something"]
+			req >> { response ->
+				assertEquals 400, response.statusCode
+				async++
+			}
+			req.headers[AUTHORIZATION] = 'token MYTOKEN'
+			req++
+		}
+	}
 
-    @Test
-    public void testWrongHeader(TestContext context) {
-        context.async { async ->
-            HttpClientRequest req = client["/expect?long=string&exists=something"]
-            req >> { response ->
-                assertEquals 400, response.statusCode
-                async++
-            }
-            req.headers[AUTHORIZATION] = 'invalidTokenFormat'
-            req++
-        }
-    }
+	@Test
+	public void testWrongHeader(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client["/expect?long=string&exists=something"]
+			req >> { response ->
+				assertEquals 400, response.statusCode
+				async++
+			}
+			req.headers[AUTHORIZATION] = 'invalidTokenFormat'
+			req++
+		}
+	}
 }

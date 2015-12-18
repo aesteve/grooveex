@@ -5,6 +5,6 @@ import io.vertx.core.http.HttpMethod
 
 @EqualsAndHashCode
 class MethodAndPath {
-    HttpMethod method
-    String path
+	HttpMethod method
+	String path
 }

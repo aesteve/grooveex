@@ -7,9 +7,9 @@ import io.vertx.groovy.core.buffer.Buffer
 @TypeChecked
 class JsonBuilderExtension {
 
-    static def asType(JsonBuilder self, Class c) {
-        if (c == String.class) return self.toString()
+	static def asType(JsonBuilder self, Class c) {
+		if (c == String.class) return self.toString()
 		if (c == Buffer.class) return Buffer.buffer(self.toString())
-    }
+	}
 
 }
