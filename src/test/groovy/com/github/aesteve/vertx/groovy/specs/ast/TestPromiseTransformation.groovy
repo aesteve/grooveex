@@ -9,7 +9,6 @@ import org.codehaus.groovy.tools.ast.TransformTestHelper
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import rx.Observable
 
 @RunWith(VertxUnitRunner)
 class TestPromiseTransformation extends GroovyTestCase {
@@ -31,16 +30,13 @@ class TestPromiseTransformation extends GroovyTestCase {
 	@Test
 	void testObservableSuccess(TestContext context) {
 		String test = 'something'
-		Promise promise = client.someAsyncMethod(test)
-		assertNotNull promise
-		Observable<String> obs = promise()
+		Promise obs = client.someAsyncMethod(test)
 		assertNotNull obs
 		context.async { async ->
-			obs.doOnNext {
+			obs.subscribe {
 				context.assertEquals it, test
 				async++
 			}
-			obs.subscribe()
 		}
 	}
 

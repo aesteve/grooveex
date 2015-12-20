@@ -9,24 +9,30 @@ class Promise {
 
 	CurriedClosure closure
 
+	@Delegate
+	Observable obs
+
+	RoutingContext context
+
 	Promise(CurriedClosure closure) {
 		this.closure = closure
+		createObservable()
 	}
 
-	Observable call(RoutingContext ctx = null) {
-		Observable.create { observer ->
+	private void createObservable() {
+		obs = Observable.create { observer ->
 			closure.call { AsyncResult res ->
 				if (res.succeeded()) {
 					def result = res.result()
 					observer.onNext result
-					if (ctx) {
-						ctx.yield result
+					if (context) {
+						context.yield result
 					}
 				} else {
 					Throwable cause = res.cause()
 					observer.onError(cause)
-					if (ctx) {
-						ctx.fail cause
+					if (context) {
+						context.fail cause
 					}
 				}
 				observer.onCompleted()
