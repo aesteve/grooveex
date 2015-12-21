@@ -9,7 +9,8 @@ class ServerDSL {
 	Vertx vertx
 	Map options = [:]
 	HttpServer server
-	List<String> routingFiles = []
+	List routingFiles = []
+	Binding binding
 
 	HttpServer make(Closure clos) {
 		clos.delegate = this
@@ -17,12 +18,13 @@ class ServerDSL {
 		clos() // fulfill options
 		if (vertx) {
 			server = vertx.createHttpServer(options)
-			if (routingFiles && !routingFiles.empty) {
+			if (!routingFiles.empty) {
 				RouterBuilder builder = new RouterBuilder(vertx: vertx)
-				Router router = builder routingFiles
+				Router router = builder binding, routingFiles
 				server.requestHandler router.&accept
 			}
 		}
+		server
 	}
 
 	def routingFile(String file) {
@@ -35,6 +37,14 @@ class ServerDSL {
 
 	def routingFiles(String dir, String pattern = '**/*routes*.groovy') {
 		routingFiles.addAll new FileNameFinder().getFileNames(dir, pattern)
+	}
+
+	def routingResource(String resource) {
+		routingFiles << this.class.getResourceAsStream(resource)
+	}
+
+	def routingResources(Collection<String> resources) {
+		routingFiles.addAll resources.collect { this.class.getResourceAsStream it }
 	}
 
 	def methodMissing(String name, def args) {

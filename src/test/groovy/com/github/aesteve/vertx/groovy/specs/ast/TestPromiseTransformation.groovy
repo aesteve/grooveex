@@ -7,10 +7,12 @@ import io.vertx.groovy.ext.unit.junit.VertxUnitRunner
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.tools.ast.TransformTestHelper
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(VertxUnitRunner)
+@Ignore
 class TestPromiseTransformation extends GroovyTestCase {
 
 	def client

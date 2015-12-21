@@ -1,14 +1,13 @@
 package com.github.aesteve.vertx.groovy.builder
 
-import groovy.transform.TypeChecked
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Router
 
-@TypeChecked
 class RouterBuilder {
 
 	Vertx vertx
 	Map<String, Closure> extensions = [:]
+	RouterDSL routerDSL
 
 	def extension(String name, Closure clos) {
 		extensions[name] = clos
@@ -17,32 +16,32 @@ class RouterBuilder {
 	Router call(Binding binding = null, File... routingFiles) {
 		if (!binding) binding = new Binding()
 		def shell = new GroovyShell(binding)
-		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
+		if (!routerDSL) routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
 		routingFiles.each { shell.evaluate it as File }
 		routerDSL.finish()
 		routerDSL.router
 	}
 
-	Router call(Binding binding = null, Collection<File> routingFiles) {
+	Router call(Binding binding = null, Collection routingFiles) {
+		if (routingFiles.empty) return null
 		if (!binding) binding = new Binding()
 		def shell = new GroovyShell(binding)
-		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
+		if (!routerDSL) routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
-		routingFiles.each { shell.evaluate it as File }
-		routerDSL.finish()
-		routerDSL.router
-	}
-
-	Router call(Binding binding = null, InputStream is) {
-		if (!is) {
-			throw new IllegalArgumentException("Routing file is null")
+		routingFiles.each { file ->
+			if (file instanceof File) {
+				shell.evaluate file as File
+			}
+			if (file instanceof InputStream) {
+				file.withReader {
+					shell.evaluate it
+				}
+			}
+			if (file instanceof String) {
+				shell.evaluate new File(file)
+			}
 		}
-		if (!binding) binding = new Binding()
-		def shell = new GroovyShell(binding)
-		RouterDSL routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
-		shell.setVariable("router", routerDSL.&make)
-		is.withReader { shell.evaluate(it) }
 		routerDSL.finish()
 		routerDSL.router
 	}

@@ -8,8 +8,8 @@ import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
-// @CompileStatic // doesnt work in Eclipse
-@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
+//@CompileStatic // doesnt work in Eclipse
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class PromiseTransformation implements ASTTransformation {
 
 	@Override
@@ -69,8 +69,8 @@ class PromiseTransformation implements ASTTransformation {
 								}
 								constant 'curry'
 								argumentList {
-									params.each {
-										variable it.name
+									params.each { Parameter param ->
+										variable param.name
 									}
 								}
 							}
