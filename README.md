@@ -13,11 +13,11 @@ Since the projects relies on an Groovy extension module, you just have to add th
 Example, if you're using Gradle: 
 ```groovy
 repositories {
-	jCenter()
+	jcenter()
 }
 
 dependencies {
-	compile 'com.github.aesteve:vertx-groovy-sugar:0.2'
+	compile 'com.github.aesteve:grooveex:0.4'
 }
 ```
 
