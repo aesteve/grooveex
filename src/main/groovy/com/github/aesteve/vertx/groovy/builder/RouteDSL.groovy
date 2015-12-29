@@ -4,9 +4,7 @@ import com.github.aesteve.vertx.groovy.io.Marshaller
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.ext.web.Route
-import io.vertx.groovy.ext.web.handler.BodyHandler
 import io.vertx.groovy.ext.web.handler.CorsHandler
-import io.vertx.groovy.ext.web.handler.SessionHandler
 import io.vertx.groovy.ext.web.sstore.ClusteredSessionStore
 import io.vertx.groovy.ext.web.sstore.LocalSessionStore
 
@@ -27,6 +25,9 @@ class RouteDSL {
 	List<String> produces = []
 	Map<String, Marshaller> marshallers = [:]
 	List<Handler> extensions = []
+	List<VertxRoute> vertxRoutes = []
+	List<Handler> pendingExtensions = []
+
 
 	def static make(RouterDSL parent, def path, boolean cookies, String parentPath = null) {
 		String completePath = ''
@@ -40,7 +41,8 @@ class RouteDSL {
 	void call(Closure closure) {
 		closure.resolveStrategy = Closure.DELEGATE_FIRST
 		closure.delegate = this
-		closure.call(this)
+		closure.call this
+		this.finish()
 	}
 
 	def cors(String origin) {
@@ -79,74 +81,46 @@ class RouteDSL {
 		RouteDSL.make(parent, path, cookies, this.path)(clos)
 	}
 
-	private void createRoute(HttpMethod method, String subPath = null, Closure handler) {
-		String path = this.path
-		if (subPath) path += subPath
-		if (usesBody) {
-			if (!bodyHandler) {
-				bodyHandler = BodyHandler.create()
-			}
-			parent.router.route(method, path).handler(bodyHandler)
-		}
-		if (sessionStore) {
-			parent.router.route(path).handler(SessionHandler.create(sessionStore))
-		}
-		expectations.each { expectation ->
-			parent.router.route(method, path).handler { ctx ->
-				try {
-					expectation.delegate = ctx
-					boolean expected = expectation(ctx)?.asBoolean()
-					if (!expected) {
-						ctx.fail 400
-					} else {
-						ctx++
-					}
-				} catch (all) {
-					ctx.fail 400
+	private void finish() {
+		vertxRoutes.each { it() }
+		def methods = vertxRoutes.collect { it.method } as Set
+		pendingExtensions.each { handler ->
+			methods.each { method ->
+				parent.router.route(method, path).handler { ctx ->
+					handler.delegate = ctx
+					handler ctx
 				}
 			}
 		}
-		checkers.each {
-			parent.router.route(method, path).handler it as Handler
-		}
-		marshallers << parent.marshallers
-		parent.router.route(method, path).handler { ctx ->
-			ctx.marshallers = marshallers
-			ctx++
-		}
-		extensions.each { clos ->
-			parent.router.route(method, path).handler { ctx ->
-				clos.delegate = ctx
-				clos.call(ctx)
-			}
-		}
-		Route route = parent.router.route(method, path)
-		consumes.addAll parent.consumes
-		produces.addAll parent.produces
-		consumes.each { route.consumes it }
-		produces.each { route.produces it }
-		missingMethods.each { methodMissing ->
-			callMethodOnRoute(route, methodMissing[0], methodMissing[1])
-		}
-		if (!blocking) {
-			route.handler { context ->
-				handler.delegate = context
-				handler context
-			}
-		} else {
-			route.blockingHandler { context ->
-				handler.delegate = context
-				handler context
-			}
-		}
-		routes << route
+	}
+
+	private void createRoute(HttpMethod method, String subPath = null, Closure handler) {
+		String path = this.path
+		if (subPath) path += subPath
+		vertxRoutes << new VertxRoute(
+			parent: this,
+			method: method,
+			path: path,
+			handler: handler,
+			// snapshot from when the route was declared, everything declared after won't be taken into account
+			expectations: expectations.findAll(),
+			checkers: checkers.findAll(),
+			consumes: consumes.findAll(),
+			produces: produces.findAll(),
+			marshallers: marshallers.findAll { true },
+			extensions: extensions.findAll()
+		)
+
 	}
 
 	def methodMissing(String name, args) {
 		Closure extension = parent.extensions[name]
 		if (extension) {
 			def handler = extension.call(*args)
-			if (handler) extensions << handler
+			if (handler) {
+				extensions << handler
+				pendingExtensions << handler
+			}
 			return
 		}
 		HttpMethod method
