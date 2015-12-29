@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-	compile 'com.github.aesteve:grooveex:0.4'
+	compile 'com.github.aesteve:grooveex:0.5'
 }
 ```
 

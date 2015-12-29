@@ -20,6 +20,26 @@ class MultiMethod {
 		this
 	}
 
+	MultiMethod and(Closure clos) {
+		methods.each { clos.call it }
+		this
+	}
+
+	MultiMethod and(MultiMethod other) {
+		methods += other.methods
+		this
+	}
+
+	MultiMethod div(Closure clos) {
+		methods.each { clos.call it }
+		this
+	}
+
+	MultiMethod div(MultiMethod other) {
+		methods += other.methods
+		this
+	}
+
 	@Override
 	String toString() {
 		methods.iterator().join("|")
