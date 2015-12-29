@@ -5,6 +5,9 @@ import io.vertx.groovy.core.http.HttpClientRequest
 import io.vertx.groovy.ext.unit.TestContext
 import org.junit.Test
 
+import static io.vertx.core.http.HttpHeaders.ACCEPT
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
+
 class NestedRoutesSpec extends BuilderTestBase {
 
 	@Test
@@ -35,6 +38,41 @@ class NestedRoutesSpec extends BuilderTestBase {
 					async++
 				}
 			}
+			req++
+		}
+	}
+
+	@Test
+	void testRootRoute(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client['/withsubroute']
+			req >> { response ->
+				assertEquals 200, response.statusCode
+				response >>> {
+					assertEquals it as String, "get"
+					async++
+				}
+			}
+			req.headers[CONTENT_TYPE] = 'application/json'
+			req.headers[ACCEPT] = 'application/json'
+			req++
+		}
+	}
+
+	@Test
+	void testSubRoute(TestContext context) {
+		String subPath = "something"
+		context.async { async ->
+			HttpClientRequest req = client["/withsubroute/$subPath"]
+			req >> { response ->
+				assertEquals 200, response.statusCode
+				response >>> {
+					assertEquals it as String, "get $subPath"
+					async++
+				}
+			}
+			req.headers[CONTENT_TYPE] = 'application/json'
+			req.headers[ACCEPT] = 'application/json'
 			req++
 		}
 	}

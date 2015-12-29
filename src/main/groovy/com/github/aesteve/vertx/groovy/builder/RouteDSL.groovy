@@ -79,7 +79,9 @@ class RouteDSL {
 		RouteDSL.make(parent, path, cookies, this.path)(clos)
 	}
 
-	private void createRoute(HttpMethod method, Closure handler) {
+	private void createRoute(HttpMethod method, String subPath = null, Closure handler) {
+		String path = this.path
+		if (subPath) path += subPath
 		if (usesBody) {
 			if (!bodyHandler) {
 				bodyHandler = BodyHandler.create()
@@ -153,7 +155,7 @@ class RouteDSL {
 		} catch (all) {
 		}
 		if (method) {
-			createRoute(method, args[0])
+			createRoute(method, *args)
 		} else {
 			if (routes.empty) {
 				// delay

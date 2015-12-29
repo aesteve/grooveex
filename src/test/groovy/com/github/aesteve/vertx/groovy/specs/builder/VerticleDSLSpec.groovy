@@ -8,13 +8,15 @@ import io.vertx.groovy.ext.unit.junit.VertxUnitRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import java.util.concurrent.atomic.AtomicInteger
+
 @RunWith(VertxUnitRunner)
 class VerticleDSLSpec {
 
-	static int verticlesStarted = 0
+	static AtomicInteger verticlesStarted = new AtomicInteger()
 
 	static verticleStarted() {
-		verticlesStarted++
+		verticlesStarted.incrementAndGet()
 	}
 
 	@Test
@@ -26,8 +28,11 @@ class VerticleDSLSpec {
 			def vertName = verticles[0]
 			assertEquals vertName, 'groovy:verticles.TestVerticle'
 			assertEquals dsl.verticles[vertName], [instances: 2]
-			verticlesStarted = 0 dsl.start { res ->
-				assertEquals 2, verticlesStarted
+			println "run test"
+			verticlesStarted.set(0)
+			dsl.start { res ->
+				println "success called"
+				assertEquals 2, verticlesStarted.get()
 				assertTrue res.succeeded()
 				async++
 			}

@@ -162,4 +162,14 @@ router {
 			}
 		}
 	}
+	route('/withsubroute') {
+		consumes 'application/json'
+		produces 'application/json'
+		get {
+			response << 'get'
+		}
+		get('/:id') {
+			response << "get ${params['id']}"
+		}
+	}
 }
