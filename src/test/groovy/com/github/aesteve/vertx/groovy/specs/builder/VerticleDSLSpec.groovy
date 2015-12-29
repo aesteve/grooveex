@@ -28,10 +28,8 @@ class VerticleDSLSpec {
 			def vertName = verticles[0]
 			assertEquals vertName, 'groovy:verticles.TestVerticle'
 			assertEquals dsl.verticles[vertName], [instances: 2]
-			println "run test"
 			verticlesStarted.set(0)
 			dsl.start { res ->
-				println "success called"
 				assertEquals 2, verticlesStarted.get()
 				assertTrue res.succeeded()
 				async++
@@ -48,7 +46,7 @@ class VerticleDSLSpec {
 			def vertName = verticles[0]
 			assertEquals vertName, 'groovy:verticles.Failing'
 			assertEquals dsl.verticles[vertName], [:]
-			verticlesStarted = 0
+			verticlesStarted.set(0)
 			dsl.start { res ->
 				assertFalse res.succeeded()
 				assertNotNull res.cause()
