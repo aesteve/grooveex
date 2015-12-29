@@ -1,5 +1,7 @@
 package com.github.aesteve.vertx.groovy.builder
 
+import com.github.aesteve.vertx.groovy.builder.http.MultiMethod
+import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Router
 
@@ -14,7 +16,11 @@ class RouterBuilder {
 	}
 
 	static Binding getBindings() {
-		new Binding()
+		def binding = new Binding()
+		HttpMethod.values().each {
+			binding.setVariable it.name().toLowerCase(), new MultiMethod(it)
+		}
+		binding
 	}
 
 	Router call(Binding binding = null, File... routingFiles) {

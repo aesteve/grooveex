@@ -94,7 +94,7 @@ class RouteDSL {
 		}
 	}
 
-	private void createRoute(HttpMethod method, String subPath = null, Closure handler) {
+	def createRoute(HttpMethod method, String subPath = null, Closure handler) {
 		String path = this.path
 		if (subPath) path += subPath
 		vertxRoutes << new VertxRoute(
@@ -110,7 +110,7 @@ class RouteDSL {
 			marshallers: marshallers.findAll { true },
 			extensions: extensions.findAll()
 		)
-
+		this.&createRoute.rcurry(subPath, handler)
 	}
 
 	def methodMissing(String name, args) {
