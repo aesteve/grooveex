@@ -6,7 +6,6 @@ router {
 	extension('findUsername') { mapName ->
 		return { ctx ->
 			String token = user?.principal()?.access_token
-			println "token = $token"
 			if (token) {
 				def tokens = vertx.sharedData[mapName]
 				def username = tokens[token]
@@ -21,7 +20,6 @@ router {
 						response >>> {
 							def userInfos = it as Map
 							username = userInfos.login
-							println "username $username"
 							tokens[token] = username
 							user = new GithubUser(user, username)
 							ctx++

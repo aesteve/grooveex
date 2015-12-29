@@ -144,7 +144,6 @@ class RouteDSL {
 	def authority(String authority) {
 		parent.authHandlers.each { auth ->
 			parent.router.route(path).handler {
-				println "call auth"
 				auth.handle(it)
 			}
 		}
