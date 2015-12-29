@@ -13,8 +13,12 @@ class RouterBuilder {
 		extensions[name] = clos
 	}
 
+	static Binding getBindings() {
+		new Binding()
+	}
+
 	Router call(Binding binding = null, File... routingFiles) {
-		if (!binding) binding = new Binding()
+		if (!binding) binding = bindings
 		def shell = new GroovyShell(binding)
 		if (!routerDSL) routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -25,7 +29,7 @@ class RouterBuilder {
 
 	Router call(Binding binding = null, Collection routingFiles) {
 		if (routingFiles.empty) return null
-		if (!binding) binding = new Binding()
+		if (!binding) binding = bindings
 		def shell = new GroovyShell(binding)
 		if (!routerDSL) routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -54,7 +58,7 @@ class RouterBuilder {
 	}
 
 	static Router buildRouter(Binding binding = null, Vertx vertx, File... routingFiles) {
-		if (!binding) binding = new Binding()
+		if (!binding) binding = bindings
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx)
 		shell.setVariable("router", routerDSL.&make)
@@ -67,7 +71,7 @@ class RouterBuilder {
 		if (!is) {
 			throw new IllegalArgumentException("Routing file is null")
 		}
-		if (!binding) binding = new Binding()
+		if (!binding) binding = bindings
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx)
 		shell.setVariable("router", routerDSL.&make)
