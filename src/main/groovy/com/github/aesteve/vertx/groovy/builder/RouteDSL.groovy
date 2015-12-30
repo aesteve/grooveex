@@ -81,6 +81,11 @@ class RouteDSL {
 		RouteDSL.make(parent, path, cookies, this.path)(clos)
 	}
 
+	def all(Closure clos) {
+		extensions << clos
+		pendingExtensions << clos
+	}
+
 	private void finish() {
 		vertxRoutes.each { it() }
 		def methods = vertxRoutes.collect { it.method } as Set
@@ -108,7 +113,7 @@ class RouteDSL {
 			consumes: consumes.findAll(),
 			produces: produces.findAll(),
 			marshallers: marshallers.findAll { true },
-			extensions: extensions.findAll()
+				extensions: extensions.findAll(),
 		)
 		this.&createRoute.rcurry(subPath, handler)
 	}

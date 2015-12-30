@@ -329,6 +329,52 @@ router {
 }
 ```
 
+#### Matching multiple http methods
+
+You can use either `|`, `&` or `/` operator to match multiple http methods. Just use the one that suits you the most.
+
+```groovy
+router {
+  route('/multi') {
+    get | post {
+      response << 'get or post'
+    }
+    options & delete {
+      response << 'options or delete'
+    }
+    trace / connect {
+      response << 'trace or connect'
+    }
+  }
+}
+```
+
+#### Matchin every (declared) http methods
+
+In case you want to match all the http methods you've (or will) declare in your route, you can use the keyword `all`.
+
+```groovy
+router {
+  route('/all') {
+    all {
+      response.chunked = true
+      it++
+    }
+    get {
+      response + 'get '
+      it++
+    }
+    post {
+      response + 'post '
+      it++
+    }
+    all {
+      response << 'Done'
+    }
+  }
+}
+```
+
 ## Complete list of syntaxic sugar
 
 ### WriteStream
