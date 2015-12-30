@@ -1,6 +1,8 @@
 package com.github.aesteve.vertx.groovy.builder
 
+import io.vertx.core.AsyncResult
 import io.vertx.core.Future
+import io.vertx.core.Handler
 import io.vertx.groovy.core.Vertx
 
 class VerticlesDSL {
@@ -28,21 +30,21 @@ class VerticlesDSL {
 		this
 	}
 
-	def start(Closure clos) {
+	def start(Handler<AsyncResult<Void>> clos) {
 		Iterator<Map.Entry<String, Map>> iterator = verticles.iterator()
 		deployNext clos, iterator
 	}
 
-	private deployNext(Closure closure, Iterator<Map.Entry<String, Map>> iterator) {
+	private deployNext(Handler<AsyncResult<Void>> handler, Iterator<Map.Entry<String, Map>> iterator) {
 		def entry = iterator.next()
 		vertx.deployVerticle entry.key, entry.value, { res ->
 			if (res.failed()) {
-				closure.call Future.failedFuture(res.cause())
+				handler.handle Future.failedFuture(res.cause())
 			} else {
 				if (iterator.hasNext()) {
-					deployNext closure, iterator
+					deployNext handler, iterator
 				} else {
-					closure.call Future.succeededFuture()
+					handler.handle Future.succeededFuture()
 				}
 			}
 		}

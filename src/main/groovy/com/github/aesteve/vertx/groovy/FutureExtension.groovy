@@ -3,6 +3,7 @@ package com.github.aesteve.vertx.groovy
 import groovy.transform.TypeChecked
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
+import io.vertx.core.Handler
 
 @TypeChecked
 class FutureExtension {
@@ -35,14 +36,14 @@ class FutureExtension {
 		self?.succeeded()
 	}
 
-	static <T> Closure<AsyncResult<T>> completeOrFail(Future<T> self) {
+	static <T> Handler<AsyncResult<T>> completeOrFail(Future<T> self) {
 		return { AsyncResult<T> res ->
 			if (res.failed()) {
 				self.fail(res.cause())
 			} else {
 				self.complete(res.result())
 			}
-		}
+		} as Handler
 	}
 
 	static void next(Future self) {
