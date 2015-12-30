@@ -24,7 +24,7 @@ class ExtensionsOrderSpec extends TestBase {
 				def after = response.headers['X-Date-After']
 				assertNotNull after
 				after = Long.valueOf after
-				assertTrue(before + 500 < after)
+				assertTrue(before + 400 < after)
 				async++
 			}
 		}
