@@ -19,4 +19,11 @@ class BufferSpec {
 		Buffer b = test as Buffer
 		assert b as String == test
 	}
+
+	@Test
+	void testCreateBuffer() {
+		def buff = Buffer.buffer
+		assert buff != null
+	}
+
 }
