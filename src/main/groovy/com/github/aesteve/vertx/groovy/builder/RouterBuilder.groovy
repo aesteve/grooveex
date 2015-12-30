@@ -16,7 +16,10 @@ class RouterBuilder {
 	}
 
 	static Binding getBindings() {
-		def binding = new Binding()
+		new Binding()
+	}
+
+	static Binding injectMethods(Binding binding) {
 		HttpMethod.values().each {
 			binding.setVariable it.name().toLowerCase(), new MultiMethod(it)
 		}
@@ -25,6 +28,7 @@ class RouterBuilder {
 
 	Router call(Binding binding = null, File... routingFiles) {
 		if (!binding) binding = bindings
+		injectMethods binding
 		def shell = new GroovyShell(binding)
 		if (!routerDSL) routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -36,6 +40,7 @@ class RouterBuilder {
 	Router call(Binding binding = null, Collection routingFiles) {
 		if (routingFiles.empty) return null
 		if (!binding) binding = bindings
+		injectMethods binding
 		def shell = new GroovyShell(binding)
 		if (!routerDSL) routerDSL = new RouterDSL(vertx: vertx, extensions: extensions)
 		shell.setVariable("router", routerDSL.&make)
@@ -65,6 +70,7 @@ class RouterBuilder {
 
 	static Router buildRouter(Binding binding = null, Vertx vertx, File... routingFiles) {
 		if (!binding) binding = bindings
+		injectMethods binding
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx)
 		shell.setVariable("router", routerDSL.&make)
@@ -78,6 +84,7 @@ class RouterBuilder {
 			throw new IllegalArgumentException("Routing file is null")
 		}
 		if (!binding) binding = bindings
+		injectMethods binding
 		def shell = new GroovyShell(binding)
 		RouterDSL routerDSL = new RouterDSL(vertx: vertx)
 		shell.setVariable("router", routerDSL.&make)
