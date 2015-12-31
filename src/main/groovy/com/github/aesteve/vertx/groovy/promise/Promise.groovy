@@ -1,16 +1,16 @@
 package com.github.aesteve.vertx.groovy.promise
 
-import io.vertx.core.AsyncResult
 import io.vertx.groovy.ext.web.RoutingContext
 import org.codehaus.groovy.runtime.CurriedClosure
-import rx.Observable
 
 class Promise {
 
 	CurriedClosure closure
 
+	/*
 	@Delegate
 	Observable obs
+	*/
 
 	RoutingContext context
 
@@ -20,6 +20,7 @@ class Promise {
 	}
 
 	private void createObservable() {
+		/*
 		obs = Observable.create { observer ->
 			closure.call { AsyncResult res ->
 				if (res.succeeded()) {
@@ -38,5 +39,6 @@ class Promise {
 				observer.onCompleted()
 			}
 		}
+		*/
 	}
 }

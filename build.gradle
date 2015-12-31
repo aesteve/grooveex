@@ -23,7 +23,6 @@ dependencies {
 	compile "io.vertx:vertx-lang-groovy:$vertxVersion"
 	compile "io.vertx:vertx-unit:$vertxVersion"
 	compile "io.vertx:vertx-auth-oauth2:$vertxVersion"
-	compile 'io.reactivex:rxgroovy:1.0.3'
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.apache.ant:ant:1.9.6'
