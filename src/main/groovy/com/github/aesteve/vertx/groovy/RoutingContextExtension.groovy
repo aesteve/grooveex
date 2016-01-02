@@ -158,8 +158,11 @@ class RoutingContextExtension {
 		List<String> contentTypes = getContentTypes self
 		if (!contentTypes || contentTypes.empty) return
 		Collection<String> usableMarshallers = contentTypes.intersect marshallers.keySet()
-		self.getAcceptableContentType()
 		if (usableMarshallers.size() == 0) return null
+		String contentType = usableMarshallers[0]
+		try {
+			self.response().headers().add(HttpHeaders.CONTENT_TYPE.toString(), contentType)
+		} catch(all) {} // response already written, ...
 		marshallers[usableMarshallers[0]]
 	}
 

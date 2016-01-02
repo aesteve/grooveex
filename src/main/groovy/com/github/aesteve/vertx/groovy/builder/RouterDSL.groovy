@@ -3,8 +3,6 @@ package com.github.aesteve.vertx.groovy.builder
 import com.github.aesteve.vertx.groovy.io.Marshaller
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
-import io.vertx.core.logging.Logger
-import io.vertx.core.logging.LoggerFactory
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.Router
@@ -12,6 +10,7 @@ import io.vertx.groovy.ext.web.RoutingContext
 import io.vertx.groovy.ext.web.handler.*
 import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
 
 import java.util.regex.Pattern
 
@@ -178,6 +177,10 @@ class RouterDSL {
 		hasMarshallers = hasMarshallers || children.find { !it.marshallers.empty }
 		if (hasMarshallers) {
 			router.route().last().handler { RoutingContext ctx ->
+				String contentType = ctx.acceptableContentType
+				if (contentType) {
+					ctx.response.headers[CONTENT_TYPE] = contentType
+				}
 				Marshaller m = ctx.marshaller
 				if (!m) {
 					ctx++ // 404 probably
