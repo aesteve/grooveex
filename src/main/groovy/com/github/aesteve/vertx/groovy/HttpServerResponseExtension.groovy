@@ -55,7 +55,6 @@ class HttpServerResponseExtension {
 	}
 
 	static HttpServerResponse getCreated(HttpServerResponse self) {
-		println "Created"
 		self.setStatusCode 201
 		self.setStatusMessage "Created"
 	}
