@@ -50,9 +50,8 @@ class VertxRoute {
 		checkers.each {
 			router.route(method, path).handler it as Handler
 		}
-		marshallers << parent.marshallers
 		router.route(method, path).handler { ctx ->
-			ctx.marshallers = marshallers
+			ctx.marshallers = marshallers + parent.marshallers
 			ctx++
 		}
 		extensions.each { clos ->

@@ -99,6 +99,10 @@ class RouteDSL {
 		}
 	}
 
+	def getMarshallers() {
+		marshallers + parent.marshallers
+	}
+
 	def createRoute(HttpMethod method, String subPath = null, Closure handler) {
 		String path = this.path
 		if (subPath) path += subPath
@@ -113,7 +117,7 @@ class RouteDSL {
 			consumes: consumes.findAll(),
 			produces: produces.findAll(),
 			marshallers: marshallers.findAll { true },
-				extensions: extensions.findAll(),
+			extensions: extensions.findAll(),
 		)
 		this.&createRoute.rcurry(subPath, handler)
 	}

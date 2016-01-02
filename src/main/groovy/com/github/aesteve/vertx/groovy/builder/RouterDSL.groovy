@@ -3,6 +3,8 @@ package com.github.aesteve.vertx.groovy.builder
 import com.github.aesteve.vertx.groovy.io.Marshaller
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
+import io.vertx.core.logging.Logger
+import io.vertx.core.logging.LoggerFactory
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.Router
@@ -159,7 +161,7 @@ class RouterDSL {
 			ctx.marshallers = marshallers
 			ctx++
 		}
-		Route route = createRoute(method, path)
+		Route route = createRoute method, path
 		consumes.each { route.consumes it }
 		produces.each { route.produces it }
 		if (closure) {
