@@ -8,7 +8,7 @@ import io.vertx.groovy.ext.web.handler.CorsHandler
 class CorsHandlerExtension {
 
 	static CorsHandler allowedMethods(CorsHandler self, HttpMethod... methods) {
-		methods?.each { self.allowedMethod it }
+		methods?.each { self.allowedMethod(it as HttpMethod) }
 		self
 	}
 
