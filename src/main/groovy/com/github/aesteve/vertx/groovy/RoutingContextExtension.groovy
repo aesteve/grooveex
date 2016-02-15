@@ -149,6 +149,14 @@ class RoutingContextExtension {
 		self
 	}
 
+	static Map<String, Marshaller> getMarshallers(RoutingContext self) {
+		Map<String, Marshaller> marshallers = self.get(MARSHALLERS) as Map
+		if (!marshallers) {
+			marshallers = [:] as Map
+			self.put MARSHALLERS, marshallers
+		}
+		marshallers
+	}
 
 	static Marshaller getMarshaller(RoutingContext self) {
 		Map<String, Marshaller> marshallers = self.get(MARSHALLERS) as Map
