@@ -13,7 +13,7 @@ class CorsHandlerExtension {
 		self
 	}
 
-	static CorsHandler allowedHeaders(CorsHandler self, HttpHeaders... headers) {
+	static CorsHandler allowedHeaders(CorsHandler self, Object... headers) {
 		headers?.each { self.allowedHeader(it as String) }
 		self
 	}
