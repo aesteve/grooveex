@@ -1,10 +1,8 @@
 package com.github.aesteve.vertx.groovy.builder
 
-import groovy.transform.TypeChecked
 import io.vertx.core.Handler
 import io.vertx.groovy.ext.web.RoutingContext
 
-@TypeChecked
 class Checker {
 
 	Closure check
@@ -19,9 +17,10 @@ class Checker {
 		if (c == Handler) {
 			return { RoutingContext ctx ->
 				check.delegate = ctx
-				boolean result = check(ctx)?.asBoolean()
+				def res = check(ctx)
+				boolean result = res?.asBoolean()
 				if (result) {
-					ctx++
+					ctx.yield res
 				} else {
 					ctx.fail status
 				}

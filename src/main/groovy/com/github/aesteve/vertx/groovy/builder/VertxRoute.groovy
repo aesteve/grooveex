@@ -36,11 +36,12 @@ class VertxRoute {
 			router.route(method, path).handler { ctx ->
 				try {
 					expectation.delegate = ctx
-					boolean expected = expectation(ctx)?.asBoolean()
+					def res = expectation(ctx)
+					boolean expected = res?.asBoolean()
 					if (!expected) {
 						ctx.fail 400
 					} else {
-						ctx++
+						ctx.yield res
 					}
 				} catch (all) {
 					ctx.fail 400
