@@ -13,10 +13,13 @@ class CORSTest extends BuilderTestBase {
 	@Test
 	void testAllowOrigin(TestContext context) {
 		context.async { async ->
-			HttpClientRequest req = client["/cors/test"]
+			HttpClientRequest req = client['/cors/test']
 			req >> { response ->
 				assertEquals 200, response.statusCode()
-				assertEquals "*", response.headers[ACCESS_CONTROL_ALLOW_ORIGIN]
+				assertEquals '*', response.headers[ACCESS_CONTROL_ALLOW_ORIGIN]
+				response.headers.each { key, value ->
+					println "$key = $value"
+				}
 				response >>> { Buffer buffer ->
 					assertEquals buffer as String, "CORS"
 					async++

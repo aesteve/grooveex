@@ -71,7 +71,10 @@ router {
 		}
 	}
 	route('/cors/test') {
-		cors "*"
+		cors('*') {
+			methods GET
+			headers 'X-Custom-Header', 'Date'
+		}
 		get {
 			response << "CORS"
 		}

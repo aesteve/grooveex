@@ -45,8 +45,12 @@ class RouteDSL {
 		this.finish()
 	}
 
-	def cors(String origin) {
-		parent.router.route(path).handler(CorsHandler.create(origin))
+	def cors(String origin, Closure closure = null) {
+		CorsHandler cors = CorsHandler.create(origin)
+		if (closure) {
+			new CorsDSL(cors: cors).make closure
+		}
+		parent.router.route(path).handler cors
 	}
 
 	def expect(Closure expectation) {
