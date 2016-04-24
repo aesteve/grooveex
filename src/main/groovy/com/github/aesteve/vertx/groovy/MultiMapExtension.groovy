@@ -17,4 +17,14 @@ class MultiMapExtension {
 			clos it, self.get(it)
 		}
 	}
+
+	static MultiMap minus(MultiMap self, CharSequence toRemove) {
+		self.remove toRemove
+	}
+
+	static MultiMap minus(MultiMap self, String toRemove) {
+		self.remove toRemove
+	}
+
+
 }

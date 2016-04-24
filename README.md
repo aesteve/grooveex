@@ -31,10 +31,10 @@ And you're done. The new methods will also work with `@TypeChecked` since it's a
 Vertx vertx = Vertx.vertx
 
 // Server-side
-Router router = Router.router vertx
-router['/hello'] >> { // router.route('hello').handler {
+Router router = vertx.router
+router['/hello'] >> { // router.get('hello').handler {
   def name = request.params['name'] // params is available through getParams => as a attribute
-  response << "Hello $name"  // it.response.end("Hello $name")
+  response << "Hello $name"  // it.response().end("Hello $name"), routingContext is implicit, thus response is it.response()
 }
 server.requestHandler router.&accept
 vertx.createHttpServer().listen()
@@ -77,7 +77,7 @@ vertx.executeBlocking({ future ->
 Vertx vertx = Vertx.vertx
 
 // Server-side
-Router router = Router.router vertx
+Router router = vertx.router
 router['/pump'] >> {
   Buffer received = Buffer.buffer()
   request >> { buff -> // request handler
@@ -525,6 +525,7 @@ router.get('/api/1/') >> {
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `resp.headers` | `resp.headers()` |
+| `resp.headers = headers` | `resp.headers().clear().addAll(headers)` |
 | `resp++` | `resp.end()` |
 | `resp << new JsonBuilder(...)` | `resp.end(new JsonBuilder(...).toString())` |
 
@@ -542,6 +543,7 @@ router.get('/api/1/') >> {
 | `req++` | `req.end()` |
 | `req << new JsonBuilder(...)` | `req.end(new JsonBuilder(...).toString())` |
 | `req.method` | `req.method()` |
+| `req.headers = headers` | `req.headers().clear().addAll(headers)` |
 
 ### HttpClientResponse
 
@@ -624,3 +626,11 @@ router.get('/api/1/') >> {
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `context.config` | `context.config()` |
+
+### MultiMap
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `map[key]` | `map.get(key)` |
+| `map[key] = value` | `map.put(key, value)` |
+| `map -= key` | `map.remove(key)` |

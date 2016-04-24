@@ -13,6 +13,14 @@ class HttpServerResponseExtension {
 		self.headers()
 	}
 
+	static MultiMap setHeaders(HttpServerResponse self, MultiMap headers) {
+		MultiMap respHeaders = self.headers()
+		respHeaders.clear()
+		respHeaders.addAll headers
+		respHeaders
+	}
+
+
 	static void next(HttpServerResponse self) {
 		self.end()
 	}

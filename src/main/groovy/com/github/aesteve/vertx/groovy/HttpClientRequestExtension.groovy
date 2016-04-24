@@ -32,4 +32,11 @@ class HttpClientRequestExtension {
 		self.method()
 	}
 
+	static MultiMap setHeaders(HttpClientRequest req, MultiMap headers) {
+		MultiMap reqHeaders = req.headers()
+		reqHeaders.clear()
+		reqHeaders.addAll headers
+		reqHeaders
+	}
+
 }
