@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.github.aesteve'
-version = '0.12'
+version = '0.13'
 
 sourceCompatibility = '1.8'
 

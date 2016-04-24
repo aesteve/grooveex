@@ -515,6 +515,9 @@ router.get('/api/1/') >> {
 | ------------- | --------------- |
 | `req.params` | `req.params()` |
 | `req.headers` | `req.headers()` |
+| `req.method` | `req.method()` |
+| `req.path` | `req.path()` |
+| `req - '/path'` | `req.path() - '/path'` |
 | `req >>> handler` | `req.bodyHandler(handler)` |
 
 ### HttpServerResponse
@@ -538,6 +541,7 @@ router.get('/api/1/') >> {
 | ------------- | --------------- |
 | `req++` | `req.end()` |
 | `req << new JsonBuilder(...)` | `req.end(new JsonBuilder(...).toString())` |
+| `req.method` | `req.method()` |
 
 ### HttpClientResponse
 
@@ -601,6 +605,7 @@ router.get('/api/1/') >> {
 | `Vertx.vertx` | `Vertx.vertx()` |
 | `vertx.eventBus` | `vertx.eventBus()` |
 | `vertx.fileSystem` | `vertx.fileSystem()` |
+| `vertx.router` | `Router.router(vertx)` |
 
 ### String
 
@@ -613,3 +618,9 @@ router.get('/api/1/') >> {
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `new JsonBuilder(...) as Buffer` | `Buffer.buffer(new JsonBuilder(...).toString())` |
+
+### Context
+
+| Groovy sugar  | Vert.x standard |
+| ------------- | --------------- |
+| `context.config` | `context.config()` |

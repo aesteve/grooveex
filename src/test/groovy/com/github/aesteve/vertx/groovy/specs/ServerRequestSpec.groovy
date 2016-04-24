@@ -26,6 +26,9 @@ class ServerRequestSpec extends TestBase {
 			ctx.response.chunked = true
 			(ctx.request | ctx.response)++
 		}
+		router["$PATH/snoopy"] = {
+			it.response << it.request - PATH
+		}
 	}
 
 	@Test
@@ -83,6 +86,20 @@ class ServerRequestSpec extends TestBase {
 				}
 			}
 			post << buff
+		}
+	}
+
+	@Test
+	void testMinus(TestContext context) {
+		context.async { async ->
+			HttpClientRequest req = client["$PATH/snoopy"]
+			req >> { resp ->
+				resp >>> { buff ->
+					context.assertEquals buff as String, "/snoopy"
+					async.complete()
+				}
+			}
+			req++
 		}
 	}
 }

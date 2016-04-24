@@ -2,6 +2,7 @@ package com.github.aesteve.vertx.groovy
 
 import groovy.json.JsonBuilder
 import groovy.transform.TypeChecked
+import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.core.MultiMap
 import io.vertx.groovy.core.buffer.Buffer
 import io.vertx.groovy.core.http.HttpClientRequest
@@ -26,4 +27,9 @@ class HttpClientRequestExtension {
 		self.end(json as Buffer)
 		self
 	}
+
+	static HttpMethod getMethod(HttpClientRequest self) {
+		self.method()
+	}
+
 }
