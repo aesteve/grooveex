@@ -28,6 +28,14 @@ class HttpClientRequestExtension {
 		self
 	}
 
+	static HttpClientRequest rightShift(HttpClientRequest self, Closure closure) {
+		self.handler { ctx ->
+			closure.delegate = ctx
+			closure ctx
+		}
+	}
+
+
 	static HttpMethod getMethod(HttpClientRequest self) {
 		self.method()
 	}
