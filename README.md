@@ -519,6 +519,7 @@ router.get('/api/1/') >> {
 | `req.headers` | `req.headers()` |
 | `req.method` | `req.method()` |
 | `req.path` | `req.path()` |
+| `req.remoteAddress` | `req.remoteAddress()` |
 | `req - '/path'` | `req.path() - '/path'` |
 | `req >>> handler` | `req.bodyHandler(handler)` |
 

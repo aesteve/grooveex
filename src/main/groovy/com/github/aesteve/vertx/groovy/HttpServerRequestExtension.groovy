@@ -18,6 +18,10 @@ class HttpServerRequestExtension {
 		self.headers()
 	}
 
+	static String getRemoteAddress(HttpServerRequest self) {
+		self.remoteAddress()
+	}
+
 	static HttpServerRequest rightShiftUnsigned(HttpServerRequest self, Handler<Buffer> handler) {
 		self.bodyHandler handler
 	}
