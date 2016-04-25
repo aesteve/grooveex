@@ -1,9 +1,11 @@
 package com.github.aesteve.vertx.groovy
 
 import groovy.transform.TypeChecked
+import io.vertx.core.Handler
 import io.vertx.core.http.HttpMethod
 import io.vertx.groovy.ext.web.Route
 import io.vertx.groovy.ext.web.Router
+import io.vertx.groovy.ext.web.RoutingContext
 
 import java.util.regex.Pattern
 
@@ -16,6 +18,11 @@ class RouterExtension {
 			handler ctx
 		}
 	}
+
+	static Route putAt(Router self, String path, Handler<RoutingContext> handler) {
+		self.route(path).handler handler
+	}
+
 
 	static Route getAt(Router self, String path) {
 		self.route(path)

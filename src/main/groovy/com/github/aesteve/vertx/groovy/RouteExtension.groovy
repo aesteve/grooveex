@@ -3,6 +3,7 @@ package com.github.aesteve.vertx.groovy
 import groovy.transform.TypeChecked
 import io.vertx.core.Handler
 import io.vertx.groovy.ext.web.Route
+import io.vertx.groovy.ext.web.RoutingContext
 
 import java.util.regex.Pattern;
 
@@ -16,7 +17,7 @@ class RouteExtension {
 		}
 	}
 
-	static Route rightShift(Route self, Handler handler) {
+	static Route rightShift(Route self, Handler<RoutingContext> handler) {
 		self.handler handler
 	}
 
