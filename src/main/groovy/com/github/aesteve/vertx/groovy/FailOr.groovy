@@ -1,9 +1,11 @@
 package com.github.aesteve.vertx.groovy
 
+import groovy.transform.TypeChecked
 import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.groovy.ext.web.RoutingContext
 
+@TypeChecked
 class FailOr {
 
 	RoutingContext ctx
@@ -16,6 +18,7 @@ class FailOr {
 				clos.delegate = ctx
 				clos res.result()
 			}
-		} as Handler
+		} as Handler<AsyncResult>
 	}
+
 }
