@@ -44,7 +44,7 @@ class FutureTest {
 			} catch (all) {
 			}
 			f += result
-		}, global.completeOrFail())
+		}, global.completer())
 	}
 
 	@Test
@@ -73,7 +73,7 @@ class FutureTest {
 			} catch (all) {
 			}
 			f -= cause
-		}, global.completeOrFail())
+		}, global.completer())
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class FutureTest {
 			} catch (all) {
 			}
 			f++
-		}, global.completeOrFail())
+		}, global.completer())
 	}
 
 }
