@@ -13,6 +13,13 @@ class ReadStreamExtension {
 		self.handler handler
 	}
 
+	static <T> ReadStream rightShift(ReadStream<T> self, Closure<?> closure) {
+		self.handler { read ->
+			closure.delegate = read
+			closure read
+		}
+	}
+
 	static <T> Pump or(ReadStream<T> self, WriteStream<T> writer) {
 		Pump.pump(self, writer)
 	}
