@@ -394,7 +394,9 @@ Examples : `WebSocket`, `HttpServerRequest`, ...
 | Groovy sugar  | Vert.x standard |
 | ------------- | --------------- |
 | `stream >> handler` | `stream.handler(handler)` |
+| `stream >>> handler` | `stream.endHandler(handler)` |
 | `stream | other` | `Pump.pump(stream, other)` |
+
 
 ### Route
 

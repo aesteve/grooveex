@@ -9,15 +9,19 @@ import io.vertx.groovy.core.streams.WriteStream
 @TypeChecked
 class ReadStreamExtension {
 
-	static <T> ReadStream rightShift(ReadStream<T> self, Handler<T> handler) {
+	static <T> ReadStream<T> rightShift(ReadStream<T> self, Handler<T> handler) {
 		self.handler handler
 	}
 
-	static <T> ReadStream rightShift(ReadStream<T> self, Closure<?> closure) {
+	static <T> ReadStream<T> rightShift(ReadStream<T> self, Closure<?> closure) {
 		self.handler { read ->
 			closure.delegate = read
 			closure read
 		}
+	}
+
+	static <T> ReadStream<T> unsignedRightShift(ReadStream<T> self, Closure closure) {
+		self.endHandler(closure as Handler<Void>)
 	}
 
 	static <T> Pump or(ReadStream<T> self, WriteStream<T> writer) {
