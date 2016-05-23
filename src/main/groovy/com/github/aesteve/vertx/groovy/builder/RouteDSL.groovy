@@ -91,6 +91,9 @@ class RouteDSL {
 	}
 
 	private void finish() {
+		if (parent.corsPattern) {
+			cors(parent.corsPattern, parent.corsOptions)
+		}
 		vertxRoutes.each { it() }
 		def methods = vertxRoutes.collect { it.method } as Set
 		pendingExtensions.each { handler ->

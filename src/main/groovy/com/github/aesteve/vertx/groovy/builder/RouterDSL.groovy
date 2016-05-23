@@ -10,9 +10,10 @@ import io.vertx.groovy.ext.web.RoutingContext
 import io.vertx.groovy.ext.web.handler.*
 import io.vertx.groovy.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.groovy.ext.web.templ.TemplateEngine
-import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
 
 import java.util.regex.Pattern
+
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE
 
 class RouterDSL {
 
@@ -28,6 +29,8 @@ class RouterDSL {
 	private Set<RouteDSL> children = [] as Set
 	Map<String, Closure> extensions = [:]
 	List<Handler> authHandlers = []
+	String corsPattern
+	Closure corsOptions
 
 	def make(Closure closure) {
 		router = Router.router vertx
@@ -37,6 +40,11 @@ class RouterDSL {
 		if (parent && path) {
 			parent.mountSubRouter path, router
 		}
+	}
+
+	def cors(String origin, Closure closure = null) {
+		corsPattern = origin
+		corsOptions = closure
 	}
 
 	def call(Closure closure) {
@@ -187,7 +195,7 @@ class RouterDSL {
 					return
 				}
 				def payload = ctx.getPayload()
-				if (!payload) {
+				if (payload == null) {
 					ctx++ // 404 probably
 					return
 				}
